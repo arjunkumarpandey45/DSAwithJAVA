@@ -3,7 +3,7 @@ import java.util.Stack;
 
 public class a_BasicOfStacks {
 
-    public static void main(String[] args) {
+            public static void main(String[] args) {
 
         // Stack create
         Stack<Integer> stack = new Stack<>();
