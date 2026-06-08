@@ -1,7 +1,7 @@
 public class NumPattern {
     public static void main(String[] args) {
-        // printNumPattern(5);
-        // printNumWithRepeation(4);
+         printNumPattern(5);
+//         printNumWithRepeation(4);
         printReverseNum(5);
     }
 

@@ -1,0 +1,554 @@
+=========================================================
+RECURSION NOTES - THINGS PEOPLE OFTEN FORGET IN JAVA
+=========================================================
+
+---------------------------------------------------------
+1. RECURSION = FUNCTION CALLING ITSELF
+---------------------------------------------------------
+
+Definition:
+A method calling itself is called recursion.
+
+Example:
+
+public static void fun(int n){
+    if(n == 0){
+        return;
+    }
+
+    fun(n - 1);
+}
+
+What beginners forget:
+- Recursion is NOT magic.
+- It is still normal method calling.
+- Difference = method calls itself.
+
+
+---------------------------------------------------------
+2. BASE CASE IS MANDATORY
+---------------------------------------------------------
+
+Base Case:
+Stopping condition of recursion.
+
+Example:
+
+if(n == 0){
+    return;
+}
+
+Why needed?
+Without base case recursion never stops.
+
+Wrong:
+
+public static void fun(int n){
+    fun(n - 1);
+}
+
+Result:
+StackOverflowError
+
+What people forget:
+- Every recursive function MUST stop.
+- Always ask:
+
+1. When should recursion stop?
+2. What is smallest problem?
+
+
+---------------------------------------------------------
+3. INPUT MUST REDUCE
+---------------------------------------------------------
+
+Wrong:
+
+fun(n);
+
+Correct:
+
+fun(n - 1);
+
+Why?
+Recursive problem must become smaller.
+
+Bad Example:
+
+public static void fun(int n){
+    if(n == 0){
+        return;
+    }
+
+    fun(n);
+}
+
+Infinite recursion happens.
+
+Golden Rule:
+
+Every recursive call must move toward base case.
+
+
+---------------------------------------------------------
+4. RECURSION USES STACK MEMORY
+---------------------------------------------------------
+
+People forget this most.
+
+Every recursive call creates NEW STACK FRAME.
+
+Example:
+
+fun(3)
+
+Stack:
+
+TOP
+----------
+fun(3)
+----------
+main()
+----------
+
+fun(2)
+
+TOP
+----------
+fun(2)
+----------
+fun(3)
+----------
+main()
+----------
+
+fun(1)
+
+TOP
+----------
+fun(1)
+----------
+fun(2)
+----------
+fun(3)
+----------
+main()
+----------
+
+What people forget:
+- Every call gets separate memory.
+- Variables are separate in each call.
+
+
+---------------------------------------------------------
+5. LOCAL VARIABLES RESET
+---------------------------------------------------------
+
+Very common mistake.
+
+Wrong:
+
+public static void fun(){
+    int c = 1;
+    c++;
+    fun();
+}
+
+Why wrong?
+
+Each call creates:
+
+c = 1
+
+again:
+c = 1
+
+again:
+c = 1
+
+Variable resets every call.
+
+Correct way:
+Pass variable as parameter.
+
+fun(c + 1)
+
+OR use static variable carefully.
+
+
+---------------------------------------------------------
+6. CODE AFTER RECURSIVE CALL WAITS
+---------------------------------------------------------
+
+This is the BIGGEST recursion concept.
+
+Example:
+
+public static void fun(int n){
+
+    if(n == 0){
+        return;
+    }
+
+    System.out.println("Before");
+
+    fun(n - 1);
+
+    System.out.println("After");
+}
+
+Call:
+
+fun(2)
+
+Execution:
+
+Before
+Before
+After
+After
+
+Why?
+
+Everything after:
+
+fun(n - 1);
+
+PAUSES and waits.
+
+Rule:
+
+Code after recursive call executes
+ONLY after child recursion finishes.
+
+
+---------------------------------------------------------
+7. BEFORE VS AFTER RECURSIVE CALL
+---------------------------------------------------------
+
+A very important interview topic.
+
+A) Work BEFORE recursion
+
+System.out.println(n);
+fun(n - 1);
+
+Output:
+
+5
+4
+3
+2
+1
+
+Reason:
+Print first → go deeper later.
+
+This is descending.
+
+
+B) Work AFTER recursion
+
+fun(n - 1);
+System.out.println(n);
+
+Output:
+
+1
+2
+3
+4
+5
+
+Reason:
+Go deeper first → print while returning.
+
+This is ascending.
+
+
+Golden Rule:
+
+Before recursion = Descending
+After recursion = Ascending
+
+
+---------------------------------------------------------
+8. FORWARD PHASE VS BACKTRACKING PHASE
+---------------------------------------------------------
+
+Forward Phase:
+Calls go deeper.
+
+Example:
+
+fun(5)
+fun(4)
+fun(3)
+fun(2)
+fun(1)
+fun(0)
+
+Backtracking Phase:
+Returning upward.
+
+fun(1)
+fun(2)
+fun(3)
+fun(4)
+fun(5)
+
+People forget:
+Real work can happen during returning.
+
+
+---------------------------------------------------------
+9. PARAMETERIZED VS FUNCTIONAL RECURSION
+---------------------------------------------------------
+
+A) Parameterized Recursion
+
+Answer passed as parameter.
+
+Example:
+
+sum(n, sum)
+
+sum += n;
+
+sum(n - 1, sum);
+
+Characteristics:
+- Answer built in forward phase.
+- Usually return type = void.
+
+
+B) Functional Recursion
+
+Function returns answer.
+
+Example:
+
+return n + sum(n - 1);
+
+Characteristics:
+- Answer built during backtracking.
+- Return type matters.
+
+
+---------------------------------------------------------
+10. RETURN TYPE CONFUSION
+---------------------------------------------------------
+
+Wrong:
+
+public static int fun(int n){
+
+    if(n == 0){
+        return;
+    }
+}
+
+Compile error.
+
+Why?
+
+Method says:
+"I return int"
+
+But returning nothing.
+
+Correct:
+
+return 0;
+
+OR
+
+change return type to:
+
+void
+
+
+---------------------------------------------------------
+11. RETURN DOES NOT END WHOLE PROGRAM
+---------------------------------------------------------
+
+People misunderstand this.
+
+return only exits CURRENT FUNCTION CALL.
+
+Example:
+
+fun(3)
+fun(2)
+fun(1)
+fun(0) return
+
+Only fun(0) ends.
+
+Then:
+
+fun(1) continues
+fun(2) continues
+fun(3) continues
+
+
+---------------------------------------------------------
+12. STACK OVERFLOW ERROR
+---------------------------------------------------------
+
+Too many recursive calls.
+
+Example:
+
+fun(10000000);
+
+Result:
+
+StackOverflowError
+
+Why?
+
+Stack memory becomes full.
+
+
+---------------------------------------------------------
+13. TC & SC IN RECURSION
+---------------------------------------------------------
+
+People mostly forget SC.
+
+If:
+
+One recursive call
+Input decreases by 1
+
+Then usually:
+
+TC = O(n)
+SC = O(n)
+
+Why SC = O(n)?
+
+Because stack stores n calls.
+
+
+Wrong thinking:
+
+SC = O(1)
+
+Correct:
+
+Recursive stack memory counts.
+
+
+---------------------------------------------------------
+14. RECURSION ≠ ALWAYS BETTER
+---------------------------------------------------------
+
+Loop can be better.
+
+Example:
+
+Factorial loop:
+
+SC = O(1)
+
+Factorial recursion:
+
+SC = O(n)
+
+Why?
+
+Stack memory overhead.
+
+
+---------------------------------------------------------
+15. DRY RUN IS EVERYTHING
+---------------------------------------------------------
+
+If recursion feels confusing:
+
+DRAW STACK.
+
+Example:
+
+fun(3)
+
+Write:
+
+fun(3)
+fun(2)
+fun(1)
+fun(0)
+
+Then return upward.
+
+Most recursion confusion disappears.
+
+
+---------------------------------------------------------
+16. GOLDEN 3 QUESTIONS
+---------------------------------------------------------
+
+Before writing recursion ask:
+
+1. What is base case?
+2. How problem becomes smaller?
+3. Where recursive call happens?
+
+If all 3 clear:
+You can solve recursion.
+
+
+---------------------------------------------------------
+17. MOST COMMON BEGINNER MISTAKES
+---------------------------------------------------------
+
+1. Forgetting base case
+2. Not reducing input
+3. Wrong return type
+4. Local variable resetting
+5. Forgetting recursive call
+6. Confusing before/after recursion
+7. Wrong TC & SC
+8. Not dry running
+9. Infinite recursion
+10. Misunderstanding return
+
+
+---------------------------------------------------------
+18. MASTER TEMPLATE OF RECURSION
+---------------------------------------------------------
+
+public static void fun(int n){
+
+    // Base Case
+    if(n == 0){
+        return;
+    }
+
+    // Work before recursion
+
+    fun(n - 1);
+
+    // Work after recursion
+}
+
+Remember:
+
+Base Case
+→ Work
+→ Smaller Problem
+→ Self Call
+→ Return/Backtracking
+
+=========================================================
+FINAL GOLDEN RULE
+=========================================================
+
+Recursion = Waiting + Stack + Smaller Problem
+
+Function says:
+
+"I will pause here,
+my smaller version will solve first."

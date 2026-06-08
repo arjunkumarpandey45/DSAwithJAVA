@@ -8,8 +8,9 @@ public class f_SubSequence {
         int[] arr = { 1, 2, 3 };
         List<Integer> ds = new ArrayList<>();
         int n = arr.length;
-        
-        subsequence(0, ds, n, arr);
+        String s="abc";
+//        subsequence(0, ds, n, arr);
+        stringSubSequence("",s,0);
     }
 //                               []
 //                         ind=0 (1)
@@ -22,8 +23,8 @@ public class f_SubSequence {
 //          [1,2]          [1]      [2]          []
 //        ind=2(3)      ind=2(3) ind=2(3)    ind=2(3)
 //         /    \         /   \      /   \       /   \
-//  PICK3  SKIP3 PICK3 SKIP3 PICK3 SKIP3 PICK3 SKIP3
-// [1,2,3]  [1,2] [1,3] [1]   [2,3]  [2]  [3]  {}
+//  PICK3     SKIP3    PICK3  SKIP3 PICK3 SKIP3 PICK3 SKIP3
+// [1,2,3]    [1,2]     [1,3]  [1]  [2,3]  [2]  [3]  {}
 
 // “There are 2^n subsequences and printing each can take O(n), so TC = O(n * 2^n) and recursion stack takes O(n) space.”
     public static void subsequence(int ind, List<Integer> ds, int n, int[] arr) {
@@ -42,8 +43,21 @@ public class f_SubSequence {
 
         ds.add(arr[ind]);
         subsequence(ind + 1, ds, n, arr);
+        //remove if datatype is mutable only
         ds.remove(ds.size() - 1);
         subsequence(ind + 1, ds, n, arr);
 
     }
+
+    public static void stringSubSequence(String ans,String s,int ind){
+        if(ind==s.length()){
+            System.out.print(ans+" ");
+            return;
+        }
+        char ch =s.charAt(ind);
+        stringSubSequence(ans+ch,s,ind+1);
+        stringSubSequence(ans,s,ind+1);
+    }
+
+
 }

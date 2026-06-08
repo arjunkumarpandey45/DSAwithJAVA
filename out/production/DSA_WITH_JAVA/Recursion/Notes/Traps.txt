@@ -1,0 +1,676 @@
+=========================================================
+RECURSION INTERVIEW TRAPS (JAVA)
+THINGS INTERVIEWERS TRY TO CONFUSE YOU WITH
+=========================================================
+
+---------------------------------------------------------
+1. BASE CASE TRAP
+---------------------------------------------------------
+
+Question:
+"What happens if base case is removed?"
+
+Example:
+
+public static void fun(int n){
+    fun(n - 1);
+}
+
+Answer:
+Infinite recursion happens.
+
+Result:
+
+StackOverflowError
+
+Interview Catch:
+Many say:
+"Program runs forever"
+
+Partially wrong.
+
+Correct:
+Program keeps creating stack frames
+until stack memory gets full,
+then StackOverflowError occurs.
+
+
+---------------------------------------------------------
+2. INPUT REDUCTION TRAP
+---------------------------------------------------------
+
+Question:
+"Is this recursion correct?"
+
+public static void fun(int n){
+
+    if(n == 0){
+        return;
+    }
+
+    fun(n);
+}
+
+Answer:
+Wrong recursion.
+
+Why?
+Input is not reducing.
+
+n never changes.
+
+Infinite recursion occurs.
+
+
+Golden Rule:
+Recursive call must move toward base case.
+
+
+---------------------------------------------------------
+3. BEFORE VS AFTER RECURSIVE CALL
+---------------------------------------------------------
+
+Interviewer favorite question.
+
+Question:
+Predict output.
+
+Code:
+
+public static void fun(int n){
+
+    if(n == 0){
+        return;
+    }
+
+    System.out.print(n + " ");
+
+    fun(n - 1);
+}
+
+fun(3);
+
+Output:
+
+3 2 1
+
+Why?
+Print happens BEFORE recursion.
+
+Descending.
+
+
+Now:
+
+public static void fun(int n){
+
+    if(n == 0){
+        return;
+    }
+
+    fun(n - 1);
+
+    System.out.print(n + " ");
+}
+
+Output:
+
+1 2 3
+
+Why?
+Print happens AFTER recursion.
+
+Ascending.
+
+
+Golden Rule:
+
+Before recursion → Descending
+After recursion → Ascending
+
+
+---------------------------------------------------------
+4. RETURN DOES NOT END ALL CALLS
+---------------------------------------------------------
+
+Question:
+"When base case returns,
+does entire recursion stop immediately?"
+
+Answer:
+NO.
+
+Only current function call ends.
+
+Example:
+
+fun(3)
+fun(2)
+fun(1)
+fun(0)
+
+return only exits:
+
+fun(0)
+
+Then:
+
+fun(1) continues
+fun(2) continues
+fun(3) continues
+
+
+This is called:
+Backtracking.
+
+
+---------------------------------------------------------
+5. LOCAL VARIABLE RESET TRAP
+---------------------------------------------------------
+
+Question:
+Predict output.
+
+public static void fun(){
+
+    int c = 1;
+
+    if(c == 5){
+        return;
+    }
+
+    c++;
+
+    System.out.println(c);
+
+    fun();
+}
+
+Answer:
+
+2
+2
+2
+2
+...
+
+then:
+
+StackOverflowError
+
+Why?
+
+Every recursive call creates:
+
+int c = 1
+
+fresh memory.
+
+
+Correct understanding:
+Local variables reset in recursion.
+
+
+---------------------------------------------------------
+6. STATIC VARIABLE TRAP
+---------------------------------------------------------
+
+Question:
+Why does this work?
+
+static int c = 1;
+
+public static void fun(){
+
+    if(c == 5){
+        return;
+    }
+
+    System.out.println(c);
+
+    c++;
+
+    fun();
+}
+
+Output:
+
+1
+2
+3
+4
+
+Why?
+
+static variable is shared.
+
+Only one copy exists.
+
+
+Interview Trap:
+Interviewer asks:
+
+"Best practice?"
+
+Answer:
+
+Prefer parameter passing.
+
+Avoid unnecessary static/global variables.
+
+
+---------------------------------------------------------
+7. TC VS SC TRAP
+---------------------------------------------------------
+
+Question:
+TC and SC?
+
+public static void fun(int n){
+
+    if(n == 0){
+        return;
+    }
+
+    fun(n - 1);
+}
+
+Correct Answer:
+
+TC = O(n)
+SC = O(n)
+
+Why?
+
+n recursive calls.
+
+Stack depth = n.
+
+Trap:
+Many say:
+
+SC = O(1)
+
+Wrong.
+
+Recursive stack counts.
+
+
+---------------------------------------------------------
+8. FUNCTIONAL VS PARAMETERIZED RECURSION
+---------------------------------------------------------
+
+Question:
+Difference?
+
+Parameterized:
+
+sum(n, sum)
+
+Answer passed as parameter.
+
+Example:
+
+sum += n;
+sum(n - 1, sum);
+
+Characteristics:
+- Forward phase
+- Usually void return type
+
+
+Functional:
+
+return n + sum(n - 1);
+
+Characteristics:
+- Backtracking phase
+- Return type important
+
+
+---------------------------------------------------------
+9. RETURN TYPE TRAP
+---------------------------------------------------------
+
+Question:
+What's wrong?
+
+public static int fun(int n){
+
+    if(n == 0){
+        return;
+    }
+}
+
+Answer:
+
+Compile Error
+
+Why?
+
+Method return type:
+
+int
+
+But returned nothing.
+
+
+Correct:
+
+return 0;
+
+OR
+
+make function:
+
+void
+
+
+---------------------------------------------------------
+10. CALL STACK TRAP
+---------------------------------------------------------
+
+Question:
+How recursion works internally?
+
+Correct Answer:
+
+Uses stack memory.
+
+Every recursive call creates
+new stack frame.
+
+Example:
+
+fun(3)
+
+Stack:
+
+TOP
+-----------
+fun(3)
+-----------
+main()
+-----------
+
+fun(2)
+
+TOP
+-----------
+fun(2)
+-----------
+fun(3)
+-----------
+main()
+-----------
+
+Memory removed while returning.
+
+
+---------------------------------------------------------
+11. INFINITE RECURSION TRAP
+---------------------------------------------------------
+
+Question:
+Will this stop?
+
+public static void fun(int n){
+
+    if(n == 5){
+        return;
+    }
+
+    fun(n - 1);
+}
+
+fun(1);
+
+Answer:
+NO.
+
+Why?
+
+n becomes:
+
+1
+0
+-1
+-2
+-3
+
+Never reaches 5.
+
+Infinite recursion.
+
+
+Interviewers test:
+Does base case actually become reachable?
+
+
+---------------------------------------------------------
+12. BASE CASE POSITION TRAP
+---------------------------------------------------------
+
+Wrong:
+
+public static void fun(int n){
+
+    System.out.println(n);
+
+    fun(n - 1);
+
+    if(n == 0){
+        return;
+    }
+}
+
+Problem:
+Recursive call happens first.
+
+Base case never checked.
+
+Infinite recursion.
+
+
+Correct:
+
+Always base case FIRST.
+
+
+---------------------------------------------------------
+13. DRY RUN TRAP
+---------------------------------------------------------
+
+Interviewer gives:
+
+return n + fun(n - 1);
+
+and asks output.
+
+Wrong approach:
+Guessing.
+
+Correct approach:
+
+Dry run.
+
+Example:
+
+fun(3)
+
+3 + fun(2)
+
+3 + (2 + fun(1))
+
+3 + (2 + (1 + fun(0)))
+
+3 + (2 + (1 + 0))
+
+6
+
+
+---------------------------------------------------------
+14. RECURSION VS LOOP TRAP
+---------------------------------------------------------
+
+Question:
+Which is better?
+
+Answer:
+
+Depends.
+
+Loop:
+TC = O(n)
+SC = O(1)
+
+Recursion:
+TC = O(n)
+SC = O(n)
+
+Loop often more memory efficient.
+
+
+Trap:
+Never say:
+"Recursion always better"
+
+
+---------------------------------------------------------
+15. TAIL RECURSION TRAP
+---------------------------------------------------------
+
+Question:
+Does Java optimize tail recursion?
+
+Answer:
+
+NO.
+
+Example:
+
+fun(n - 1);
+
+as last statement.
+
+Still:
+
+SC = O(n)
+
+Trap:
+Some languages optimize.
+Java DOES NOT.
+
+
+---------------------------------------------------------
+16. MULTIPLE RECURSIVE CALLS TRAP
+---------------------------------------------------------
+
+Question:
+
+TC of Fibonacci?
+
+fib(n-1) + fib(n-2)
+
+Wrong:
+
+O(n)
+
+Correct:
+
+O(2^n)
+
+Why?
+
+Recursive tree expands exponentially.
+
+
+---------------------------------------------------------
+17. RECURSION TREE TRAP
+---------------------------------------------------------
+
+Question:
+How many calls happen?
+
+fib(5)
+
+Tree:
+
+fib(5)
+├── fib(4)
+│   ├── fib(3)
+│   └── fib(2)
+└── fib(3)
+
+Same subproblems repeated.
+
+This causes bad TC.
+
+
+---------------------------------------------------------
+18. SPACE COMPLEXITY TRAP
+---------------------------------------------------------
+
+Question:
+SC of Fibonacci?
+
+fib(n)
+
+Wrong:
+O(2^n)
+
+Correct:
+O(n)
+
+Why?
+
+Maximum stack depth = n.
+
+SC is stack height,
+NOT total calls.
+
+
+---------------------------------------------------------
+19. BACKTRACKING TRAP
+---------------------------------------------------------
+
+Question:
+Why recursion used in Sudoku/N Queen?
+
+Answer:
+
+Because recursion supports:
+
+Choose
+Explore
+Undo
+
+(backtracking)
+
+
+---------------------------------------------------------
+20. GOLDEN INTERVIEW ANSWER FRAMEWORK
+---------------------------------------------------------
+
+Whenever asked recursion question say:
+
+1. Base case
+2. Smaller subproblem
+3. Recursive call
+4. Time Complexity
+5. Space Complexity
+6. Dry run logic
+
+This instantly makes answer strong.
+
+=========================================================
+FINAL INTERVIEW GOLDEN RULE
+=========================================================
+
+Interviewer mostly checks:
+
+"Can you think recursively
+without getting confused by stack?"
+
+If you can dry run correctly,
+you already know recursion.

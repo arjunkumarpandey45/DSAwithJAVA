@@ -1,6 +1,7 @@
 package Recursion;
 
-public class b_FunctionalAndParamaterized {
+public class
+b_FunctionalAndParamaterized {
     public static void main(String[] args) {
         sumOfNumberV1(7, 0);
         System.out.println( sumOfNumberV2(7));

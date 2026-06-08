@@ -39,6 +39,6 @@ public class a_BasicRecursion {
         // SC = O(n)
           System.out.println(n);
         printNum(n - 1);
-        System.out.println(n);
+      System.out.println(n);
     }
 }
