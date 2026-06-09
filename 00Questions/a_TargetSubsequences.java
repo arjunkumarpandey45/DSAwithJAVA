@@ -6,14 +6,16 @@ import java.util.List;
 
 public class a_TargetSubsequences {
     public static void main(String[] args) {
-        int[] arr = {3, 7, 4, 5, 7, 3, 4, 2};
+        int[] arr = {1,2,1};
         Arrays.sort(arr);
-        int target = 7;
+        int target = 2;
         List<Integer> ds = new ArrayList<>();
+        ArrayList<Integer> list = new ArrayList<>();
         int n = arr.length;
         int sum = 0;
-        getAllSequences(0, arr, ds, n, target, sum);
-        getAllUniqueCombinationOfTarget(0, arr, ds, target);
+//        getAllSequences(0, arr, ds, n, target, sum);
+//        getAllUniqueCombinationOfTarget(0, arr, ds, target);
+        printSubsequence(arr,0,list,sum,target);
 
     }
 
@@ -59,4 +61,26 @@ public class a_TargetSubsequences {
         }
     }
 
+    public static void printSubsequence(int[] arr, int idx, ArrayList<Integer> list, int sum,int target){
+        if(idx==arr.length){
+
+            if (sum == target) {
+                System.out.println();
+                for(Object seq:list){
+
+                    System.out.print(seq+" ");
+                }
+
+            }
+
+            return;
+        }
+
+
+        list.add(arr[idx]);
+        printSubsequence(arr,idx+1,list,sum+arr[idx],target);
+        list.remove(list.size()-1);
+       printSubsequence(arr,idx+1,list,sum,target);
+
+    }
 }
