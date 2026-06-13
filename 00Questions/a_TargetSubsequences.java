@@ -42,13 +42,11 @@ public class a_TargetSubsequences {
         if (target == 0) {
             System.out.print("[ ");
             for (Integer it : ds) {
-
                 System.out.print(it + " ");
             };
             System.out.print(" ]");
             System.out.println();
             return;
-
         }
 
         for (int i = ind; i < arr.length; i++) {
