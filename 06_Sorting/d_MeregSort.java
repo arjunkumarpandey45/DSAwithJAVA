@@ -23,6 +23,7 @@ public class d_MeregSort {
             return;
         }
         int mid = (low + high) / 2;
+        
         mergeSort(arr, low, mid);
         mergeSort(arr, mid + 1, high);
         merge(arr, low, high, mid);
