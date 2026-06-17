@@ -1,8 +1,8 @@
 
 public class a_RotateArrByD {
     public static void main(String[] args) {
-        int[] arr = { 1, 2, 3, 4, 5 ,6,7};
-        rotate3(arr, 4);
+        int[] arr = { 1, 2, 3, 4, 5 };
+        rotate3(arr,1 );
         for (int i : arr) {
             System.out.print(i + " ");
         }
@@ -55,9 +55,15 @@ public class a_RotateArrByD {
     // if(k==0){
     //     return;
     // }
+    //Left Rotate
     rverse(arr, 0, arr.length-1);
     rverse(arr, 0, k-1);
     rverse(arr, k, arr.length-1);
+    //Right Rotate
+    
+        // rverse(arr, 0, k - 1);
+        // rverse(arr, k, arr.length - 1);
+        // rverse(arr, 0, arr.length - 1);
     }
 
     public static void rverse(int[] arr, int left, int right) {
