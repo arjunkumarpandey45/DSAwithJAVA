@@ -1,6 +1,6 @@
 public class e_QuickSort {
     public static void main(String[] args) {
-        int[] arr ={4, 6,-2, 2, 5, 7, 9, 1, 3};
+        int[] arr ={4,6,8,10,2,5,7,9,1,3};
         System.out.println("ORIGINAL");
          for (int i : arr) {
             System.out.print(i+" ");
@@ -12,7 +12,7 @@ public class e_QuickSort {
             System.out.print(i+" ");
         }
     }
-//                     [4,6,2,5,7,9,1,3]
+//                     [4,6,8,10,2,5,7,9,1,3]
                 //            pivot=4
                 //          /          \
                 //   [1,3,2]          [7,9,5,6]
@@ -41,6 +41,7 @@ public class e_QuickSort {
            while (j >= low  && arr[j] > pivot) {
                 j--;
             }
+      
             if(i<j){
                 swap(arr, i, j);
             }
