@@ -9,17 +9,17 @@ public class i_PreviousSmallerElement {
         int[] ans = new int[n];
         Stack<Integer> st = new Stack<>();
         for (int i = 0; i < arr.length; i++) {
-            int val=-1;
+            int val = -1;
             while (!st.isEmpty() && arr[i] <= st.peek()) {
                 st.pop();
             }
-            if(st.isEmpty()){
-                val=-1;
-            }else{
-                val=st.peek();
+            if (st.isEmpty()) {
+                val = -1;
+            } else {
+                val = st.peek();
             }
             st.push(arr[i]);
-            ans[i]=val;
+            ans[i] = val;
         }
         return ans;
     }

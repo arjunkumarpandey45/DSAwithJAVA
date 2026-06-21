@@ -10,7 +10,7 @@ public class k_NextSmallerElement {
         Stack<Integer> st = new Stack<>();
         for (int i = arr.length - 1; i >= 0; i--) {
             
-            while (!st.isEmpty() && arr[i] <= st.peek()) {
+            while (!st.isEmpty() && arr[i] <= arr[st.peek()] ) {
                 st.pop();
             }
             if (st.isEmpty()) {
@@ -19,7 +19,7 @@ public class k_NextSmallerElement {
                 ans[i] = st.peek();
             }
 
-            st.push(arr[i]);
+            st.push(i);
         }
 
         return ans;
