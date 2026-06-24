@@ -1,4 +1,3 @@
-package Recursion;
 
 public class h_ReverseNum {
     static void main() {

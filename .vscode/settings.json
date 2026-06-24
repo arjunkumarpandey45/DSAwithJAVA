@@ -1,3 +1,13 @@
 {
-    "java.debug.settings.onBuildFailureProceed": true
+    "java.debug.settings.onBuildFailureProceed": true,
+    "java.project.sourcePaths": [
+        "100_Test",
+        "07_ARRAY",
+        "06_Sorting",
+        "05_Hashing",
+        "02_BasicMaths",
+        "01Patterns",
+        "00Questions",
+        "03_Recursion"
+    ]
 }
