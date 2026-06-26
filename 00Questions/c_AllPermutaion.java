@@ -3,9 +3,9 @@ import java.util.ArrayList;
 
 public class c_AllPermutaion {
     public static void main(String[] args) {
-        int[] ar = {1, 2, 3};
+        int[] ar = {1, 2};
         boolean[] freq = new boolean[ar.length];
-//        permutationApproach1(ar, 0, new ArrayList<>(), freq);
+       permutationApproach1(ar,  new ArrayList<>(), freq);
         permutationApproach2(ar, 0);
     }
 
@@ -17,7 +17,7 @@ public class c_AllPermutaion {
 //         [1,2]   [1,3]  [2,1] [2,3] [3,1] [3,2]
 //           |        |      |      |     |      |
 //      [1,2,3] [1,3,2] [2,1,3] [2,3,1] [3,1,2] [3,2,1]
-    public static void permutationApproach1(int[] arr, int idx, ArrayList<Integer> ds, boolean[] freq) {
+    public static void permutationApproach1(int[] arr, ArrayList<Integer> ds, boolean[] freq) {
         if (ds.size() == arr.length) {
             for (Integer i : ds) {
                 System.out.print(i + " ");
@@ -31,7 +31,7 @@ public class c_AllPermutaion {
             if (!freq[i]) {
                 freq[i] = true;
                 ds.add(arr[i]);
-                permutationApproach1(arr, idx, ds, freq);
+                permutationApproach1(arr, ds, freq);
                 ds.remove(ds.size() - 1);
                 freq[i] = false;
             }
@@ -71,7 +71,7 @@ public class c_AllPermutaion {
             swap(i, idx, arr);
             permutationApproach2(arr, idx + 1);
 
-            swap(i, idx, arr);
+             swap(i, idx, arr);
 
         }
 
