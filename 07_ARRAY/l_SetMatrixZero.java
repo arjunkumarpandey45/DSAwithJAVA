@@ -45,8 +45,8 @@ public class l_SetMatrixZero {
                         firstRow = true;
                     if (j == 0)
                         firstCol = true;
-matrix[i][0]=0;
-matrix[0][j]=0;
+                    matrix[i][0] = 0;
+                    matrix[0][j] = 0;
                 }
             }
         }
