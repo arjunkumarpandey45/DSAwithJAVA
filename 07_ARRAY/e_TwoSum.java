@@ -6,7 +6,7 @@ public class e_TwoSum {
 
     public static void main(String[] args) {
         int[] arr = { 1, 2, 3, 4, 5, 18 };
-        int target = 9;
+        int target = 3;
 
         int[] result = twoSum(arr, target);
 
