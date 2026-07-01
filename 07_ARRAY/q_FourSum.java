@@ -10,7 +10,8 @@ public class q_FourSum {
         System.out.println(fourSumBetter(arr, 8));
         ;
     }
-   public static List<List<Integer>> fourSumBrute(int[] nums, int target) {
+
+    public static List<List<Integer>> fourSumBrute(int[] nums, int target) {
 
         Set<List<Integer>> set = new HashSet<>();
 
@@ -35,7 +36,8 @@ public class q_FourSum {
 
         return new ArrayList<>(set);
     }
- public  static List<List<Integer>> fourSumBetter(int[] nums, int target) {
+
+    public static List<List<Integer>> fourSumBetter(int[] nums, int target) {
 
         Set<List<Integer>> ans = new HashSet<>();
 
@@ -59,8 +61,7 @@ public class q_FourSum {
                                 nums[i],
                                 nums[j],
                                 (int) fourth,
-                                nums[k]
-                        ));
+                                nums[k]));
                     }
 
                     set.add((long) nums[k]);
@@ -70,14 +71,15 @@ public class q_FourSum {
 
         return new ArrayList<>(ans);
     }
+
     public static List<List<Integer>> fourSumOptimal(int[] arr, int target) {
         Arrays.sort(arr);
         List<List<Integer>> ans = new ArrayList<>();
-        for (int i = 0; i < arr.length-3; i++) {
+        for (int i = 0; i < arr.length - 3; i++) {
             if (i > 0 && arr[i] == arr[i - 1])
                 continue;
 
-            for (int j = i + 1; j < arr.length-2; j++) {
+            for (int j = i + 1; j < arr.length - 2; j++) {
                 int k = j + 1;
                 int l = arr.length - 1;
                 if (j > i + 1 && arr[j] == arr[j - 1]) {
