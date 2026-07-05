@@ -12,6 +12,7 @@ public class o_PascalTriangle {
         List<List<Integer>> ans = new ArrayList<>();
         for (int i = 0; i < numRows; i++) {
             int v = 1;
+            
             List<Integer> row = new ArrayList<>();
             row.add(v);
             for (int j = 0; j <i; j++) {

@@ -23,6 +23,6 @@ public class z_PivotIndex {
             
            
         }
-        return p;
+        return -1;
     }
 }

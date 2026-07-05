@@ -2,6 +2,7 @@
     "java.debug.settings.onBuildFailureProceed": true,
     "java.project.sourcePaths": [
         "100_Test",
+        "08_STRING",
         "07_ARRAY",
         "06_Sorting",
         "05_Hashing",
@@ -9,6 +10,6 @@
         "02_BasicMaths",
         "01Patterns",
         "00Questions",
-        "08_STRING"
+        "09_BitManipulation"
     ]
 }
