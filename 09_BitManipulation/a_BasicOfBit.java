@@ -85,7 +85,7 @@ public class a_BasicOfBit {
 
     public static void countBit(int a) {
         int c = 0;
-        // while (a > 0) {
+        // while (a != 0) {
         //      if (a==1){
         //         c++;
         //         break;
