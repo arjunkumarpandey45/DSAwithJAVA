@@ -1,8 +1,10 @@
+import java.util.Arrays;
+
 public class d_SingleNumberII {
     public static void main(String[] args) {
-        int arr[] = { 1, 1, 1, 2, 3, 3, 3 };
+        int arr[] = { 1, 1, 2, 4, 3, 3 };
         // System.out.println(singleNumberIIV1(arr));
-        System.out.println(singleNumberIIV2(arr));
+        System.out.println(Arrays.toString(singleNumberIII(arr)));
         ;
     }
 
@@ -34,4 +36,27 @@ public class d_SingleNumberII {
         return ones;
 
     }
+
+    public static int[] singleNumberIII(int[] arr) {
+        int a[] = new int[2];
+        int xor = 0;
+        int index = 0;
+        for (int i = 0; i < arr.length; i++) {
+            xor ^= arr[i];
+        }
+        int rightMostBit = xor & -xor;
+        int b1 = 0;
+        int b2 = 0;
+        for (int i = 0; i < arr.length; i++) {
+            if ((arr[i] & rightMostBit) == 0) {
+                b1 ^= arr[i];
+            } else {
+                b2 ^= arr[i];
+            }
+        }
+        a[index++] = b1;
+        a[index] = b2;
+        return a;
+    }
+
 }
