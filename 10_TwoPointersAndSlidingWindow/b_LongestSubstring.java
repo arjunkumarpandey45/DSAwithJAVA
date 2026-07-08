@@ -36,13 +36,36 @@ public class b_LongestSubstring {
             char ch = s.charAt(i);
             if (map.containsKey(ch) && map.get(ch) >= l) {
                 l = map.get(ch) + 1;
-                 map.put(ch, i);
+                map.put(ch, i);
             } else {
                 map.put(ch, i);
-               
+
                 max = Math.max(max, i - l + 1);
-                System.out.println(max+ " "+i+" "+l+" " +ch);
+                System.out.println(max + " " + i + " " + l + " " + ch);
             }
+        }
+
+        return max;
+    }
+
+    public static int longestSubstringOptimal2(String s) {
+        int max = 0;
+        int l = 0;
+
+        int[] hash = new int[256];
+        for (int i = 0; i < 256; i++) {
+            hash[i] = -1;
+        }
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            if (hash[ch] >= l) {
+                l = hash[ch] + 1;
+
+            }
+            hash[ch] = i;
+
+            max = Math.max(max, i - l + 1);
+
         }
 
         return max;
