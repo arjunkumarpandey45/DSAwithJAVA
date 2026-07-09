@@ -2,7 +2,7 @@ import java.rmi.dgc.Lease;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MaxConsecutivesOnesIII {
+public class c_MaxConsecutivesOnesIII {
     public static void main(String[] args) {
         int[] arr = { 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0 };
         int k = 2;
@@ -37,30 +37,27 @@ public class MaxConsecutivesOnesIII {
     }
 
     public static int maxOnesBetter(int[] arr, int k) {
-        int maxCount = 0;
+       int maxCount = 0;
+    int left = 0;
+    int zeroCount = 0;
 
-        int kCount = 0;
+    for (int right = 0; right < arr.length; right++) {
 
-        int left = 0;
-
-        for (int i = 0; i < arr.length; i++) {
-            if (arr[i] == 0) {
-                kCount++;
-            }
-            while (kCount > k) {
-
-                if (arr[left] == 0) {
-                    kCount--;
-                }
-
-                left++;
-            }
-
-            if (kCount <= k) {
-                maxCount = Math.max(maxCount, i - left + 1);
-            }
+        if (arr[right] == 0) {
+            zeroCount++;
         }
-        return maxCount;
+
+        while (zeroCount > k) {
+            if (arr[left] == 0) {
+                zeroCount--;
+            }
+            left++;
+        }
+
+        maxCount = Math.max(maxCount, right - left + 1);
+    }
+
+    return maxCount;
     }
 
 }
