@@ -1,5 +1,6 @@
 {
     "java.project.sourcePaths": [
+        "10_TwoPointersAndSlidingWindow",
         "100_Test",
         "09_BitManipulation",
         "08_STRING",
@@ -10,6 +11,6 @@
         "02_BasicMaths",
         "01Patterns",
         "00Questions",
-        "10_TwoPointersAndSlidingWindow"
+        "11_BinarySearch"
     ]
 }
