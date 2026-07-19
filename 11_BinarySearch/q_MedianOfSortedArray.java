@@ -66,9 +66,10 @@ public class q_MedianOfSortedArray {
          int n=nums1.length+nums2.length;
          int low=0;
           int high = nums1.length;
+          int leftHalf=(n + 1) / 2;
          while (low <= high) {
           int partitionX = low + (high - low) / 2;
-            int partitionY = (n + 1) / 2 - partitionX;
+            int partitionY = leftHalf- partitionX;
             int l1 = partitionX == 0 ? Integer.MIN_VALUE : nums1[partitionX - 1];
             int r1 = partitionX == nums1.length ? Integer.MAX_VALUE : nums1[partitionX];
             int l2 = partitionY == 0 ? Integer.MIN_VALUE : nums2[partitionY - 1];
