@@ -321,6 +321,7 @@ public void addBeforValue(String val,String data){
         list.addFirst("a");
         list.addLast("c");
         list.addBeforValue("c","lucky");
+        
         // list.deleteLast();
         // list.deleteFirst();
         // list.deleteFirst();
