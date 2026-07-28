@@ -42,7 +42,7 @@ public class b_DeleteNode {
 
         Solution obj = new Solution();
 
-        // Delete node having value 5
+       
         obj.deleteNode(head.next);
 
         System.out.println("After Deletion:");
