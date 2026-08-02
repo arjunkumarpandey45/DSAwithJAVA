@@ -54,6 +54,11 @@ class Solution {
 
         return dummy.next;
     }
+
+    public int[] nextGreaterElement(int[] nums1, int[] nums2) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'nextGreaterElement'");
+    }
 }
 
 public class e_Random {
