@@ -10,7 +10,7 @@ class Node {
     }
 }
 
-public class Main {
+public class b_DFS {
 
     // Preorder: Root -> Left -> Right
     static void preorder(Node root) {
