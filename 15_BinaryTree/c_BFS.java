@@ -30,7 +30,8 @@ public class c_BFS {
 
         root.right.left = new TreeNode(6);
         root.right.right = new TreeNode(7);
-         System.out.println(breadthWiseTraversal(root));
+         System.out.println(breadthWiseTraversal(root));//via queue 
+         System.out.println(levelOrder(root)); //via recursion
     }
 
     public static List<List<Integer>> breadthWiseTraversal(TreeNode root) {
@@ -46,6 +47,38 @@ public class c_BFS {
                 if(q.peek().right!=null)q.offer(q.peek().right);
                 row.add(q.poll().data);
             }
+            ans.add(row);
+        }
+        return ans;
+
+    }
+     public static int height(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        int left = height(root.left);
+        int right = height(root.right);
+        return 1 + Math.max(left, right);
+    }
+
+    public static TreeNode nLevel(TreeNode root, int h, List<Integer> row) {
+        if (root == null) {
+            return null;
+        }
+        if (h == 1) {
+            row.add(root.data);
+        }
+      nLevel(root.left, h - 1, row);
+      nLevel(root.right, h - 1, row);
+      return root;
+    }
+
+    public static List<List<Integer>> levelOrder(TreeNode root) {
+        int h = height(root);
+        List<List<Integer>> ans = new ArrayList<>();
+        for (int i = 1; i <= h; i++) {
+            List<Integer> row = new ArrayList<>();
+            nLevel(root, i, row);
             ans.add(row);
         }
         return ans;
