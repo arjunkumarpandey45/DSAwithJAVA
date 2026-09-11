@@ -11,15 +11,15 @@ public class GraphBFS {
         visited[node] = true;
         while (!q.isEmpty()) {
             Integer nodee = q.poll();
-            System.out.print(nodee+" ");
+            System.out.print(nodee + " ");
             System.out.println();
-           for (Integer neighbour : adj.get(nodee)) {
-            if(visited[neighbour]!=true){
-                visited[neighbour]=true;
-                q.add(neighbour);
+            for (Integer neighbour : adj.get(nodee)) {
+                if (visited[neighbour] != true) {
+                    visited[neighbour] = true;
+                    q.add(neighbour);
+                }
+
             }
-            
-           }
 
         }
     }
