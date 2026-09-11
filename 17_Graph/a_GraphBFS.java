@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class GraphBFS {
+public class a_GraphBFS {
 
     static List<List<Integer>> adj = new ArrayList<>();
 
