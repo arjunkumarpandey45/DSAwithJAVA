@@ -1,6 +1,7 @@
+package m_TopologicalSort;
 import java.util.*;
 
-public class m_CourseSchedule {
+public class b_CourseSchedule {
 
     static List<List<Integer>> adj = new ArrayList<>();
 
