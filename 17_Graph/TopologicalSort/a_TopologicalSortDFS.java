@@ -1,4 +1,4 @@
-package m_TopologicalSort;
+package TopologicalSort;
 import java.util.*;
 
 public class a_TopologicalSortDFS {
