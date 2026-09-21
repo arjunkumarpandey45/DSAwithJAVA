@@ -1,7 +1,7 @@
 package TopologicalSort;
 import java.util.*;
 
-public class a_TopologicalSortDFS {
+public class a_TopologicalSort {
 
     static List<List<Integer>> adj = new ArrayList<>();
 
