@@ -2,7 +2,7 @@ package BellmanFordAlgorithm;
 
 import java.util.*;
 
-public class BellmanFord {
+public class a_BellmanFord {
 
     static class Edge {
 
