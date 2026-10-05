@@ -68,7 +68,7 @@ class DSU {
     }
 }
 
-public class  KruskalAlgorithm {
+public class  b_KruskalAlgorithm {
 
     public static void main(String[] args) {
 
