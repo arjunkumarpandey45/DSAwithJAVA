@@ -112,3 +112,5 @@ System.out.println("Highest frequency of "+ maxEle+ " is "+maxFreq);
 
     }
 }
+
+
