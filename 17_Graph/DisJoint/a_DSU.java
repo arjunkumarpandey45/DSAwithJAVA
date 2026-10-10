@@ -1,47 +1,48 @@
+
 package DisJoint;
+
 class DSU {
 
     int[] parent;
     int[] rank;
+    int[] size;
 
-    // Constructor
+  
     DSU(int n) {
 
         parent = new int[n];
         rank = new int[n];
+        size = new int[n];
 
-        // Initially every node is its own parent
         for (int i = 0; i < n; i++) {
             parent[i] = i;
             rank[i] = 0;
+            size[i] = 1;
         }
     }
 
-    // Find ultimate parent
+    // Find ultimate parent with Path Compression
     int find(int x) {
 
         if (parent[x] == x) {
             return x;
         }
 
-        // Path Compression
         parent[x] = find(parent[x]);
 
         return parent[x];
     }
 
     // Union by Rank
-    void union(int x, int y) {
+    void unionByRank(int x, int y) {
 
         int rootX = find(x);
         int rootY = find(y);
 
-        // Already in same set
         if (rootX == rootY) {
             return;
         }
 
-        // Smaller rank under larger rank
         if (rank[rootX] < rank[rootY]) {
 
             parent[rootX] = rootY;
@@ -52,49 +53,53 @@ class DSU {
 
         } else {
 
-            // Same rank
             parent[rootY] = rootX;
             rank[rootX]++;
         }
     }
 
+    // Union by Size
+    void unionBySize(int x, int y) {
+
+        int rootX = find(x);
+        int rootY = find(y);
+
+        if (rootX == rootY) {
+            return;
+        }
+
+        if (size[rootX] < size[rootY]) {
+
+            parent[rootX] = rootY;
+            size[rootY] += size[rootX];
+
+        } else {
+
+            parent[rootY] = rootX;
+            size[rootX] += size[rootY];
+        }
+    }
 
     public static void main(String[] args) {
 
         DSU dsu = new DSU(6);
 
-        // Initially:
-        // {0} {1} {2} {3} {4} {5}
+        // Using Union by Rank
+        dsu.unionByRank(0, 1);
+        dsu.unionByRank(1, 2);
 
-        dsu.union(0, 1);
+        // Using Union by Size
+        dsu.unionBySize(3, 4);
+        dsu.unionBySize(4, 5);
 
-        // {0,1} {2} {3} {4} {5}
-
-        dsu.union(1, 2);
-
-        // {0,1,2} {3} {4} {5}
-
-        dsu.union(3, 4);
-
-        // {0,1,2} {3,4} {5}
-
-        dsu.union(4, 5);
-
-        // {0,1,2} {3,4,5}
-
-
-        // Check whether 0 and 2 belong
-        // to the same component
-
+        // Check whether 0 and 2 are connected
         if (dsu.find(0) == dsu.find(2)) {
             System.out.println("0 and 2 are connected");
         } else {
             System.out.println("0 and 2 are not connected");
         }
 
-
-        // Check 0 and 5
-
+        // Check whether 0 and 5 are connected
         if (dsu.find(0) == dsu.find(5)) {
             System.out.println("0 and 5 are connected");
         } else {
