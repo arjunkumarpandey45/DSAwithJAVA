@@ -3,7 +3,7 @@ import java.util.Stack;
 
 public class e_NextGreaterElementI{
 
-    public int[] nextGreaterElement(int[] nums1, int[] nums2) {
+    public static  int[] nextGreaterElement(int[] nums1, int[] nums2) {
 
         Stack<Integer> st = new Stack<>();
         HashMap<Integer, Integer> map = new HashMap<>();
@@ -45,12 +45,11 @@ public class e_NextGreaterElementI{
 
     public static void main(String[] args) {
 
-        Solution obj = new Solution();
 
         int[] nums1 = {4, 1, 2};
         int[] nums2 = {1, 3, 4, 2};
 
-        int[] ans = obj.nextGreaterElement(nums1, nums2);
+        int[] ans = nextGreaterElement(nums1, nums2);
 
         System.out.print("Answer: ");
 
