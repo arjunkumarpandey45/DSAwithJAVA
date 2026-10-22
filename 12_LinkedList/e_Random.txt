@@ -1,0 +1,72 @@
+================================================================================
+QUESTION: Copy List with Random Pointer (LeetCode 138)
+FILE: e_Random.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Construct a deep copy of a linked list where each node contains an additional `random` pointer that could point to any node in the list or null. Must achieve O(1) auxiliary space.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Brute Force: Use HashMap<Node, CopyNode> to map old nodes to copies (O(N) space).
+
+Optimal O(1) Space Trick (3 Steps):
+Step 1: Interweave copy nodes directly after their original nodes!
+Original: A -> B -> C
+Interweaved: A -> A' -> B -> B' -> C -> C'
+Step 2: Connect random pointers of copy nodes!
+Notice: `copy.random = original.random.next`!
+Step 3: Separate the original and copied lists back apart!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Step 1 (Create copy nodes):
+   - curr = head; while (curr != null):
+     - copy = new Node(curr.val);
+     - copy.next = curr.next;
+     - curr.next = copy;
+     - curr = copy.next;
+2. Step 2 (Connect random pointers):
+   - curr = head; while (curr != null):
+     - if (curr.random != null) curr.next.random = curr.random.next;
+     - curr = curr.next.next;
+3. Step 3 (Detach lists):
+   - dummy = new Node(0), copyCurr = dummy, curr = head;
+   - while (curr != null):
+     - copyCurr.next = curr.next;
+     - curr.next = curr.next.next;
+     - copyCurr = copyCurr.next;
+     - curr = curr.next;
+4. Return dummy.next.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Because copy node A' sits directly after original node A, `A.random.next` is guaranteed to be the exact copy node that A''s random pointer must target.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not HashMap?
+HashMap uses O(N) extra memory. Interweaving achieves O(1) extra memory.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+List: 1 -> 2, where 1.random = 2, 2.random = 1
+Step 1 (Interweave): 1 -> 1' -> 2 -> 2'
+Step 2 (Assign randoms):
+- 1'.random = 1.random.next = 2.next = 2'
+- 2'.random = 2.random.next = 1.next = 1'
+Step 3 (Detach): 1' -> 2' with correct next and random pointers restored!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Three linear passes over the list.
+- Space Complexity: O(1)
+  Reason: In-place interweaving without any extra map.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Always check `curr.random != null` before writing `curr.random.next` to avoid NullPointerException.
+- Restore the original list's `next` pointers during Step 3, otherwise the original list is left broken!
+================================================================================

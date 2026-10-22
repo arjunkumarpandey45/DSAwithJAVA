@@ -1,0 +1,57 @@
+================================================================================
+QUESTION: Find Peak Element (LeetCode 162)
+FILE: h_PeakELement.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+A peak element is an element that is strictly greater than its neighbors. Find ANY peak element in an unsorted array in O(log N) time.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Imagine climbing a mountain:
+At position `mid`:
+- If `arr[mid] < arr[mid + 1]`: You are climbing UP a slope to the right! A peak MUST exist somewhere to your right! Move `low = mid + 1`.
+- If `arr[mid] > arr[mid + 1]`: You are on a downward slope (or peak). A peak exists at `mid` or to your left! Move `high = mid`.
+Follow the slope upward and you are GUARANTEED to hit a peak!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. low = 0, high = arr.length - 1.
+2. while (low < high):
+   - mid = low + (high - low) / 2;
+   - if (arr[mid] < arr[mid + 1]) low = mid + 1;
+   - else high = mid;
+3. Return low.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Because elements outside boundaries are treated as negative infinity (-infinity), whenever you walk in the direction of the increasing neighbor, you cannot walk off a cliff without hitting a local maximum.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Can binary search work on an unsorted array?
+YES! Binary search does not require a sorted array; it only requires a directional decision rule that guarantees an answer lies in one half.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+arr = [1, 2, 1, 3, 5, 6, 4]
+low=0, high=6, mid=3 (val 3)
+arr[3]=3 < arr[4]=5 -> slope climbs right -> low = mid + 1 = 4
+low=4, high=6, mid=5 (val 6)
+arr[5]=6 > arr[6]=4 -> slope goes down -> high = mid = 5
+low=4, high=5, mid=4 (val 5)
+arr[4]=5 < arr[5]=6 -> low = mid + 1 = 5
+low == high == 5 -> arr[5] = 6 is a peak element! (6 > 5 and 6 > 4)
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(log N)
+  Reason: Search space halved each step.
+- Space Complexity: O(1)
+  Reason: Constant space.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Condition is `low < high` and `high = mid` (not `high = mid - 1`) to preserve the peak candidate.
+================================================================================

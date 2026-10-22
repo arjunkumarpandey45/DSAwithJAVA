@@ -1,0 +1,50 @@
+================================================================================
+QUESTION: Find the City with Smallest Number of Neighbors (Bellman-Ford)
+FILE: b_FindCitySmallestNeighborsBellmanFord.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+LeetCode 1334: Find the city with the smallest number of reachable cities within distanceThreshold. If tie, return city with greatest index.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Run Bellman-Ford from EVERY city `i` (0 to n - 1):
+Get shortest distances from city `i` to all other cities.
+Count how many cities have `dist <= distanceThreshold`.
+Track the city with the minimum count (preferring larger index on tie).
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. int minReachable = n, bestCity = -1;
+2. For city = 0 to n - 1:
+   - int[] dist = bellmanFord(n, edges, city);
+   - int reachable = 0;
+   - for d in dist: if (d <= threshold) reachable++;
+   - if (reachable <= minReachable): minReachable = reachable; bestCity = city;
+3. Return bestCity.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Running single-source shortest path for all N nodes solves all-pairs reachability.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Floyd-Warshall is usually preferred for All-Pairs Shortest Path (O(V^3)), but running Bellman-Ford N times takes O(V^2 * E).
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Cities reachable within threshold: City 0: 2, City 1: 3, City 2: 2.
+Cities 0 and 2 tie with 2 reachable cities -> Pick larger index: City 2!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(V^2 * E)
+  Reason: V runs of Bellman-Ford O(V * E).
+- Space Complexity: O(V)
+  Reason: Distance array.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Use `>=` when comparing indices for ties: `if (reachable <= minReachable)` automatically favors larger city indices as city increments.
+================================================================================

@@ -1,0 +1,52 @@
+================================================================================
+QUESTION: Double Ended Queue (Deque) Implementation
+FILE: b_DequeImplementation.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Implement a Deque (Double Ended Queue) that allows O(1) insertion and deletion from BOTH front and rear ends.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+A Deque is a hybrid of Stack and Queue:
+- addFirst / removeFirst
+- addLast / removeLast
+Best implemented using a Doubly Linked List with head and tail pointers.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+Doubly Linked List Deque:
+1. Node has `data`, `prev`, and `next`.
+2. addFirst(x): insert before head, update head.
+3. addLast(x): insert after tail, update tail.
+4. removeFirst(): remove head node, head = head.next.
+5. removeLast(): remove tail node, tail = tail.prev.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Doubly linked lists have bidirectional pointers, enabling O(1) removal of the tail node (unlike singly linked lists where finding tail.prev takes O(N)).
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Singly linked list cannot implement O(1) `removeLast` because there is no backward pointer to reach the second-to-last node.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+addFirst(1) -> [1]
+addLast(2) -> [1, 2]
+addFirst(0) -> [0, 1, 2]
+removeLast() -> returns 2 -> [0, 1]
+removeFirst() -> returns 0 -> [1]
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(1) for all 4 end operations
+  Reason: Direct doubly linked list head/tail updates.
+- Space Complexity: O(N)
+  Reason: Storage for nodes.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Always handle the case when the deque becomes empty after removal: both `head` and `tail` must be set to `null`.
+================================================================================

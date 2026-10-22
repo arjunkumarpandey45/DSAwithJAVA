@@ -1,0 +1,54 @@
+================================================================================
+QUESTION: Palindrome Number
+FILE: c_Palindrome.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Check whether a given integer reads the same forwards and backwards (e.g., 121 is a palindrome, 123 is not).
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+A number is a palindrome if:
+original number == reversed number.
+So, make a copy of the number, compute its reverse using our reverse number formula, and compare the two at the end!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. If number is negative, it can NEVER be a palindrome (because '-' at the beginning does not appear at the end).
+2. Store a copy: int original = num.
+3. Reverse the number using:
+   - reversed = reversed * 10 + (num % 10);
+   - num /= 10;
+4. If original == reversed, return true; else return false.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+By definition, a palindrome is identical when read backwards. Comparing the mathematical reverse directly validates this property.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not compare digits using string indexing?
+Converting to string s.charAt(i) requires string allocation and garbage collection. Doing it with integer math runs faster and requires zero auxiliary memory.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Input: num = 121
+original = 121, reversed = 0
+- digit 1: reversed = 0*10 + 1 = 1
+- digit 2: reversed = 1*10 + 2 = 12
+- digit 1: reversed = 12*10 + 1 = 121
+Compare: original (121) == reversed (121) -> TRUE!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(log10(N))
+  Reason: Reversing takes operations equal to the count of digits.
+- Space Complexity: O(1)
+  Reason: Only primitive variables are used.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Trap: Don't forget to store original = num before the loop, because the loop reduces num down to 0!
+- Any single digit number (0 to 9) is always a palindrome.
+================================================================================

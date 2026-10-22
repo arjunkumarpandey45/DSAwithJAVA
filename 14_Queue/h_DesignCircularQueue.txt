@@ -1,0 +1,57 @@
+================================================================================
+QUESTION: Design Circular Queue (LeetCode 622)
+FILE: h_DesignCircularQueue.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Design a Circular FIFO Queue with fixed size supporting enQueue, deQueue, Front, Rear, isEmpty, and isFull.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Standard FIFO circular queue with `front`, `rear`, and `count` on a fixed array `k`:
+- enQueue: place at `rear`, `rear = (rear + 1) % k`.
+- deQueue: advance `front = (front + 1) % k`.
+- Front: `arr[front]`.
+- Rear: `arr[(rear - 1 + k) % k]`.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. int[] data; int head = 0, tail = 0, count = 0, capacity = k;
+2. enQueue(val): if (isFull()) return false; data[tail] = val; tail = (tail + 1) % capacity; count++; return true;
+3. deQueue(): if (isEmpty()) return false; head = (head + 1) % capacity; count--; return true;
+4. Front(): return isEmpty() ? -1 : data[head];
+5. Rear(): return isEmpty() ? -1 : data[(tail - 1 + capacity) % capacity];
+6. isEmpty(): return count == 0; isFull(): return count == capacity;
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Modulo wraps the queue around the array boundary, reusing vacated slots in O(1) time.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Tracking `count` directly simplifies state checks and avoids edge cases where `head == tail` could mean either empty or full.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+k = 3
+enQueue(1) -> true, data=[1]
+enQueue(2) -> true, data=[1, 2]
+enQueue(3) -> true, data=[1, 2, 3] (Full)
+enQueue(4) -> false (Full!)
+Rear() -> 3
+isFull() -> true
+deQueue() -> true, head moves to 1
+enQueue(4) -> true (stored at index 0)
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(1) for all operations
+  Reason: Constant time array access.
+- Space Complexity: O(K)
+  Reason: Fixed array of size K.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Return boolean from enQueue and deQueue as specified by the LeetCode 622 interface.
+================================================================================

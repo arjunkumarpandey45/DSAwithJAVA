@@ -1,0 +1,58 @@
+================================================================================
+QUESTION: Number of Enclaves (LeetCode 1020)
+FILE: j_NumberOfEnclaves.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given an m x n binary matrix grid where 1 is land and 0 is water, return the number of land cells from which you CANNOT walk off the boundary of the grid in any number of moves.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Identical logic to Surrounded Regions:
+Any land cell (1) on the boundary can walk off the grid!
+Any land cell connected to a boundary land cell can also walk off the grid!
+Algorithm:
+1. Run BFS/DFS from all boundary 1s and mark them visited (or change them to 0).
+2. Count all remaining 1s in the grid! These are the trapped enclaves!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Queue<int[]> q = new LinkedList<>(); boolean[][] vis = new boolean[m][n];
+2. Add all boundary cells with grid[r][c] == 1 to queue, mark vis[r][c] = true.
+3. Standard BFS: poll cell, explore 4 neighbors; if neighbor == 1 and !vis, mark vis and push.
+4. int enclaves = 0;
+5. For r = 0..m-1, c = 0..n-1:
+   - if (grid[r][c] == 1 && !vis[r][c]) enclaves++;
+6. Return enclaves.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Boundary BFS floods and marks all land with an escape route. Unreached land cells are strictly surrounded by water.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Multi-source BFS from the boundary is clean, non-recursive, and runs in linear O(M*N) time.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+grid = [
+  [0,0,0,0],
+  [1,0,1,0],
+  [0,1,1,0],
+  [0,0,0,0]
+]
+Boundary 1 is at (1, 0). BFS marks (1, 0).
+Inland 1s at (1,2), (2,1), (2,2) cannot reach border -> Count = 3 enclaves!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(M * N)
+  Reason: Each cell processed once.
+- Space Complexity: O(M * N)
+  Reason: Queue and visited matrix.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Make sure to count land cells, NOT islands (each cell with value 1 counts as 1).
+================================================================================

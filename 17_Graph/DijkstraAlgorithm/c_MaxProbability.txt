@@ -1,0 +1,55 @@
+================================================================================
+QUESTION: Path with Maximum Probability (LeetCode 1514)
+FILE: c_MaxProbability.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Find the path from start to end with the maximum probability of success. Probabilities multiply along path edges.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Modified Dijkstra using a MAX-HEAP:
+Instead of minimizing sum of distances, we MAXIMIZE the product of probabilities!
+- Start with `prob[start] = 1.0` (all others 0.0).
+- Max-heap stores `(prob, node)` sorted descending.
+- Relax: `if (prob[u] * edgeProb > prob[v]): prob[v] = prob[u] * edgeProb; pq.offer(prob[v], v);`
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. double[] maxProb = new double[n]; maxProb[start] = 1.0;
+2. PriorityQueue<Pair> pq = new PriorityQueue<>((a, b) -> Double.compare(b.prob, a.prob));
+3. pq.offer(new Pair(1.0, start));
+4. while (!pq.isEmpty()):
+   - curr = pq.poll();
+   - if (curr.node == end) return curr.prob;
+   - for (v, p) in adj.get(curr.node):
+     - if (curr.prob * p > maxProb[v]): maxProb[v] = curr.prob * p; pq.offer(new Pair(maxProb[v], v));
+5. Return 0.0;
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Since edge probabilities are in [0, 1], multiplying by an edge probability never increases the total probability (monotonically non-increasing), preserving Dijkstra's optimality.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Can also convert by taking negative log `-log(prob)` to turn product into sum and run standard min Dijkstra, but direct max-heap multiplication is faster and avoids floating-point precision issues.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+start=0, end=2, edges: 0-1 (0.5), 1-2 (0.5), 0-2 (0.2)
+Path 0->1->2: 0.5 * 0.5 = 0.25
+Path 0->2: 0.2
+Max probability = 0.25.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(E log V)
+  Reason: Max-Heap Dijkstra.
+- Space Complexity: O(V + E)
+  Reason: Adjacency list and heap.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Stop early: `if (curr.node == end) return curr.prob`.
+================================================================================

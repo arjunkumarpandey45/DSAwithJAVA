@@ -1,0 +1,52 @@
+================================================================================
+QUESTION: Next Greater Element on Array (Standard Monotonic Stack)
+FILE: f_NextGreaterElementI.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Find the next greater element for every element in an array and return the result array.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Scan array from right to left (index n - 1 down to 0).
+Stack keeps elements in monotonic decreasing order from bottom to top:
+- Pop all elements <= current element (they are too small to be useful).
+- If stack has an element left, that top element is the answer!
+- Else answer is -1.
+- Push current element into stack.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. int[] nge = new int[n]; Stack<Integer> st = new Stack<>();
+2. For i = n - 1 down to 0:
+   - while (!st.isEmpty() && st.peek() <= arr[i]) st.pop();
+   - nge[i] = st.isEmpty() ? -1 : st.peek();
+   - st.push(arr[i]);
+3. Return nge.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Each element enters the stack once and leaves at most once. Amortized O(1) operations per element.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not search forward for each element with a nested loop?
+Nested loops take O(N^2) time. Monotonic stack takes O(N) time.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+arr = [4, 12, 5, 3, 1, 2, 5, 3, 1, 2, 4, 6]
+Scan from right, popping smaller elements, yields O(N) next greater array.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Every element pushed and popped at most once.
+- Space Complexity: O(N)
+  Reason: Stack holds up to N elements.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Scanning right-to-left directly produces the answer array without needing to store indices.
+================================================================================

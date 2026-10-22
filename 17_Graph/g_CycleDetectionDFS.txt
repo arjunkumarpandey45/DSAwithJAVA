@@ -1,0 +1,56 @@
+================================================================================
+QUESTION: Cycle Detection in Undirected Graph (DFS)
+FILE: g_CycleDetectionDFS.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Detect if an undirected graph contains a cycle using Depth First Search.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+In an undirected graph, if you are walking through the graph and you see a neighbor that is ALREADY VISITED...
+Ask: "Is that neighbor the node I just came from (my parent)?"
+- If YES: that's just the undirected edge we walked along (not a cycle).
+- If NO: someone else visited that node from another path! A CYCLE EXISTS!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. boolean[] vis = new boolean[V];
+2. dfs(node, parent, adj, vis):
+   - vis[node] = true;
+   - for neighbor in adj.get(node):
+     - if (!vis[neighbor]):
+       - if (dfs(neighbor, node, adj, vis)) return true;
+     - else if (neighbor != parent):
+       - return true; // cycle detected!
+   - return false;
+3. Loop for all components: if (!vis[i] && dfs(i, -1, adj, vis)) return true;
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+A back-edge to an already visited vertex that is not the direct parent proves the existence of an alternate closed path (a cycle).
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+BFS also detects cycles, but DFS is simpler with direct recursive backtracking.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Graph: 1 - 2, 2 - 3, 3 - 1 (Triangle)
+dfs(1, parent=-1): vis[1]=true -> call dfs(2, parent=1)
+dfs(2, parent=1): vis[2]=true -> call dfs(3, parent=2)
+dfs(3, parent=2): vis[3]=true -> inspect neighbor 1:
+  vis[1] is TRUE and neighbor 1 != parent 2 -> CYCLE FOUND! Return true!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(V + 2E)
+  Reason: Standard DFS graph traversal.
+- Space Complexity: O(V)
+  Reason: Visited array and call stack.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Always pass `parent` to distinguish between the reverse edge to the immediate predecessor and a true back-edge.
+================================================================================

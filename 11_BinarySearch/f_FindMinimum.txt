@@ -1,0 +1,57 @@
+================================================================================
+QUESTION: Find Minimum in Rotated Sorted Array (LeetCode 153)
+FILE: f_FindMinimum.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Find the minimum element in a rotated sorted array of unique elements in O(log N) time.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+In a rotated sorted array, the minimum element is the ONLY element that is smaller than its previous neighbor (the rotation pivot).
+Compare `arr[mid]` with `arr[high]`:
+- If `arr[mid] > arr[high]`: The pivot (and minimum) MUST lie to the RIGHT of mid! So `low = mid + 1`.
+- If `arr[mid] <= arr[high]`: The right side is sorted, so the minimum is at `mid` or to the LEFT of mid! So `high = mid`.
+When `low == high`, that index is the minimum!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. low = 0, high = arr.length - 1.
+2. while (low < high):
+   - mid = low + (high - low) / 2;
+   - if (arr[mid] > arr[high]): low = mid + 1;
+   - else: high = mid;
+3. Return arr[low].
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Because all elements are unique, `arr[mid] > arr[high]` is an airtight test that the rotation cliff lies in the right half.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not linear scan min?
+Linear scan takes O(N). Binary search takes O(log N).
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+arr = [4, 5, 6, 7, 0, 1, 2]
+low=0(4), high=6(2), mid=3(7)
+7 > 2 -> minimum is to the right! low = mid + 1 = 4
+low=4(0), high=6(2), mid=5(1)
+1 <= 2 -> minimum is at mid or left! high = mid = 5
+low=4(0), high=5(1), mid=4(0)
+0 <= 1 -> high = mid = 4
+low == high == 4 -> arr[4] = 0 is the minimum!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(log N)
+  Reason: Halves the search range on every step.
+- Space Complexity: O(1)
+  Reason: Constant space.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Notice: `high = mid`, NOT `mid - 1`! Because `arr[mid]` itself might be the minimum element, so you cannot discard it.
+================================================================================

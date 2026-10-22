@@ -1,0 +1,59 @@
+================================================================================
+QUESTION: Delete Node in a BST (LeetCode 450)
+FILE: c_DeleteNodeInBST.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Delete a node with given key from a BST while preserving the BST property.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+3 Cases when deleting node X:
+Case 1: X is a LEAF -> simply remove it (return null).
+Case 2: X has ONLY ONE child -> replace X with its non-null child!
+Case 3: X has TWO children -> find its INORDER SUCCESSOR (smallest node in right subtree) or INORDER PREDECESSOR. Copy successor's value to X, then recursively delete successor from right subtree!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+public TreeNode deleteNode(TreeNode root, int key) {
+    if (root == null) return null;
+    if (key < root.val) root.left = deleteNode(root.left, key);
+    else if (key > root.val) root.right = deleteNode(root.right, key);
+    else {
+        if (root.left == null) return root.right;
+        if (root.right == null) return root.left;
+        TreeNode minNode = findMin(root.right); // successor
+        root.val = minNode.val;
+        root.right = deleteNode(root.right, minNode.val);
+    }
+    return root;
+}
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Inorder successor is the smallest value greater than X, so replacing X with its successor preserves all BST inequality invariants.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Arbitrarily reconnecting subtrees requires extensive rebalancing. Replacing value with successor is mathematically minimal.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Tree: 5 -> (3, 6). Delete 3 (children 2, 4)
+Node 3 has two children: successor in right subtree is 4.
+Copy 4 to node 3's position.
+Delete old 4 -> 4 has no children -> removed.
+Resulting subtree has 4 with left child 2.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(H)
+  Reason: Traverses down height of tree H.
+- Space Complexity: O(H)
+  Reason: Recursion stack.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Helper `findMin(node)` simply walks `while (node.left != null) node = node.left;` to find the leftmost (minimum) node.
+================================================================================

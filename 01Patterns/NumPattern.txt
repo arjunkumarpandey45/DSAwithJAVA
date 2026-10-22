@@ -1,0 +1,61 @@
+================================================================================
+QUESTION: Number Pattern Printing (Half Pyramid & Variations)
+FILE: NumPattern.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Print various number patterns such as increasing numbers per row (1, 12, 123...), repeating numbers per row (1, 22, 333...), and reverse number patterns using nested loops.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Pattern problems are all about 2 loops:
+1. Outer loop: controls rows (how many lines to print).
+2. Inner loop: controls columns (what to print on each line).
+Observe the relation between row index 'i' and the number of characters printed in that row.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Pattern 1 (1 to i):
+   - Outer loop i from 1 to n.
+   - Inner loop j from 1 to i: print j.
+   - After inner loop, print newline.
+2. Pattern 2 (Repeated row number i):
+   - Outer loop i from 1 to n.
+   - Inner loop j from 1 to i: print i.
+3. Pattern 3 (Reverse number pattern):
+   - Outer loop i from n down to 1.
+   - Inner loop j from 1 to i: print j.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+The inner loop runs 'i' times for row 'i'. When i increases from 1 to n, row 1 gets 1 item, row 2 gets 2 items, etc., creating a triangle. Printing 'j' prints 1, 2, 3... while printing 'i' repeats the row number.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not hardcode print statements?
+Hardcoding only works for one fixed size (like n=4). Nested loops generalize to any positive integer n dynamically.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+For printNumPattern(3):
+i = 1: j runs 1 to 1 -> prints "1", newline
+i = 2: j runs 1 to 2 -> prints "12", newline
+i = 3: j runs 1 to 3 -> prints "123", newline
+Output:
+1
+12
+123
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N^2)
+  Reason: Total numbers printed is 1 + 2 + ... + N = N*(N+1)/2, which is O(N^2).
+- Space Complexity: O(1)
+  Reason: Only loop counters i and j are used. No extra memory.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Remember to use System.out.print() inside the inner loop and System.out.println() after the inner loop finishes.
+- Watch whether 1-based indexing (1 to n) or 0-based indexing is easier for the formula.
+================================================================================

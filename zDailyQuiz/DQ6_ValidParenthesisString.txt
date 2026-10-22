@@ -1,0 +1,72 @@
+================================================================================
+QUESTION: DQ6 - Valid Parenthesis String
+FILE: DQ6_ValidParenthesisString.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given a string 's' containing only '(', ')' and '*', return true if 's' is valid.
+The character '*' can be treated as:
+  - An opening bracket '('
+  - A closing bracket ')'
+  - An empty string ""
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Because '*' has 3 possibilities, at any point we don't have a single count of open brackets,
+we have a RANGE of possible open brackets: [low, high].
+- 'low': minimum possible open brackets (treat '*' as ')' if possible).
+- 'high': maximum possible open brackets (treat '*' as '(').
+As we scan:
+- If high < 0: we have more ')' than any combination can balance. Impossible! Return false.
+- low can never be negative (we won't turn '*' into ')' if there are no open brackets to cancel).
+  So low = max(0, low).
+At the end, if 0 is within [low, high] (i.e. low == 0), the string can be valid!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Initialize low = 0, high = 0.
+2. Loop through each character ch in s:
+   - If ch == '(': low++, high++
+   - If ch == ')': low--, high--
+   - If ch == '*': low-- (treated as ')'), high++ (treated as '(')
+   - low = Math.max(0, low) (cannot have negative required opens)
+   - If high < 0: return false (too many closes, cannot be saved)
+3. Return low == 0 (can all open brackets be balanced).
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Instead of branching into 3 branches recursively (3^n exponential states),
+we observe that the number of open brackets always forms a continuous range of consecutive integers.
+Tracking [low, high] precisely captures all valid possibilities in O(1) space.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not recursion / backtracking?
+- Each '*' has 3 choices. For 100 asterisks, 3^100 is astronomically large and will TLE.
+  Range tracking solves it in a single O(n) pass.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Input: s = '(*))'
+
+ch = '(': low = 1, high = 1
+ch = '*': low = max(0, 1 - 1) = 0, high = 1 + 1 = 2
+ch = ')': low = max(0, 0 - 1) = 0, high = 2 - 1 = 1
+ch = ')': low = max(0, 0 - 1) = 0, high = 1 - 1 = 0
+
+End of string: low == 0 is true. Return true!
+(Here '*' acted as '(' giving '(())', which is valid).
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(n)
+  Reason: Single pass through string of length n.
+- Space Complexity: O(1)
+  Reason: Only two integer counters (low, high).
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Always clamp low = Math.max(0, low) after each character.
+- If high < 0 at any point, too many ')' have appeared that no future characters can fix.
+================================================================================

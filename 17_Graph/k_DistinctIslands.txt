@@ -1,0 +1,59 @@
+================================================================================
+QUESTION: Number of Distinct Islands
+FILE: k_DistinctIslands.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Count the number of islands with distinct shapes. Two islands are considered the same shape if one can be translated (shifted) to match the other.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+How to identify identical island shapes regardless of where they appear on the map?
+RELATIVE COORDINATES!
+When you discover an island starting at base cell `(r0, c0)`:
+During DFS, record every cell's relative position: `(r - r0, c - c0)`!
+For example, an L-shaped island always produces relative offsets: `["(0,0)", "(1,0)", "(1,1)"]` whether it starts at (0, 0) or (50, 80)!
+Store each island's relative coordinates list in a `HashSet<List<String>>`.
+The size of the HashSet is the number of distinct island shapes!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Set<List<String>> distinct = new HashSet<>(); boolean[][] vis = new boolean[m][n];
+2. For r = 0..m-1, c = 0..n-1:
+   - if (grid[r][c] == 1 && !vis[r][c]):
+     - List<String> shape = new ArrayList<>();
+     - dfs(r, c, r, c, grid, vis, shape);
+     - distinct.add(shape);
+3. dfs(r, c, r0, c0, grid, vis, shape):
+   - vis[r][c] = true;
+   - shape.add((r - r0) + ":" + (c - c0));
+   - explore 4 directions (up, down, left, right) if valid land and !vis;
+4. Return distinct.size();
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Subtracting the base coordinate normalizes the shape so identical shapes yield identical coordinate sequences. HashSet automatically filters out duplicates.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not record traversal directions (e.g. "U", "D", "L", "R")?
+Path signatures require explicit backtracking tags (e.g. "B") to distinguish between different tree shapes. Relative coordinates `(r - r0, c - c0)` are mathematically unambiguous.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Island 1 at (0, 0), (0, 1) -> relative: ["0:0", "0:1"]
+Island 2 at (3, 3), (3, 4) -> relative: ["0:0", "0:1"]
+Set stores ["0:0", "0:1"] once. Size = 1 distinct island!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(M * N)
+  Reason: Every cell visited once in DFS.
+- Space Complexity: O(M * N)
+  Reason: Visited array and HashSet of shape lists.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Always traverse neighbors in the EXACT SAME order (e.g. Up, Down, Left, Right) in DFS so identical shapes produce identical coordinate list orders.
+================================================================================

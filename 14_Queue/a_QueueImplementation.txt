@@ -1,0 +1,52 @@
+================================================================================
+QUESTION: Queue Implementation (Array & Linked List)
+FILE: a_QueueImplementation.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Implement the Queue data structure following FIFO (First In First Out) using arrays and linked lists.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+A Queue is like a line at a ticket counter:
+- New people join at the BACK / REAR (enqueue / offer).
+- People leave from the FRONT (dequeue / poll).
+- FIFO: The first person to arrive is the first served!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+Linked List Queue (Dynamic):
+1. class Node { int data; Node next; }
+2. Node front = null, rear = null;
+3. enqueue(x): Node n = new Node(x); if (rear == null) front = rear = n; else { rear.next = n; rear = n; }
+4. dequeue(): if (front == null) return -1; int v = front.data; front = front.next; if (front == null) rear = null; return v;
+5. peek(): return front == null ? -1 : front.data;
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Maintaining both `front` and `rear` pointers allows O(1) enqueue at the tail and O(1) dequeue at the head.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not simple array without circular pointers?
+In a simple array, dequeuing from index 0 either takes O(N) shifting, or front moves right wasting left memory space. Linked List or Circular Array solves this.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+enqueue(10) -> front=10, rear=10
+enqueue(20) -> front=10 -> 20=rear
+dequeue() -> returns 10, front becomes 20
+peek() -> returns 20
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(1) for enqueue, dequeue, peek
+  Reason: Direct pointer updates.
+- Space Complexity: O(N)
+  Reason: N nodes in memory.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- When dequeuing the last remaining element (`front == null`), remember to set `rear = null` as well!
+================================================================================

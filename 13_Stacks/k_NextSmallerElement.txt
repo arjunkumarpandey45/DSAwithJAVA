@@ -1,0 +1,54 @@
+================================================================================
+QUESTION: Next Smaller Element
+FILE: k_NextSmallerElement.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+For each element in an array, find the first smaller element to its right. Return -1 if none exists.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Monotonic Stack scanning from RIGHT TO LEFT (index n - 1 down to 0):
+- Pop elements >= current element.
+- Top of stack is the next smaller element (or -1 if empty).
+- Push current element to stack.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. int[] nse = new int[n]; Stack<Integer> st = new Stack<>();
+2. For i = n - 1 down to 0:
+   - while (!st.isEmpty() && st.peek() >= arr[i]) st.pop();
+   - nse[i] = st.isEmpty() ? -1 : st.peek();
+   - st.push(arr[i]);
+3. Return nse.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Scanning backwards processes future elements first. Elements >= current cannot be the next smaller for earlier numbers.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Brute force takes O(N^2), stack takes O(N).
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+arr = [4, 8, 5, 2, 25]
+i=4 (25): stack empty -> -1, push 25
+i=3 (2): pop 25 -> stack empty -> -1, push 2
+i=2 (5): top is 2 < 5 -> 2, push 5
+i=1 (8): top is 5 < 8 -> 5, push 8
+i=0 (4): pop 8, pop 5, top is 2 < 4 -> 2, push 4
+Result: [2, 5, 2, -1, -1]
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: O(1) amortized per element.
+- Space Complexity: O(N)
+  Reason: Stack storage.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- If storing indices instead of values, set default to `n` instead of `-1`.
+================================================================================

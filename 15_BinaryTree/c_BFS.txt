@@ -1,0 +1,64 @@
+================================================================================
+QUESTION: Binary Tree Level Order Traversal / BFS (LeetCode 102)
+FILE: c_BFS.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Traverse a binary tree level by level from left to right (Breadth First Search) and return values grouped by level.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Think of a wave spreading outward:
+Level 0 (Root) -> Level 1 (Children) -> Level 2 (Grandchildren)...
+Use a Queue (FIFO):
+1. Put root in queue.
+2. At each level, check `size = queue.size()` (this is how many nodes belong to the CURRENT level!).
+3. Loop `size` times: poll node, save value to level list, push its left and right children to queue.
+4. Add level list to master result list.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. List<List<Integer>> ans = new ArrayList<>();
+2. if (root == null) return ans;
+3. Queue<TreeNode> q = new LinkedList<>(); q.offer(root);
+4. while (!q.isEmpty()):
+   - int size = q.size();
+   - List<Integer> level = new ArrayList<>();
+   - for i = 0 to size - 1:
+     - TreeNode node = q.poll();
+     - level.add(node.val);
+     - if (node.left != null) q.offer(node.left);
+     - if (node.right != null) q.offer(node.right);
+   - ans.add(level);
+5. Return ans.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Capturing `int size = q.size()` before processing ensures that children added during the loop are NOT processed until the NEXT level.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not DFS?
+DFS can group by levels using `dfs(node, level, ans)`, but BFS naturally processes nodes in visual top-to-bottom, left-to-right order.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Tree: 3 / \ (9, 20) -> 20 has (15, 7)
+q = [3]
+- Level 1: size=1 -> poll 3, add children 9, 20 -> level=[3], q=[9, 20]
+- Level 2: size=2 -> poll 9 (no children), poll 20 (add 15, 7) -> level=[9, 20], q=[15, 7]
+- Level 3: size=2 -> poll 15, poll 7 -> level=[15, 7], q=[]
+Result: [[3], [9, 20], [15, 7]]
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Each node queued and dequeued once.
+- Space Complexity: O(W)
+  Reason: Queue holds at most maximum tree width W (up to N/2 at deepest level of full tree).
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- CRITICAL: Always store `int size = q.size()` in a variable! If you write `for (int i=0; i<q.size(); i++)`, `q.size()` changes dynamically as you add children, corrupting level boundaries!
+================================================================================

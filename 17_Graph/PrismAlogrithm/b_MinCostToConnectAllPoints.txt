@@ -1,0 +1,53 @@
+================================================================================
+QUESTION: Min Cost to Connect All Points (LeetCode 1584)
+FILE: b_MinCostToConnectAllPoints.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Connect all 2D points with minimum total Manhattan distance `|xi - xj| + |yi - yj|` such that there is exactly one simple path between any two points (MST).
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Complete Graph with N vertices and N*(N-1)/2 edges where weight between point i and point j is Manhattan distance.
+Run Prim's algorithm directly:
+- Track `minCost[i]`: minimum cost to connect point `i` to the growing tree.
+- In each step, pick the unvisited point with smallest `minCost`, add to tree, and update neighbor distances.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. int n = points.length, totalCost = 0;
+2. int[] minCost = new int[n]; Arrays.fill(minCost, INF); minCost[0] = 0;
+3. boolean[] visited = new boolean[n];
+4. For step = 0 to n - 1:
+   - Find unvisited point u with minimum minCost[u];
+   - visited[u] = true; totalCost += minCost[u];
+   - for v = 0 to n - 1:
+     - if (!visited[v]): int dist = Math.abs(x[u] - x[v]) + Math.abs(y[u] - y[v]); minCost[v] = min(minCost[v], dist);
+5. Return totalCost.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Because the graph is dense (every point connects to every other point, E = V^2), array-based Prim's runs in O(V^2) time, which beats heap-based O(E log V).
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Kruskal requires creating and sorting N^2 / 2 edges, consuming O(N^2) memory. Array-based Prim's uses only O(N) memory!
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+points = [[0,0],[2,2],[3,10],[5,2],[7,0]]
+Prim connects (0,0)->(2,2) dist 4, (2,2)->(5,2) dist 3, (5,2)->(7,0) dist 4, (2,2)->(3,10) dist 9.
+Total = 20.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N^2)
+  Reason: N iterations, each scans N vertices.
+- Space Complexity: O(N)
+  Reason: minCost and visited arrays of size N.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Array-based Prim's is faster and uses 10x less memory than heap-based Prim's on complete graphs.
+================================================================================

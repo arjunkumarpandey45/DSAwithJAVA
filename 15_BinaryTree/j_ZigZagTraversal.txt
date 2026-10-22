@@ -1,0 +1,65 @@
+================================================================================
+QUESTION: Binary Tree Zigzag Level Order Traversal (LeetCode 103)
+FILE: j_ZigZagTraversal.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Return the zigzag level order traversal of binary tree node values (left-to-right, then right-to-left for the next level, alternating).
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Standard BFS with a boolean flag `leftToRight = true`:
+At each level of size `k`:
+Create a list of size `k`.
+For each polled node at index `i` (0 to k - 1):
+- If leftToRight: place at index `i`.
+- If rightToLeft: place at index `k - 1 - i` (reverse index)!
+Toggle flag: `leftToRight = !leftToRight`.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. List<List<Integer>> ans = new ArrayList<>();
+2. Queue<TreeNode> q = new LinkedList<>(); q.offer(root);
+3. boolean leftToRight = true;
+4. while (!q.isEmpty()):
+   - int size = q.size();
+   - Integer[] row = new Integer[size];
+   - for i = 0 to size - 1:
+     - TreeNode node = q.poll();
+     - int index = leftToRight ? i : (size - 1 - i);
+     - row[index] = node.val;
+     - if (node.left != null) q.offer(node.left);
+     - if (node.right != null) q.offer(node.right);
+   - ans.add(Arrays.asList(row));
+   - leftToRight = !leftToRight;
+5. Return ans.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Nodes are still placed into the queue in standard left-to-right order (preserving BFS ordering), but written into the level array in alternating directions.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not reverse the level list using Collections.reverse()?
+`Collections.reverse()` also works in O(k), but direct index assignment `leftToRight ? i : size - 1 - i` is cleaner and does zero extra shifting.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Tree: [3, 9, 20, null, null, 15, 7]
+Level 0 (L->R): [3], toggle false
+Level 1 (R->L): 9 placed at 2-1-0=1, 20 placed at 2-1-1=0 -> [20, 9], toggle true
+Level 2 (L->R): [15, 7]
+Result: [[3], [20, 9], [15, 7]]
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Every node visited once.
+- Space Complexity: O(N)
+  Reason: Queue and output storage.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Do NOT toggle the flag inside the inner loop! Toggle it once per LEVEL after the inner loop finishes.
+================================================================================

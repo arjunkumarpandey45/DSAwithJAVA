@@ -1,0 +1,65 @@
+================================================================================
+QUESTION: Asteroid Collision (LeetCode 735)
+FILE: o_Asteroid.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given an array asteroids of integers representing asteroids in a row:
+- Absolute value = size
+- Positive sign = moving right (+)
+- Negative sign = moving left (-)
+When two asteroids collide, the smaller one explodes. If same size, both explode. Two asteroids moving in the same direction never collide. Return the remaining asteroids.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+When does a collision occur?
+ONLY when a previous asteroid is moving RIGHT (+) and the current asteroid is moving LEFT (-)!
+Stack simulation:
+For each asteroid `a`:
+- While stack has positive asteroid (`st.peek() > 0`) and current is negative (`a < 0`):
+  - If `st.peek() < |a|`: stack asteroid explodes! Pop it, continue while loop!
+  - If `st.peek() == |a|`: both explode! Pop stack, destroy current (break)!
+  - If `st.peek() > |a|`: current asteroid explodes! Destroy current (break)!
+- If current asteroid was not destroyed: push to stack.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Stack<Integer> st = new Stack<>();
+2. For each a in asteroids:
+   - boolean alive = true;
+   - while (alive && a < 0 && !st.isEmpty() && st.peek() > 0):
+     - if (st.peek() < -a) st.pop(); // top explodes
+     - else if (st.peek() == -a) { st.pop(); alive = false; } // both explode
+     - else alive = false; // current explodes
+   - if (alive) st.push(a);
+3. Convert stack to array and return.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+A left-moving asteroid can trigger a chain reaction of collisions with right-moving asteroids stored in the stack until it either explodes or survives.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not simulation with array shifts?
+Deleting elements from arrays requires O(N) shifts. Stack handles explosions in O(1).
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+asteroids = [5, 10, -5]
+- 5 (>0): push 5 -> st=[5]
+- 10 (>0): push 10 -> st=[5, 10]
+- -5 (<0): top is 10 > |-5| -> -5 explodes! alive=false
+Result: [5, 10]
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Each asteroid is pushed and popped at most once.
+- Space Complexity: O(N)
+  Reason: Stack holds up to N asteroids.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Notice: `a > 0` followed by `st.peek() < 0` does NOT collide because they move AWAY from each other (left one moves left, right one moves right)!
+================================================================================

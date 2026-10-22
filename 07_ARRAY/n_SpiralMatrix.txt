@@ -1,0 +1,65 @@
+================================================================================
+QUESTION: Spiral Matrix Traversal (LeetCode 54)
+FILE: n_SpiralMatrix.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given an m x n matrix, return all elements of the matrix in spiral order (outer perimeter inward).
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Maintain 4 moving boundaries:
+- top = 0
+- bottom = m - 1
+- left = 0
+- right = n - 1
+Keep looping while (top <= bottom && left <= right):
+1. Move Left -> Right along `top` row, then top++.
+2. Move Top -> Bottom along `right` col, then right--.
+3. Move Right -> Left along `bottom` row, then bottom--.
+4. Move Bottom -> Top along `left` col, then left++.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. top = 0, bottom = m - 1, left = 0, right = n - 1.
+2. While (top <= bottom && left <= right):
+   - For i = left to right: add matrix[top][i]; top++;
+   - For i = top to bottom: add matrix[i][right]; right--;
+   - If (top <= bottom): for i = right down to left: add matrix[bottom][i]; bottom--;
+   - If (left <= right): for i = bottom down to top: add matrix[i][left]; left++;
+3. Return result list.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Shrinking boundaries layer by layer peels off outer rings until all cells are traversed without overlap.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not use direction vectors and visited matrix?
+Direction vectors and boolean visited matrix use O(M*N) extra space and complex turning logic. Boundary pointers use O(1) extra space.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Matrix 3x3:
+1 2 3
+4 5 6
+7 8 9
+- Left to right on top=0: 1, 2, 3 -> top becomes 1
+- Top to bottom on right=2: 6, 9 -> right becomes 1
+- Right to left on bottom=2: 8, 7 -> bottom becomes 1
+- Bottom to top on left=0: 4 -> left becomes 1
+- Left to right on top=1: 5 -> top becomes 2 > bottom(1) -> loop ends!
+Output: [1, 2, 3, 6, 9, 8, 7, 4, 5]
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(M * N)
+  Reason: Every cell in the matrix is visited exactly once.
+- Space Complexity: O(1)
+  Reason: Beyond the output list, only 4 boundary variables are used.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Crucial Trap: Always recheck `if (top <= bottom)` before bottom traversal and `if (left <= right)` before left traversal to prevent duplicate prints on non-square matrices (e.g. 1x4 or 3x1).
+================================================================================

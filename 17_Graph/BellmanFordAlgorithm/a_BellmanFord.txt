@@ -1,0 +1,58 @@
+================================================================================
+QUESTION: Bellman-Ford Algorithm for Shortest Path
+FILE: a_BellmanFord.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Compute shortest path from a single source vertex to all other vertices in a directed/undirected weighted graph. Works with NEGATIVE edge weights and DETECTS negative weight cycles.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Why does Dijkstra fail on negative edges?
+Dijkstra greedily assumes once a node is visited, its shortest distance is finalized. Negative weights invalidate this assumption.
+Bellman-Ford is brute force relaxation:
+Relax ALL edges (u -> v with weight w):
+`if (dist[u] + w < dist[v]) dist[v] = dist[u] + w;`
+Repeat this for `V - 1` times!
+Why V - 1 times? In a graph with V vertices, any simple shortest path has at most V - 1 edges.
+On the V-th iteration: If any distance STILL decreases, a NEGATIVE CYCLE EXISTS!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. int[] dist = new int[V]; Arrays.fill(dist, (int)1e8); dist[src] = 0;
+2. For i = 1 to V - 1:
+   - for each edge (u, v, wt):
+     - if (dist[u] != 1e8 && dist[u] + wt < dist[v]): dist[v] = dist[u] + wt;
+3. Check negative cycle (V-th iteration):
+   - for each edge (u, v, wt):
+     - if (dist[u] != 1e8 && dist[u] + wt < dist[v]) return new int[]{-1}; // cycle!
+4. Return dist.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+After k iterations, shortest paths using at most k edges are guaranteed to be found. Since simple paths contain at most V-1 edges, V-1 rounds suffice.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Bellman-Ford is O(V * E), which is slower than Dijkstra's O(E log V). Only use Bellman-Ford when negative weights or negative cycles are present.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+V = 3, edges = [[0, 1, 5], [1, 2, -2], [0, 2, 4]], src = 0
+dist = [0, inf, inf]
+Round 1: dist[1] = 5, dist[2] = 4, then dist[2] becomes min(4, 5 + (-2) = 3)
+Round 2: no changes.
+Final dist: [0, 5, 3]
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(V * E)
+  Reason: V - 1 rounds over all E edges.
+- Space Complexity: O(V)
+  Reason: Distance array.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Use `1e8` or `1e9` instead of `Integer.MAX_VALUE` so that `dist[u] + wt` does not overflow into negative numbers!
+================================================================================

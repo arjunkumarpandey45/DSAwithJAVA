@@ -1,0 +1,71 @@
+================================================================================
+QUESTION: DQ7 - Score of Parentheses
+FILE: DQ7_ScoreOfParentheses.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given a balanced parentheses string 's', compute the score based on rules:
+1. "()" has score 1.
+2. "AB" has score A + B, where A and B are balanced strings.
+3. "(A)" has score 2 * A, where A is a balanced string.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Parentheses define nesting levels.
+Every time we see '(', we are opening a new deeper level of nesting.
+Every time we see ')', we are closing the current level and calculating its contribution:
+- If nothing was inside (score 0), it is a base pair "()", score = 1.
+- If there was an accumulated score inside > 0, it is "(A)", score = 2 * inside.
+Then this score must be added to whatever score already exists at the parent level!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Use a Stack of integers.
+2. Push 0 initially to represent the base root level score.
+3. For each character ch in s:
+   - If ch == '(': push 0 onto stack (new inner level starts with score 0).
+   - If ch == ')':
+     * Pop inner score 'inside' = st.pop().
+     * Calculate score: if inside == 0 ? 1 : 2 * inside.
+     * Add score to the outer parent level: st.push(st.pop() + score).
+4. Return st.pop() (the total accumulated score at root level).
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+The stack naturally mirrors the recursive tree structure of brackets:
+- Sibling components at the same level add together: st.pop() + score.
+- Nested components get doubled: 2 * inside.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not pure string replacements / regex?
+- Replacing '()' with 1 repeatedly requires multiple full string scans and reparsing numbers,
+  leading to O(n^2) time and ugly string manipulation. Stack computes it cleanly in O(n).
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Input: s = '(()())'
+
+Init: stack = [0]
+1. '(': push 0 -> stack = [0, 0]
+2. '(': push 0 -> stack = [0, 0, 0]
+3. ')': pop inside=0 -> score = 1. Add to parent: pop 0, push 0+1=1 -> stack = [0, 1]
+4. '(': push 0 -> stack = [0, 1, 0]
+5. ')': pop inside=0 -> score = 1. Add to parent: pop 1, push 1+1=2 -> stack = [0, 2]
+6. ')': pop inside=2 -> score = 2 * 2 = 4. Add to parent: pop 0, push 0+4=4 -> stack = [4]
+
+Result: 4.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(n)
+  Reason: Each parenthesis is processed once, with O(1) stack push/pop operations.
+- Space Complexity: O(n)
+  Reason: Stack stores at most n / 2 integers in the worst case of nested brackets.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Pushing an initial 0 avoids checking if stack is empty when adding to parent level.
+- Alternative O(1) space insight: each '()' pair at depth d contributes 2^d to the final score.
+================================================================================

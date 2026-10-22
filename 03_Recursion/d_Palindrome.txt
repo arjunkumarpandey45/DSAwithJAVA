@@ -1,0 +1,52 @@
+================================================================================
+QUESTION: Check if String is Palindrome (Recursion)
+FILE: d_Palindrome.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Determine whether a given string is a palindrome using recursive character comparisons.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+A string is a palindrome if:
+1. The first character equals the last character.
+2. AND the substring inside between them is also a palindrome!
+Check characters from both ends moving inward.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Helper: boolean isPalindrome(int l, String s):
+2. Base case: If l >= s.length() / 2, all paired characters matched! Return true.
+3. If s.charAt(l) != s.charAt(s.length() - 1 - l), mismatch found! Return false.
+4. Otherwise: return isPalindrome(l + 1, s).
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+It systematically checks symmetric index pairs (l, n - 1 - l). If any pair mismatches, it short-circuits to false. If all pairs match up to the middle, it is confirmed a palindrome.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not create a reversed string and compare?
+new StringBuilder(s).reverse().toString().equals(s) allocates a new string of length N in memory. Recursive checking checks characters directly without extra string allocation.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Input: "madam", length = 5
+Call 1: l = 0 -> charAt(0)='m' == charAt(4)='m' -> recurse l = 1
+Call 2: l = 1 -> charAt(1)='a' == charAt(3)='a' -> recurse l = 2
+Call 3: l = 2 >= 5 / 2 (2) -> Base case hit! Return TRUE.
+Output: true
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: At most N / 2 comparisons.
+- Space Complexity: O(N)
+  Reason: Recursion stack depth is at most N / 2.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Notice: s.length() - 1 - l gives the correct symmetric index from the right end.
+- Watch for case sensitivity and non-alphanumeric characters in real interview questions (like LeetCode 125).
+================================================================================

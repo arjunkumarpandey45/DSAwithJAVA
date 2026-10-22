@@ -1,0 +1,62 @@
+================================================================================
+QUESTION: Top View and Bottom View of Binary Tree
+FILE: l_TopAndBottomView.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Top View: Nodes visible when looking at the tree from the top.
+Bottom View: Nodes visible when looking at the tree from the bottom.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Use Vertical Line Coordinates (hd = horizontal distance):
+- Root has `hd = 0`.
+- Going left: `hd - 1`.
+- Going right: `hd + 1`.
+Use BFS (Level Order) with a Queue storing `(Node, hd)` and a `TreeMap<hd, val>` (keeps vertical lines sorted):
+- TOP VIEW: Only record the FIRST node seen at each `hd` (`map.putIfAbsent(hd, node.val)`).
+- BOTTOM VIEW: Always overwrite with the LATEST node seen at each `hd` (`map.put(hd, node.val)`).
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. TreeMap<Integer, Integer> map = new TreeMap<>();
+2. Queue<Pair<Node, Integer>> q = new LinkedList<>(); q.offer(new Pair(root, 0));
+3. while (!q.isEmpty()):
+   - Pair p = q.poll(); Node node = p.node; int hd = p.hd;
+   - For Top View: if (!map.containsKey(hd)) map.put(hd, node.data);
+   - For Bottom View: map.put(hd, node.data); // always overwrite
+   - if (node.left != null) q.offer(new Pair(node.left, hd - 1));
+   - if (node.right != null) q.offer(new Pair(node.right, hd + 1));
+4. Extract map.values() into result list.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+BFS visits higher levels first. For Top View, higher levels obscure lower levels on the same vertical line. For Bottom View, lower levels overwrite higher levels.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not DFS?
+DFS can visit lower-level nodes before higher-level nodes on other branches, requiring tracking both vertical `hd` and vertical level depth to resolve conflicts. BFS handles depth precedence automatically.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Tree: 1(hd 0) with left: 2(hd -1), right: 3(hd 1). 2 has right: 4(hd 0)
+BFS traversal:
+- hd -1: Node 2
+- hd 0: Node 1 (top view keeps 1, bottom view overwrites with 4)
+- hd 1: Node 3
+Top View: [2, 1, 3]
+Bottom View: [2, 4, 3]
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N log N)
+  Reason: N nodes with TreeMap insertions taking O(log N).
+- Space Complexity: O(N)
+  Reason: Queue and TreeMap storage.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- TreeMap automatically keeps keys sorted from leftmost horizontal distance to rightmost.
+================================================================================

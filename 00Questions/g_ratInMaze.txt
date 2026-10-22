@@ -1,0 +1,79 @@
+================================================================================
+QUESTION: Rat in a Maze (All Paths Backtracking)
+FILE: g_ratInMaze.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+A rat starts at cell (0, 0) of an N x N grid and wants to reach destination (N-1, N-1).
+The rat can move in 4 directions: Down ('D'), Left ('L'), Right ('R'), Up ('U').
+1 means open cell, 0 means blocked wall. Find all valid path strings.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Imagine the rat walking through a maze.
+At each cell (x, y):
+1. Has the rat reached the exit (N-1, N-1)? If yes, record the path taken!
+2. Otherwise, look around in all 4 directions (Down, Left, Right, Up).
+3. If a neighbor is inside the maze, open (value 1), and NOT already visited in current path:
+   - Mark it visited so the rat does not walk in infinite circles!
+   - Step into that neighbor and continue.
+   - Backtrack: when returning from that neighbor, unmark it as visited so other alternative paths can still use this cell!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Check if maze[0][0] == 0: If blocked at start, rat cannot move, return empty list.
+2. Maintain a boolean 2D array trail[N][N] to track visited cells in the current path.
+3. Mark trail[0][0] = true.
+4. Call recursive function check(maze, trail, x, y, list, currentPath):
+   - Base Case: if (x == N - 1 && y == N - 1), list.add(currentPath), return.
+   - Try Down (x+1, y):
+     If valid and maze[x+1][y]==1 and !trail[x+1][y]:
+       trail[x+1][y] = true;
+       check(x+1, y, path + "D");
+       trail[x+1][y] = false; // backtrack
+   - Try Left (x, y-1): same check + backtrack with "L".
+   - Try Right (x, y+1): same check + backtrack with "R".
+   - Try Up (x-1, y): same check + backtrack with "U".
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+The visited matrix prevents cycles (infinite loops). Backtracking (unmarking visited=false) ensures that different branching paths can independently traverse the same square if reached through a different route.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not use simple BFS?
+BFS finds the shortest path, but this problem asks for ALL possible paths in alphabetical/lexicographical order. DFS with backtracking is the natural choice to enumerate all paths.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Input: 2x2 maze
+1 1
+1 1
+Start (0, 0), trail[0][0]=true, path=""
+- Try Down to (1, 0): open, not visited.
+  trail[1][0]=true, path="D"
+  - From (1,0), try Down (out of bounds)
+  - Try Left (out of bounds)
+  - Try Right to (1, 1): destination reached! ADD "DR"
+  - Try Up to (0,0): already visited!
+  trail[1][0]=false (backtrack)
+- Try Right to (0, 1): open, not visited.
+  trail[0][1]=true, path="R"
+  - From (0,1), try Down to (1, 1): destination reached! ADD "RD"
+  trail[0][1]=false (backtrack)
+Output: ["DR", "RD"]
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(4^(N^2))
+  Reason: In the worst case where every cell is 1, from each cell we can explore up to 4 directions.
+- Space Complexity: O(N^2)
+  Reason: For the visited matrix and recursion call stack depth of up to N^2.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Common Trap: Forgetting to unmark trail[x][y] = false when backtracking. If not reset, subsequent valid paths will be blocked.
+- Always check array boundaries (e.g., x + 1 < maze.length and x >= 0) BEFORE indexing into maze or trail.
+- If alphabetical order is required, explore in order: D -> L -> R -> U.
+================================================================================

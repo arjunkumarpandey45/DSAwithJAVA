@@ -1,0 +1,60 @@
+================================================================================
+QUESTION: Sum of Subarray Minimums (LeetCode 907)
+FILE: n_SumofSubarrayMinimums.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given an array of integers arr, find the sum of min(b), where b ranges over every contiguous subarray of arr. Return modulo 10^9 + 7.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Instead of finding the minimum for each subarray...
+Ask: "In HOW MANY subarrays is arr[i] the minimum element?" (Contribution Technique!)
+Let `left` = distance to Previous Strictly Smaller element (`i - pse[i]`).
+Let `right` = distance to Next Smaller or Equal element (`nse[i] - i`).
+Total subarrays where arr[i] is minimum = `left * right`!
+Total contribution of arr[i] = `arr[i] * left * right`!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Calculate pse[]: previous smaller index (default -1).
+   - while (!st.isEmpty() && arr[st.peek()] > arr[i]) st.pop();
+2. Calculate nse[]: next smaller or equal index (default n).
+   - while (!st.isEmpty() && arr[st.peek()] >= arr[i]) st.pop();
+3. long total = 0, MOD = 1_000_000_007;
+4. For i = 0 to n - 1:
+   - long left = i - pse[i];
+   - long right = nse[i] - i;
+   - total = (total + (arr[i] * left % MOD) * right % MOD) % MOD;
+5. Return (int) total.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Every subarray has a unique minimum (or leftmost minimum if duplicate values exist). Summing over the contributions of all elements covers all subarrays exactly once.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not check all subarrays?
+O(N^2) TLEs on N = 30,000. Monotonic stack runs in O(N).
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+arr = [3, 1, 2, 4]
+For element 1 (index 1):
+- pse = -1 (distance left = 1 - (-1) = 2: subarrays starting at idx 0, 1)
+- nse = 4 (distance right = 4 - 1 = 3: subarrays ending at idx 1, 2, 3)
+- Subarrays where 1 is min = 2 * 3 = 6 subarrays! Contribution = 1 * 6 = 6.
+Sum across all elements = 3*1 + 1*6 + 2*2 + 4*1 = 3 + 6 + 4 + 4 = 17.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Two monotonic stack passes to find pse and nse.
+- Space Complexity: O(N)
+  Reason: Arrays for pse, nse, and stack.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Duplicate handling: use strictly `>` for PSE and `>=` for NSE! Using `<=` on both sides counts duplicates multiple times; using `<` on both misses subarrays.
+================================================================================

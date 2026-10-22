@@ -1,0 +1,59 @@
+================================================================================
+QUESTION: Maximum Product Subarray (LeetCode 152)
+FILE: w_MaxProductSubArr.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Find the contiguous subarray within an integer array that has the largest product.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Product is tricky because of negative numbers:
+A negative number multiplied by another negative number turns into a giant POSITIVE number!
+Observation:
+1. If there are an even number of negative numbers, product of all elements is positive!
+2. If there are an odd number of negative numbers, removing either the prefix before the first negative or the suffix after the last negative leaves an even number of negatives!
+So the maximum product must be either a PREFIX product or a SUFFIX product!
+If a zero is encountered, reset product = 1.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. int maxi = Integer.MIN_VALUE, prefix = 1, suffix = 1;
+2. For i = 0 to n - 1:
+   - if (prefix == 0) prefix = 1;
+   - if (suffix == 0) suffix = 1;
+   - prefix *= arr[i];
+   - suffix *= arr[n - 1 - i];
+   - maxi = Math.max(maxi, Math.max(prefix, suffix));
+3. Return maxi.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Zeroes split the problem into independent subarrays. In any subarray with no zeroes, the maximum product subarray will always start from the left boundary or end at the right boundary.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not Kadane's sum algorithm directly?
+Sum does not have the "negative * negative = positive" property. Tracking prefix and suffix or tracking both `maxProd` and `minProd` handles sign flips correctly.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+arr = [2, 3, -2, 4]
+i=0: pref = 2, suff = 4 -> maxi = 4
+i=1: pref = 2*3 = 6, suff = 4*(-2) = -8 -> maxi = 6
+i=2: pref = 6*(-2) = -12, suff = -8*3 = -24 -> maxi = 6
+i=3: pref = -12*4 = -48, suff = -24*2 = -48 -> maxi = 6
+Result: 6
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Single pass scanning prefix and suffix simultaneously.
+- Space Complexity: O(1)
+  Reason: Only primitive variables.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Remember to reset `prefix = 1` or `suffix = 1` when it becomes 0, because 0 breaks the contiguous product streak.
+================================================================================

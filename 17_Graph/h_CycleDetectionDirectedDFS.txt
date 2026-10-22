@@ -1,0 +1,59 @@
+================================================================================
+QUESTION: Cycle Detection in Directed Graph (DFS with Path Visited)
+FILE: h_CycleDetectionDirectedDFS.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Detect if a DIRECTED graph contains a cycle using Depth First Search.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+In a directed graph, simply hitting an already visited node does NOT mean there is a cycle!
+Example: 1 -> 2 and 1 -> 3 -> 2 (no cycle, just two paths meeting at 2).
+A cycle ONLY exists if you hit a node that was visited on the CURRENT PATH (an ancestor in the recursion stack)!
+Track two arrays:
+- `visited[]`: node has been visited ever.
+- `pathVisited[]`: node is active on the CURRENT recursion path!
+Backtrack: When returning from a node, reset `pathVisited[node] = false`!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. boolean[] vis = new boolean[V], pathVis = new boolean[V];
+2. dfsCheck(node, adj, vis, pathVis):
+   - vis[node] = true; pathVis[node] = true;
+   - for neighbor in adj.get(node):
+     - if (!vis[neighbor]):
+       - if (dfsCheck(neighbor, adj, vis, pathVis)) return true;
+     - else if (pathVis[neighbor]):
+       - return true; // cycle in current path!
+   - pathVis[node] = false; // backtrack!
+   - return false;
+3. Loop for all components: if (!vis[i] && dfsCheck(i, adj, vis, pathVis)) return true;
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+A cycle in a directed graph is by definition a back-edge pointing to an active ancestor on the current DFS path.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Undirected cycle detection (checking parent) fails on directed graphs because direction prevents walking backward across edges.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+1 -> 2 -> 3 -> 1
+dfs(1): pathVis={1}
+dfs(2): pathVis={1, 2}
+dfs(3): pathVis={1, 2, 3} -> neighbor is 1 -> pathVis[1] is TRUE! CYCLE DETECTED!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(V + E)
+  Reason: Standard directed graph DFS.
+- Space Complexity: O(V)
+  Reason: vis and pathVis arrays plus call stack.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- ALWAYS reset `pathVis[node] = false` when backtracking. Forgetting this turns path-visited into global-visited and gives false positives!
+================================================================================

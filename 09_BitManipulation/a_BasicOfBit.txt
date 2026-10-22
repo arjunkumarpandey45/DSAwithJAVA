@@ -1,0 +1,54 @@
+================================================================================
+QUESTION: Bit Manipulation Basics & Operations
+FILE: a_BasicOfBit.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Fundamental bit operations: check if i-th bit is set, set i-th bit, clear i-th bit, toggle i-th bit, and swap two numbers without temp.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Bit manipulation cheat sheet:
+1. Check i-th bit: `(n & (1 << i)) != 0` (or `(n >> i) & 1 == 1`)
+2. Set i-th bit: `n | (1 << i)`
+3. Clear i-th bit: `n & ~(1 << i)`
+4. Toggle i-th bit: `n ^ (1 << i)`
+5. Swap a and b without temp: a = a ^ b; b = a ^ b; a = a ^ b;
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+Swap Two Numbers using XOR:
+1. a = a ^ b
+2. b = a ^ b // (a ^ b) ^ b = a
+3. a = a ^ b // (a ^ b) ^ a = b
+Binary representation: Repeatedly divide by 2 or check (n >> i) & 1.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+`1 << i` creates a mask with a 1 at bit position i and 0s everywhere else. Bitwise AND isolates bit i; bitwise OR forces bit i to 1; bitwise NOT + AND forces bit i to 0.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why use bitwise operations?
+Bitwise operations execute directly in CPU registers in a single clock cycle, making them the fastest operations possible.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Swap a = 5 (0101), b = 7 (0111):
+1. a = 5 ^ 7 = 0010 (2)
+2. b = 2 ^ 7 = 0101 (5)
+3. a = 2 ^ 5 = 0111 (7)
+Result: a = 7, b = 5! Swapped without temp!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(1)
+  Reason: Bitwise instructions execute in constant time.
+- Space Complexity: O(1)
+  Reason: No extra memory.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Trap with XOR swap: If `a` and `b` refer to the SAME memory address (like arr[i] and arr[j] when i == j), `a ^= a` zeroes out the value!
+================================================================================

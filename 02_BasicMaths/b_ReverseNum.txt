@@ -1,0 +1,62 @@
+================================================================================
+QUESTION: Reverse a Number
+FILE: b_ReverseNum.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given an integer (e.g. 991), reverse its digits to obtain 199.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+To build a number from right to left:
+Each time you peel off the last digit of the original number, you push your reversed number one decimal place to the left (multiply by 10) and add the peeled digit.
+Formula: reversed = reversed * 10 + lastDigit.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Initialize reversedNum = 0.
+2. Loop while (num > 0):
+   - lastDigit = num % 10.
+   - reversedNum = reversedNum * 10 + lastDigit.
+   - num = num / 10.
+3. Return reversedNum.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Multiplying by 10 shifts existing digits one position to the left (units become tens, tens become hundreds), making room in the units place for the new digit.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not convert to string, reverse string, and parse back?
+String operations allocate extra memory on heap and fail easily with negative numbers or integer overflow. Pure math loop is O(1) space.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Input: num = 991, reversedNum = 0
+Step 1:
+  lastDigit = 991 % 10 = 1
+  reversedNum = 0 * 10 + 1 = 1
+  num = 991 / 10 = 99
+Step 2:
+  lastDigit = 99 % 10 = 9
+  reversedNum = 1 * 10 + 9 = 19
+  num = 99 / 10 = 9
+Step 3:
+  lastDigit = 9 % 10 = 9
+  reversedNum = 19 * 10 + 9 = 199
+  num = 9 / 10 = 0 -> loop ends
+Output: 199
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(log10(N))
+  Reason: The loop executes once per digit of the number.
+- Space Complexity: O(1)
+  Reason: Uses only primitive integer variables.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- In LeetCode (Problem 7), watch out for 32-bit integer overflow! If reversedNum * 10 exceeds Integer.MAX_VALUE, you must return 0.
+- Negative numbers: save the sign, take absolute value, reverse, then re-apply sign.
+================================================================================

@@ -1,0 +1,64 @@
+================================================================================
+QUESTION: Longest Repeating Character Replacement (LeetCode 424)
+FILE: f_CharacterReplacement.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given a string s and an integer k, you can choose up to k characters and replace them with any other uppercase English character. Return the length of the longest substring containing the same letter.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+In any window of length `L = right - left + 1`:
+Let `maxFreq` be the count of the MOST FREQUENT character in this window.
+The number of characters that need to be changed is: `changes = L - maxFreq`.
+If `changes <= k`, the window is VALID (we have enough flips)!
+If `changes > k`, the window is INVALID. Shrink `left` by 1.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. int[] count = new int[26];
+2. int left = 0, right = 0, maxFreq = 0, maxLen = 0;
+3. while (right < s.length()):
+   - count[s.charAt(right) - 'A']++;
+   - maxFreq = Math.max(maxFreq, count[s.charAt(right) - 'A']);
+   - if ((right - left + 1) - maxFreq > k):
+     - count[s.charAt(left) - 'A']--;
+     - left++;
+   - if ((right - left + 1) - maxFreq <= k):
+     - maxLen = Math.max(maxLen, right - left + 1);
+   - right++;
+4. Return maxLen.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+We only care about finding a strictly larger valid window. Because `maxFreq` only needs to grow to beat our current record, we don't even need to decrement `maxFreq` when shrinking `left`!
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not check all 26 letters individually with separate sliding windows?
+Running 26 separate sliding windows takes O(26 * N). Tracking `maxFreq` in a single window solves it in O(N).
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+s = "AABABBA", k = 1
+r=0 ('A'): count[A]=1, maxFreq=1, len=1, 1-1=0 <= 1 -> maxLen=1
+r=1 ('A'): count[A]=2, maxFreq=2, len=2, 2-2=0 <= 1 -> maxLen=2
+r=2 ('B'): count[B]=1, maxFreq=2, len=3, 3-2=1 <= 1 -> maxLen=3 ("AAB")
+r=3 ('A'): count[A]=3, maxFreq=3, len=4, 4-3=1 <= 1 -> maxLen=4 ("AABA")
+r=4 ('B'): count[B]=2, maxFreq=3, len=5, 5-3=2 > 1 -> invalid! shrink left: left=1
+r=5 ('B'): count[B]=3, maxFreq=3, len=5, 5-3=2 > 1 -> shrink left: left=2
+r=6 ('A'): ...
+Result: 4
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Both pointers move forward once.
+- Space Complexity: O(1)
+  Reason: Frequency array of size 26.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- You DO NOT need to rescan the 26-element array to find the new maxFreq when shrinking left. Leaving maxFreq as-is does not affect the correctness of maxLen.
+================================================================================

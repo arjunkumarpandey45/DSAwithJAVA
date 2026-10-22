@@ -1,0 +1,61 @@
+================================================================================
+QUESTION: Number of Islands (LeetCode 200)
+FILE: d_CountIsland.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given an m x n 2D binary grid grid which represents a map of '1's (land) and '0's (water), return the number of islands.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+An island is formed by connecting adjacent lands.
+Scan the grid row by row, column by column:
+Whenever you see an unvisited land ('1'):
+- You discovered a new island! Increment `islandCount++`.
+- Launch a BFS or DFS from that cell to visit and sink/mark ALL connected land cells on this island!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. int islands = 0, m = grid.length, n = grid[0].length;
+2. For r = 0 to m - 1:
+   - For c = 0 to n - 1:
+     - if (grid[r][c] == '1'):
+       - islands++;
+       - dfs(r, c, grid); // sink island
+3. dfs(r, c, grid):
+   - if (r < 0 || r >= m || c < 0 || c >= n || grid[r][c] != '1') return;
+   - grid[r][c] = '0'; // sink to water so it is not visited again!
+   - dfs(r + 1, c, grid); dfs(r - 1, c, grid); dfs(r, c + 1, grid); dfs(r, c - 1, grid);
+4. Return islands.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Mutating `grid[r][c] = '0'` acts as an in-place visited array, eliminating the need for an extra O(M*N) boolean matrix.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+BFS vs DFS: Both work in O(M*N). DFS is concise; BFS avoids deep stack recursion on large grids.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+grid = [
+  ["1","1","0"],
+  ["1","1","0"],
+  ["0","0","1"]
+]
+- (0,0) is '1' -> island 1! DFS sinks (0,0), (0,1), (1,0), (1,1) to '0'.
+- Scan continues... hits (2,2) which is '1' -> island 2! Sinks (2,2).
+Total = 2 islands.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(M * N)
+  Reason: Every cell visited a constant number of times.
+- Space Complexity: O(M * N) worst case recursion stack
+  Reason: If grid is completely filled with land.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Check problem statement: does island connectivity include DIAGONALS (8 directions - GFG) or only HORIZONTAL/VERTICAL (4 directions - LeetCode)?
+================================================================================

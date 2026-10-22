@@ -1,0 +1,76 @@
+================================================================================
+QUESTION: DQ1 - First Stable Index
+FILE: DQ1_FirstStableIndex.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given an integer array 'nums' and an integer 'k', find the first (smallest) index 'i'
+such that the difference between the maximum element seen so far from left (prefix max)
+and the minimum element from 'i' to the end of the array (suffix min) is less than or equal to 'k':
+  max(nums[0..i]) - min(nums[i..n-1]) <= k
+If such an index exists, return 'i'. If no such index exists, return -1.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Think of 'preMax' as the highest peak climbed up to index i,
+and 'sufMin' as the deepest valley we could fall into from index i onwards.
+A position is 'stable' if the gap between our highest past peak and lowest future valley is small (<= k).
+If we compute suffix minimums in advance from right to left, we can scan from left to right,
+tracking the prefix maximum on the fly. At each index i, we check the condition in O(1) time.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Create an array 'arr' of size n to store suffix minimums.
+2. Traverse from n - 1 down to 0:
+   - Maintain 'lastMin = min(lastMin, nums[i])'.
+   - Store 'arr[i] = lastMin'.
+3. Traverse from 0 to n - 1:
+   - Maintain 'preMax = max(preMax, nums[i])'.
+   - Calculate score = preMax - arr[i].
+   - If score <= k, return current index i immediately (earliest stable index).
+4. If loop finishes without returning, return -1.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+1. arr[i] holds the exact minimum among elements nums[i..n-1].
+2. preMax holds the exact maximum among elements nums[0..i].
+3. Since we scan from left (i = 0 upwards), the very first index that satisfies the condition
+   is guaranteed to be the smallest valid index.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not recompute min and max for each index?
+- Recalculating the minimum of the remaining suffix for every index takes O(n) per index,
+  resulting in O(n^2) total time, which is too slow for large arrays.
+  Precomputing the suffix array in one backward pass reduces each check to O(1).
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Input: nums = [1, 5, 3, 7, 2], k = 4, n = 5
+
+Step 1: Compute suffix minimums (backward pass):
+  i = 4: val = 2, lastMin = 2, arr[4] = 2
+  i = 3: val = 7, lastMin = min(2, 7) = 2, arr[3] = 2
+  i = 2: val = 3, lastMin = min(2, 3) = 2, arr[2] = 2
+  i = 1: val = 5, lastMin = min(2, 5) = 2, arr[1] = 2
+  i = 0: val = 1, lastMin = min(2, 1) = 1, arr[0] = 1
+  arr = [1, 2, 2, 2, 2]
+
+Step 2: Forward pass to find first stable index:
+  preMax = MIN_VALUE
+  i = 0: preMax = max(-inf, 1) = 1. score = preMax - arr[0] = 1 - 1 = 0 <= 4. Match!
+  Return 0 immediately.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(n)
+  Reason: One backward pass O(n) to build suffix min array + one forward pass O(n) to evaluate condition.
+- Space Complexity: O(n)
+  Reason: Auxiliary array 'arr' of size n to store suffix minimums.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- preMax >= nums[i] and arr[i] <= nums[i], so score is always >= 0.
+- Suffix precomputation + prefix on-the-fly is a classic DSA pattern for range queries.
+================================================================================

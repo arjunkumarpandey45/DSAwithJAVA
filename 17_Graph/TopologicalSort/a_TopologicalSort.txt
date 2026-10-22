@@ -1,0 +1,60 @@
+================================================================================
+QUESTION: Topological Sort (Kahn's Algorithm BFS & DFS)
+FILE: a_TopologicalSort.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Linear ordering of vertices in a Directed Acyclic Graph (DAG) such that for every directed edge u -> v, vertex u comes before v in the ordering.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Kahn's Algorithm (BFS with In-degrees):
+- In-degree = number of incoming edges pointing to a node.
+- If a node has `inDegree == 0`, it has NO prerequisites! It can be completed right now!
+- Put all nodes with `inDegree == 0` into a Queue.
+- Pop node, append to topo sort, reduce in-degree of all its neighbors by 1.
+- If a neighbor's in-degree drops to 0, push it to queue!
+- If result size < V, a CYCLE exists (not a DAG)!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. int[] inDegree = new int[V]; for each u: for v in adj.get(u): inDegree[v]++;
+2. Queue<Integer> q = new LinkedList<>();
+   for i = 0 to V - 1: if (inDegree[i] == 0) q.offer(i);
+3. List<Integer> topo = new ArrayList<>();
+4. while (!q.isEmpty()):
+   - int node = q.poll(); topo.add(node);
+   - for v in adj.get(node):
+     - inDegree[v]--;
+     - if (inDegree[v] == 0) q.offer(v);
+5. Return topo.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Nodes with 0 in-degrees have all prerequisites fulfilled. Removing their outgoing edges enables their dependent nodes to reach 0 in-degree.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Kahn's algorithm automatically detects cycles (if `topo.size() != V`, cycle exists), unlike simple DFS which needs separate cycle detection.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+5->0, 5->2, 4->0, 4->1, 2->3, 3->1
+In-degrees: 5:0, 4:0 -> push 5, 4
+poll 5 -> reduce 0 and 2 -> inDegree[2] becomes 0 -> push 2
+poll 4 -> reduce 0 and 1
+poll 2 -> reduce 3 -> inDegree[3] becomes 0 -> push 3...
+Valid Topo Order: [5, 4, 2, 3, 1, 0]
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(V + E)
+  Reason: Each vertex and edge processed once.
+- Space Complexity: O(V)
+  Reason: Queue and inDegree array.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Topological sort ONLY exists for Directed Acyclic Graphs (DAGs).
+================================================================================

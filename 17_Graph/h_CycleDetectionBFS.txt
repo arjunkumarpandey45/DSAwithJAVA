@@ -1,0 +1,56 @@
+================================================================================
+QUESTION: Cycle Detection in Undirected Graph (BFS)
+FILE: h_CycleDetectionBFS.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Detect if an undirected graph contains a cycle using Breadth First Search.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Use BFS with a Queue storing pairs `(node, parent)`:
+When expanding `node`:
+For each neighbor:
+- If unvisited: mark visited, push `(neighbor, node)` to queue.
+- If already visited AND `neighbor != parent`: two different BFS paths reached this node! A CYCLE EXISTS!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. boolean[] vis = new boolean[V];
+2. bfs(start, adj, vis):
+   - Queue<Pair> q = new LinkedList<>(); q.offer(new Pair(start, -1)); vis[start] = true;
+   - while (!q.isEmpty()):
+     - Pair p = q.poll(); int node = p.node, parent = p.parent;
+     - for neighbor in adj.get(node):
+       - if (!vis[neighbor]): vis[neighbor] = true; q.offer(new Pair(neighbor, node));
+       - else if (neighbor != parent) return true; // cycle!
+   - return false;
+3. Loop for i = 0 to V - 1: if (!vis[i] && bfs(i, adj, vis)) return true;
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+If an already visited node is touched by an edge from a node other than its parent, multiple simple paths exist between the vertices, confirming a cycle.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+BFS avoids deep recursive call stacks, preventing StackOverflowError on massive linear graphs.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+1 - 2, 2 - 3, 3 - 1
+q = [(1, -1)], vis={1}
+poll (1, -1) -> push (2, 1) and (3, 1), vis={1, 2, 3}
+poll (2, 1) -> check neighbor 3: vis[3] is true and 3 != 1 (parent)! CYCLE DETECTED!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(V + 2E)
+  Reason: Standard BFS traversal.
+- Space Complexity: O(V)
+  Reason: Queue and visited array.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Don't forget the outer component loop to handle disconnected graphs with multiple components.
+================================================================================

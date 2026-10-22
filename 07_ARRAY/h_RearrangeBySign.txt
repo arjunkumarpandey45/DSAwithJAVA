@@ -1,0 +1,61 @@
+================================================================================
+QUESTION: Rearrange Array Elements by Sign (LeetCode 2149)
+FILE: h_RearrangeBySign.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Rearrange an array of equal positive and negative integers such that positive and negative numbers alternate, starting with a positive number, while preserving relative order.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Every even index (0, 2, 4...) should hold a positive number.
+Every odd index (1, 3, 5...) should hold a negative number.
+Keep two pointers:
+- `posIndex = 0`
+- `negIndex = 1`
+Create a result array of size N. Iterate through original array:
+- If number > 0: place at ans[posIndex], posIndex += 2.
+- If number < 0: place at ans[negIndex], negIndex += 2.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Create int[] ans = new int[n].
+2. posIndex = 0, negIndex = 1.
+3. For each num in arr:
+   - If num > 0: ans[posIndex] = num; posIndex += 2;
+   - Else: ans[negIndex] = num; negIndex += 2;
+4. Return ans.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Placing positives at even positions and negatives at odd positions in one pass automatically alternates signs while preserving original relative order.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not separate into two lists `pos` and `neg` first?
+Separating into two lists requires 2 passes and multiple list allocations. Direct index placement does it in a single pass directly into an array.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+arr = [3, 1, -2, -5, 2, -4]
+posIndex = 0, negIndex = 1, ans = [0, 0, 0, 0, 0, 0]
+- num=3 (>0)  -> ans[0]=3, pos=2
+- num=1 (>0)  -> ans[2]=1, pos=4
+- num=-2 (<0) -> ans[1]=-2, neg=3
+- num=-5 (<0) -> ans[3]=-5, neg=5
+- num=2 (>0)  -> ans[4]=2, pos=6
+- num=-4 (<0) -> ans[5]=-4, neg=7
+Result: [3, -2, 1, -5, 2, -4]
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Single pass of length N.
+- Space Complexity: O(N)
+  Reason: Result array of size N.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- If the number of positives and negatives is unequal (variety 2), first collect remaining elements, then append them to the end.
+================================================================================

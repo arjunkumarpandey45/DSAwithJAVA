@@ -1,0 +1,56 @@
+================================================================================
+QUESTION: Implement Stack using Queues (LeetCode 225)
+FILE: d_StackUsingQueue.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Implement a LIFO stack using only standard FIFO queue operations.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+How to make a FIFO queue behave like a LIFO stack using ONE queue?
+Whenever you push a new element `x`:
+1. Add `x` to the back of the queue.
+2. Now `x` is trapped at the very back!
+3. ROTATE THE QUEUE: Remove all `size - 1` elements from the front and push them right back to the rear!
+Now `x` is at the very FRONT of the queue! Ready to be popped immediately!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Queue<Integer> q = new LinkedList<>();
+2. push(x):
+   - q.offer(x);
+   - for i = 0 to q.size() - 2:
+     - q.offer(q.poll()); // rotate
+3. pop(): return q.poll();
+4. top(): return q.peek();
+5. empty(): return q.isEmpty();
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Rotating the queue places the newly added element at the front. The queue's front always mirrors the stack's top.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why use 1 queue instead of 2 queues?
+2 queues require transferring elements back and forth during pop. Single-queue rotation is cleaner, requires only 1 queue, and makes `pop()` O(1).
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+push(1) -> q=[1]
+push(2) -> add 2: q=[1, 2] -> rotate 1 time: poll 1 and add: q=[2, 1]
+push(3) -> add 3: q=[2, 1, 3] -> rotate 2 times: q=[3, 2, 1]
+pop() -> returns 3 (LIFO!) -> q=[2, 1]
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: push: O(N), pop: O(1), top: O(1)
+  Reason: Push rotates N elements. Pop and top are instant O(1).
+- Space Complexity: O(N)
+  Reason: Queue stores N elements.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Rotate exactly `q.size() - 1` times (the newly added element stays, previous ones loop behind it).
+================================================================================

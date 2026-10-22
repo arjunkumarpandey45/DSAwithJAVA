@@ -1,0 +1,70 @@
+================================================================================
+QUESTION: Print All Subsequences (Pick / Don't Pick Pattern)
+FILE: f_SubSequence.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Generate and print all subsequences of an array or string. A subsequence is formed by deleting zero or more elements without changing the order of remaining elements.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+This is the Mother of all Recursion Patterns:
+At every index, you have 2 branches:
+1. TAKE (Pick) the current element.
+2. DO NOT TAKE (Don't Pick) the current element.
+When index reaches N, you have reached a leaf of the recursion tree: print the collected subsequence!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+Array version:
+1. void subseq(int ind, List ds, int n, int[] arr):
+   - if (ind == n) { print ds; return; }
+   - ds.add(arr[ind]);
+   - subseq(ind + 1, ds, n, arr); // pick
+   - ds.remove(ds.size() - 1); // backtrack
+   - subseq(ind + 1, ds, n, arr); // don't pick
+
+String version:
+- void stringSub(String p, String up, int ind):
+  - if (ind == up.length()) { print p; return; }
+  - stringSub(p + up.charAt(ind), up, ind + 1); // pick
+  - stringSub(p, up, ind + 1); // don't pick
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+For N elements, there are 2^N possible subsequences. Branching 2 ways at every index systematically visits all 2^N combinations.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not use bit manipulation (1 << n)?
+Bit manipulation also works and takes O(2^N * N), but recursion naturally extends to questions with constraints, pruning, and backtracking (e.g. subset sum, combinations).
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Input: [1, 2]
+ind=0:
+- Pick 1: ds=[1]
+  ind=1:
+  - Pick 2: ds=[1, 2] -> ind=2: PRINT [1, 2]
+  - Backtrack -> ds=[1]
+  - Don't pick 2: ds=[1] -> ind=2: PRINT [1]
+- Backtrack -> ds=[]
+- Don't pick 1: ds=[]
+  ind=1:
+  - Pick 2: ds=[2] -> ind=2: PRINT [2]
+  - Backtrack -> ds=[]
+  - Don't pick 2: ds=[] -> ind=2: PRINT []
+Total subsequences: 2^2 = 4: [1, 2], [1], [2], []
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(2^N)
+  Reason: There are 2^N subsequences, each leaf takes O(N) to print.
+- Space Complexity: O(N)
+  Reason: Stack space is O(N) and list holds at most N elements.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Notice the difference between Subarray (contiguous) and Subsequence (relative order maintained, not necessarily contiguous).
+================================================================================

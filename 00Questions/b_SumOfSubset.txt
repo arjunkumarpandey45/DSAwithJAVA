@@ -1,0 +1,68 @@
+================================================================================
+QUESTION: Sum of Subset & Unique Subsets (Subsets II)
+FILE: b_SumOfSubset.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Generate all possible subsets of an array and compute the sum of each subset.
+Also generate all unique subsets when the input array contains duplicate elements.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Every subset is formed by making a decision on each item: should we include it or not?
+If an array has 3 elements, there are 2^3 = 8 subsets.
+To avoid duplicate subsets when elements repeat (like [1, 1, 1]):
+Sort the array first. At each decision point, when picking an element for a position, if arr[i] == arr[i - 1] at the same loop level, do not pick it again because you already explored starting with that number!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+For Subset Sums (sumOfSubset):
+1. Use standard pick / don't pick recursion.
+2. When index == arr.length, print the subset and its total sum.
+3. Otherwise: add element, recurse with sum + arr[idx], backtrack, then recurse without adding.
+
+For Unique Subsets (uniqueSubset):
+1. Print the current subset at the start of the recursive call (every node in recursion tree is a valid subset).
+2. Loop from i = idx to arr.length - 1:
+   - If i > idx and arr[i] == arr[i - 1], skip it (continue).
+   - Add arr[i] to list.
+   - Recurse on i + 1.
+   - Backtrack (remove last).
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Sorting groups identical numbers together. Checking i > idx && arr[i] == arr[i - 1] ensures that at any position, an identical number is only chosen once at that recursion depth.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not use a HashSet of lists to filter duplicates?
+A HashSet requires generating all 2^N subsets first and computing hashes for all of them. It wastes memory (O(2^N * N)) and time. Sorting + skipping duplicates prevents duplicates from being created in the first place!
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Input: arr = [1, 2], start with ds = []
+- Print []
+- Loop i = 0: pick arr[0]=1 -> ds = [1]
+  - Print [1]
+  - Loop i = 1: pick arr[1]=2 -> ds = [1, 2]
+    - Print [1, 2]
+    - Backtrack -> ds = [1]
+  - Backtrack -> ds = []
+- Loop i = 1: pick arr[1]=2 -> ds = [2]
+  - Print [2]
+  - Backtrack -> ds = []
+All subsets printed: [], [1], [1, 2], [2]
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(2^N)
+  Reason: There are 2^N subsets in total, and each subset takes O(N) to process/print.
+- Space Complexity: O(N)
+  Reason: Recursion depth is at most N, and the list holds at most N elements.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Notice: in uniqueSubset, we print BEFORE the loop because the empty set and intermediate subsets are all valid subsets!
+- Do NOT write i > 0 for skipping duplicates. It must be i > idx because you ARE allowed to pick duplicates at deeper levels (e.g., [1, 1]).
+================================================================================

@@ -1,0 +1,54 @@
+================================================================================
+QUESTION: Same Tree (LeetCode 100)
+FILE: h_isSameTree.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given the roots of two binary trees p and q, check if they are the same (structurally identical, and all corresponding nodes have the same value).
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Two trees are identical if:
+1. Both current nodes are null: TRUE (both empty).
+2. One is null and the other is not: FALSE (structural mismatch).
+3. Their values are different: FALSE (value mismatch).
+4. Their left subtrees are identical AND their right subtrees are identical!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+public boolean isSameTree(TreeNode p, TreeNode q) {
+    if (p == null && q == null) return true;
+    if (p == null || q == null) return false;
+    if (p.val != q.val) return false;
+    return isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
+}
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Preorder comparison verifies current node equivalence before recursively confirming left and right subtrees.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not compare inorder traversals?
+Two completely different trees can have the same inorder traversal! Direct node-by-node structural comparison is required.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Tree 1: [1, 2, 3], Tree 2: [1, 2, 3]
+- compare roots: 1 == 1
+- compare left: 2 == 2 (leaves both null -> true)
+- compare right: 3 == 3 (leaves both null -> true)
+Returns true!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(min(N, M))
+  Reason: Visits nodes until mismatch or all checked.
+- Space Complexity: O(min(H1, H2))
+  Reason: Call stack depth.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Always check `p == null && q == null` before `p == null || q == null`.
+================================================================================

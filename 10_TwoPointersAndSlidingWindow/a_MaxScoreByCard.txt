@@ -1,0 +1,56 @@
+================================================================================
+QUESTION: Maximum Points You Can Obtain from Cards (LeetCode 1423)
+FILE: a_MaxScoreByCard.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+You have several cards arranged in a row. You must take exactly k cards, picking each card either from the beginning or from the end of the row. Maximize total card points.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+If you take k cards from the edges (front and back), what remains in the middle?
+A contiguous subarray of size (N - k)!
+Maximizing points from the k chosen edge cards is the EXACT same as MINIMIZING the sum of the remaining (N - k) middle cards!
+Alternatively: Start by taking all k cards from the left. Then one by one, drop one card from the left and pick one card from the right, tracking the maximum score!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Calculate leftSum = sum of first k elements (index 0 to k - 1).
+2. int maxScore = leftSum, rightSum = 0, rightIndex = n - 1.
+3. For i = k - 1 down to 0:
+   - leftSum -= arr[i]; // remove from left
+   - rightSum += arr[rightIndex]; // add from right
+   - rightIndex--;
+   - maxScore = Math.max(maxScore, leftSum + rightSum);
+4. Return maxScore.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Taking k cards from the ends means choosing x cards from the front and (k - x) from the back, where x ranges from 0 to k. Sliding window smoothly transitions through all k + 1 combinations in O(k) time.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not recursion (pick front or back)?
+Recursion branches 2 ways at each step, taking O(2^k) time. Sliding window takes O(k) time.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+arr = [1, 2, 3, 4, 5, 6, 1], k = 3, n = 7
+Initial: take first 3 from left -> [1, 2, 3] -> leftSum = 6, rightSum = 0 -> maxScore = 6
+- Drop 3, add arr[6]=1: leftSum=3, rightSum=1 -> sum=4, max=6
+- Drop 2, add arr[5]=6: leftSum=1, rightSum=7 -> sum=8, max=8
+- Drop 1, add arr[4]=5: leftSum=0, rightSum=12 -> sum=12, max=12! (takes 5, 6, 1 from right)
+Output: 12
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(K)
+  Reason: We only slide through K combinations.
+- Space Complexity: O(1)
+  Reason: Only sum variables.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- When k == n, simply return the total sum of the entire array.
+================================================================================

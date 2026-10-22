@@ -1,0 +1,53 @@
+================================================================================
+QUESTION: Basic Binary Tree Representation & Node Creation
+FILE: a_BasicBinaryTree.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Fundamental structure of a Binary Tree where each node has at most two children: `left` and `right`.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+A linked list node points to 1 next node.
+A binary tree node points to 2 child nodes: `left` and `right`.
+Topmost node is the ROOT.
+Nodes with no children are LEAVES.
+Every tree problem is naturally solved recursively: "Do something for root, let recursion handle left subtree and right subtree!"
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. class Node { int data; Node left, right; public Node(int val) { this.data = val; } }
+2. Node root = new Node(1);
+3. root.left = new Node(2); root.right = new Node(3);
+4. root.left.left = new Node(4); root.left.right = new Node(5);
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Hierarchical non-linear data structure modeling parent-child relationships efficiently.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Linear structures (arrays, lists) require O(N) search. Balanced binary trees allow O(log N) operations.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Tree structure:
+      1
+    /   \
+   2     3
+  / \
+ 4   5
+Root is 1. Left child is 2. Right child is 3.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(1) to create node
+  Reason: Simple object instantiation.
+- Space Complexity: O(N)
+  Reason: Memory for N tree nodes.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Always check if `root == null` before accessing `root.left` or `root.right`.
+================================================================================

@@ -1,0 +1,54 @@
+================================================================================
+QUESTION: Two Sum IV - Input is a BST (LeetCode 653)
+FILE: h_TwoSumInBST.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given the root of a BST and a target number k, return true if there exist two elements in the BST such that their sum equals k.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Combine Two-Pointers with BST Iterator:
+On a sorted array, Two Sum uses two pointers: `i` starting at 0 (moving forward) and `j` starting at n-1 (moving backward).
+Create TWO BST Iterators:
+1. Forward Iterator `next()`: yields values from smallest to largest (ascending).
+2. Reverse Iterator `before()`: yields values from largest to smallest (descending).
+Now run standard two-pointer check in O(H) space!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. BSTIterator l = new BSTIterator(root, false); // next()
+   BSTIterator r = new BSTIterator(root, true);  // before()
+2. int i = l.next(), j = r.next();
+3. while (i < j):
+   - if (i + j == k) return true;
+   - else if (i + j < k) i = l.next();
+   - else j = r.next();
+4. Return false.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Iterators generate sorted values on demand without materializing the full array, achieving optimal O(H) space.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Flattening BST to an array takes O(N) space. Two iterators use only O(H) space.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+BST: [5, 3, 6, 2, 4, null, 7], k = 9
+l gives 2, r gives 7.
+2 + 7 = 9 == k -> MATCH FOUND! Return true.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Traverses through elements like two pointers.
+- Space Complexity: O(H)
+  Reason: Two iterator stacks of size H.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Stop when `i >= j` to prevent pairing an element with itself.
+================================================================================

@@ -1,0 +1,74 @@
+================================================================================
+QUESTION: Subsequences with Target Sum (Print All, Print Any One, Count All)
+FILE: g_SumOfSubSequence.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Three classic variations on subsequences:
+1. Print ALL subsequences whose sum equals K.
+2. Print ONLY ONE subsequence whose sum equals K.
+3. COUNT the total number of subsequences whose sum equals K.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Master these three recursion techniques:
+1. Print All: Traverse both pick and skip branches unconditionally.
+2. Print Any One: Make helper return boolean! If pick returns true, return true immediately (no need to check skip branch!).
+3. Count: Make helper return int! Return (count from pick branch) + (count from skip branch). Base case returns 1 if valid, 0 if invalid.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+Pattern 1 (Print All):
+- void printAll(ind, ds, sum):
+  - if (ind == n) { if (sum == k) print(ds); return; }
+  - ds.add; printAll(ind+1, sum+arr[ind]);
+  - ds.remove; printAll(ind+1, sum);
+
+Pattern 2 (Print One - Boolean):
+- boolean printOne(ind, ds, sum):
+  - if (ind == n) { if (sum == k) { print(ds); return true; } return false; }
+  - ds.add; if (printOne(ind+1, sum+arr[ind])) return true;
+  - ds.remove; if (printOne(ind+1, sum)) return true;
+  - return false;
+
+Pattern 3 (Count - Integer):
+- int count(ind, sum):
+  - if (ind == n) return sum == k ? 1 : 0;
+  - int l = count(ind+1, sum+arr[ind]);
+  - int r = count(ind+1, sum);
+  - return l + r;
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Returning a boolean stops further recursion as soon as the first answer is found. Returning an integer adds counts from all subtrees, giving the exact total.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not use a global counter variable?
+Using return values makes functions pure, reentrant, thread-safe, and directly convertible into Dynamic Programming memoization tables!
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Input: [1, 2, 1], K = 2 (Count function)
+- pick 1 -> sum=1
+  - pick 2 -> sum=3 != 2 (0)
+  - skip 2 -> sum=1
+    - pick 1 -> sum=2 == 2 (returns 1)
+    - skip 1 -> sum=1 != 2 (returns 0)
+- skip 1 -> sum=0
+  - pick 2 -> sum=2
+    - skip 1 -> sum=2 == 2 (returns 1)
+Total Count = 1 + 1 = 2 subsequences ([1, 1] and [2]).
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(2^N)
+  Reason: In the worst case, 2^N subsets are explored.
+- Space Complexity: O(N)
+  Reason: Stack depth is N.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Super high yield for coding interviews: memorizing the 3 return styles (void for all, boolean for one, int for count).
+================================================================================

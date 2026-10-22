@@ -1,0 +1,63 @@
+================================================================================
+QUESTION: 4Sum - Quadruplets that Sum to Target (LeetCode 18)
+FILE: q_FourSum.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Find all unique quadruplets [nums[a], nums[b], nums[c], nums[d]] that add up to target.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Natural extension of 3Sum:
+Sort the array first.
+Use TWO nested loops to fix the first two numbers (i and j).
+Use two pointers (left and right) for the remaining two numbers.
+Skip duplicates at ALL 4 levels (i, j, left, right)!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Arrays.sort(nums);
+2. For i = 0 to n - 4:
+   - if (i > 0 && nums[i] == nums[i - 1]) continue;
+   - For j = i + 1 to n - 3:
+     - if (j > i + 1 && nums[j] == nums[j - 1]) continue;
+     - left = j + 1, right = n - 1;
+     - while (left < right):
+       - long sum = (long) nums[i] + nums[j] + nums[left] + nums[right];
+       - if (sum == target):
+         - add quadruplet to ans;
+         - left++; right--;
+         - skip duplicate lefts and rights;
+       - else if (sum < target) left++;
+       - else right--;
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Two outer loops fix two elements in O(N^2), and two pointers solve the remaining 2Sum in O(N). Total = O(N^3). Skipping duplicates guarantees unique quadruplets.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not 4 nested loops?
+O(N^4) is way too slow. O(N^3) runs within milliseconds for N = 200.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+nums = [1, 0, -1, 0, -2, 2], target = 0
+Sorted: [-2, -1, 0, 0, 1, 2]
+i=0(-2), j=1(-1): left=2(0), right=5(2): sum = -2 + -1 + 0 + 2 = -1 < 0 -> left++
+left=3(0), right=5(2): sum = -2 + -1 + 0 + 2 = -1 < 0 -> left++
+left=4(1), right=5(2): sum = -2 + -1 + 1 + 2 = 0! FOUND: [-2, -1, 1, 2]
+...continues and finds [-2, 0, 0, 2] and [-1, 0, 0, 1].
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N^3)
+  Reason: Two nested loops (O(N^2)) * inner two pointers (O(N)) = O(N^3).
+- Space Complexity: O(1)
+  Reason: No extra memory beyond output list.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- BIG TRAP: Integer Overflow! When adding 4 integers, the sum can exceed 2 * 10^9. ALWAYS cast to `(long)` before adding!
+================================================================================

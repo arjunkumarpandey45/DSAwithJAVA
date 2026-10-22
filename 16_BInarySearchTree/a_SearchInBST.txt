@@ -1,0 +1,53 @@
+================================================================================
+QUESTION: Search in a Binary Search Tree (LeetCode 700)
+FILE: a_SearchInBST.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Find the node in the BST that the node's value equals val and return the subtree rooted with that node. If not found, return null.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+BST Property:
+- All values in LEFT subtree are < root.val.
+- All values in RIGHT subtree are > root.val.
+At each node:
+- If `val == root.val`: found!
+- If `val < root.val`: can only be in LEFT subtree (`root = root.left`)!
+- If `val > root.val`: can only be in RIGHT subtree (`root = root.right`)!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+public TreeNode searchBST(TreeNode root, int val) {
+    while (root != null && root.val != val) {
+        root = val < root.val ? root.left : root.right;
+    }
+    return root;
+}
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+BST ordering eliminates half of the tree on every branch decision, exactly like binary search on a sorted array.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Iterative while loop is O(1) space, avoiding recursion stack overhead.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Tree: 4 -> left: 2 (1, 3), right: 7. Target = 2
+- root=4: 2 < 4 -> root = root.left (2)
+- root=2: 2 == 2 -> FOUND! Return node 2.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(H) = O(log N) average, O(N) worst
+  Reason: Follows a single path from root to leaf.
+- Space Complexity: O(1) iterative
+  Reason: Pointer updates.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- If tree is degenerate (skewed line), height is N. For balanced BST, height is log N.
+================================================================================

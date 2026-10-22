@@ -1,0 +1,56 @@
+================================================================================
+QUESTION: Previous Greater Element
+FILE: l_PreviousGreaterElement.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Find the first greater element to the left of each element in an array.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Scan LEFT TO RIGHT.
+Stack maintains decreasing order:
+- Pop all elements <= current element.
+- Top element is previous greater.
+- Push current element.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. int[] pge = new int[n]; Stack<Integer> st = new Stack<>();
+2. For i = 0 to n - 1:
+   - while (!st.isEmpty() && st.peek() <= arr[i]) st.pop();
+   - pge[i] = st.isEmpty() ? -1 : st.peek();
+   - st.push(arr[i]);
+3. Return pge.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Mirror image of Next Greater Element: scanning forward with stack popping <= elements retains the previous greater element at the top.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+O(N) stack replaces O(N^2) brute force.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+arr = [10, 4, 2, 20, 40, 12, 30]
+i=0 (10): -1, push 10
+i=1 (4): 10 > 4 -> 10, push 4
+i=2 (2): 4 > 2 -> 4, push 2
+i=3 (20): pop 2, pop 4, pop 10 -> -1, push 20
+i=4 (40): pop 20 -> -1, push 40
+i=5 (12): 40 > 12 -> 40, push 12
+i=6 (30): pop 12, 40 > 30 -> 40, push 30
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Single pass O(N).
+- Space Complexity: O(N)
+  Reason: Stack space.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Used directly in Stock Span and Largest Rectangle in Histogram.
+================================================================================

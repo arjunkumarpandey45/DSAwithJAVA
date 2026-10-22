@@ -1,0 +1,87 @@
+================================================================================
+QUESTION: DQ15 - Minimum Swaps to Sort by Digit Sum
+FILE: DQ15_MinimumSwapsToSortbyDigitSum.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given an integer array 'nums', sort the array according to:
+1. Sum of digits in ascending order.
+2. If digit sums are equal, break ties by comparing the original numbers in ascending order.
+Return the minimum number of swaps needed to sort the array into this target order.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Finding minimum swaps to rearrange an array into sorted order is a classic Cycle Decomposition problem!
+1. Pair each number with its digit sum and original index: [num, digitSum, originalIndex].
+2. Sort this auxiliary array by (digitSum, num).
+3. Now, the element currently at sorted position 'i' originally came from 'arr[i][2]'.
+4. This forms directed permutation cycles:
+   - An element already in its correct spot forms a cycle of length 1 (0 swaps).
+   - A cycle of length L requires exactly (L - 1) swaps to place all its elements correctly!
+5. Total minimum swaps = sum of (cycleLength - 1) over all unvisited cycles.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Helper function getSum(x): sums digits of x by repeated modulo 10 and division.
+2. Build 2D array arr[n][3]:
+   - arr[i][0] = nums[i]
+   - arr[i][1] = getSum(nums[i])
+   - arr[i][2] = i (original index)
+3. Sort arr with custom comparator:
+   - Primary: compare arr[a][1] with arr[b][1] (digit sum).
+   - Secondary: compare arr[a][0] with arr[b][0] (original value).
+4. Create boolean visited[n] array and swaps = 0.
+5. For i = 0 to n - 1:
+   - If visited[i] or arr[i][2] == i, continue.
+   - Traverse the cycle starting from i: while (!visited[j]) { visited[j] = true; j = arr[j][2]; cycleLength++; }
+   - swaps += (cycleLength - 1).
+6. Return swaps.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Any permutation can be uniquely partitioned into disjoint cycles.
+To resolve a cycle of length L (e.g. A->B->C->A), exactly L - 1 swaps are necessary and sufficient.
+Summing (L - 1) across all independent cycles gives the exact theoretical minimum swaps.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not simulate actual selection sort or bubble sort swaps?
+- Selection sort makes O(n) swaps but does not guarantee the MINIMUM possible swaps.
+- Bubble sort swaps only adjacent elements (O(n^2) swaps).
+  Cycle decomposition guarantees the absolute minimum number of arbitrary position swaps.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Input: nums = [37, 100, 22, 11]
+
+Compute digit sums:
+  37: 3 + 7 = 10 (idx 0)
+  100: 1 + 0 + 0 = 1 (idx 1)
+  22: 2 + 2 = 4 (idx 2)
+  11: 1 + 1 = 2 (idx 3)
+
+Sorted order by (digitSum, val):
+  pos 0: 100 (digitSum 1, origIdx 1)
+  pos 1: 11  (digitSum 2, origIdx 3)
+  pos 2: 22  (digitSum 4, origIdx 2)
+  pos 3: 37  (digitSum 10, origIdx 0)
+
+Cycle tracing:
+  i = 0: origIdx = 1 != 0. Cycle: 0 -> 1 -> 3 -> 0. Length = 3. Swaps += 3 - 1 = 2.
+  i = 2: origIdx = 2 == 2 (already in position, length 1, 0 swaps).
+
+Total minimum swaps = 2.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(n log n)
+  Reason: Sorting dominates the time complexity; cycle finding runs in linear O(n) time.
+- Space Complexity: O(n)
+  Reason: Auxiliary 2D array of size n x 3 and visited boolean array.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Cycle decomposition is the universal algorithm for minimum swaps to sort any array.
+- Always use secondary tie-breaking in the comparator to handle identical digit sums deterministically.
+================================================================================

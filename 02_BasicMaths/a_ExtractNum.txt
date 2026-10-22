@@ -1,0 +1,59 @@
+================================================================================
+QUESTION: Extract Digits of a Number & Count Digits
+FILE: a_ExtractNum.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Extract digits of a number one by one from right to left, and compute the total number of digits in the number.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+How do you get the last digit of any number in base 10?
+- Take modulus 10: num % 10.
+How do you chop off the last digit?
+- Divide by 10: num / 10.
+How do you count digits without a loop?
+- Math formula: (int)Math.log10(num) + 1!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Extraction loop:
+   - while (num > 0):
+     - lastDigit = num % 10.
+     - process/print lastDigit.
+     - num = num / 10.
+2. Fast Digit Counting formula:
+   - count = (int) Math.log10(num) + 1.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+In base 10 arithmetic, dividing by 10 shifts all digits right by 1 position (discarding the remainder). Math.log10(x) tells you what power of 10 equals x; adding 1 gives the exact number of digits.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not convert to String: String.valueOf(num).length()?
+Converting to string creates a new String object and character array in heap memory (O(N) space and slower). Modulus/division or log10 is O(1) space and super fast.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Input: num = 1998
+Formula: log10(1998) = 3.30059... -> (int)3.30059 = 3 -> 3 + 1 = 4 digits!
+Loop extraction:
+1998 % 10 = 8 -> num becomes 199
+199 % 10 = 9 -> num becomes 19
+19 % 10 = 9 -> num becomes 1
+1 % 10 = 1 -> num becomes 0 -> Loop terminates.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(log10(N))
+  Reason: A number N has roughly log10(N) digits. We divide by 10 each step.
+- Space Complexity: O(1)
+  Reason: No extra storage used.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Notice that extracting with % 10 gives digits in REVERSE order (from right to left: 8, 9, 9, 1).
+- Special case: num = 0. Math.log10(0) is negative infinity! For 0, count is manually 1.
+================================================================================

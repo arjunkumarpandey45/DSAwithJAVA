@@ -1,0 +1,59 @@
+================================================================================
+QUESTION: Capacity To Ship Packages Within D Days (LeetCode 1011)
+FILE: m_ShipWithinDays.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Find the minimum weight capacity of a ship such that all packages in weights array can be shipped in order within `days` days.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Binary Search on Answer!
+What is the minimum possible ship capacity? `max(weights)` (must be able to carry the heaviest package).
+What is the maximum capacity? `sum(weights)` (shipping everything in 1 day).
+At capacity `mid`:
+Pack packages in order until adding another exceeds `mid`, then increment day count.
+- If daysNeeded <= days: capacity is sufficient! Try smaller capacity (`high = mid - 1`).
+- Else: capacity too small, need bigger ship (`low = mid + 1`).
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. low = max(weights), high = sum(weights), ans = high;
+2. while (low <= high):
+   - mid = low + (high - low) / 2;
+   - if (daysNeeded(weights, mid) <= days): ans = mid; high = mid - 1;
+   - else: low = mid + 1;
+3. daysNeeded helper:
+   - days = 1, load = 0;
+   - for w in weights: if (load + w > cap) { days++; load = w; } else load += w;
+   - return days;
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Days needed is monotonically decreasing with ship capacity. Increasing capacity never increases days needed.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not test capacities linearly?
+Sum can be 5 * 10^7, making linear search take millions of iterations.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+weights = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], days = 5
+low = 10, high = 55
+- mid = 32: days = 2 <= 5 -> ans = 32, high = 31
+- mid = ... converges to 15.
+At capacity 15: [1,2,3,4,5](15), [6,7](13), [8](8), [9](9), [10](10) -> exactly 5 days!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N * log(sum - max))
+  Reason: Binary search on capacity range, O(N) scan per step.
+- Space Complexity: O(1)
+  Reason: Constant space.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Low must start at `max(weights)`, NOT 1 or 0! If ship capacity is less than the heaviest package, that package can NEVER be shipped.
+================================================================================

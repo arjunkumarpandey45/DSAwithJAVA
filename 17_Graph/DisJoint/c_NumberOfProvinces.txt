@@ -1,0 +1,51 @@
+================================================================================
+QUESTION: Number of Provinces Using DSU
+FILE: c_NumberOfProvinces.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Find the number of connected components in an undirected graph using Disjoint Set Union.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Initialize DSU with N vertices (initially N independent components).
+For every edge `isConnected[i][j] == 1`:
+If `findUPar(i) != findUPar(j)`:
+- Union `i` and `j`!
+At the end, count how many nodes are their OWN ultimate parent (`parent[i] == i`)!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. DSU dsu = new DSU(n);
+2. For i = 0..n-1, j = i+1..n-1:
+   - if (isConnected[i][j] == 1) dsu.unionBySize(i, j);
+3. int count = 0;
+4. For i = 0..n-1: if (dsu.parent[i] == i) count++;
+5. Return count;
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Each independent connected component has exactly one ultimate parent.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+DSU is dynamically updateable: if new edges are added over time, DSU handles queries in O(1) without rerunning DFS.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+3 cities, edge between 0 and 1.
+union(0, 1): parents become [0, 0, 2]
+Roots: parent[0]=0, parent[2]=2 -> 2 provinces!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N^2 * alpha)
+  Reason: Scan N x N matrix with O(1) DSU unions.
+- Space Complexity: O(N)
+  Reason: DSU arrays.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Count `dsu.parent[i] == i` or `dsu.findUPar(i) == i`.
+================================================================================

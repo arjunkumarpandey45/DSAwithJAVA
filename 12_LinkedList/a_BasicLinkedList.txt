@@ -1,0 +1,58 @@
+================================================================================
+QUESTION: Basic Linked List Implementation & Operations
+FILE: a_BasicLinkedList.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Fundamental Linked List structure and operations: creating nodes, adding at head (addFirst), adding at tail (addLast), deleting nodes, and traversing/printing the list.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+An array is a row of contiguous lockers in memory.
+A Linked List is a treasure hunt: each node holds a value (`data`) and a clue pointing to the address of the next node (`next`).
+Adding at head is O(1): create a new node, point its `next` to old head, update `head = newNode`.
+Traversing: start at `curr = head`, while `curr != null`, print `curr.data` and advance `curr = curr.next`.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Node class: int data (or String data); Node next;
+2. addFirst(data):
+   - Node newNode = new Node(data);
+   - newNode.next = head;
+   - head = newNode;
+3. addLast(data):
+   - if head == null: head = newNode; return;
+   - curr = head; while (curr.next != null) curr = curr.next;
+   - curr.next = newNode;
+4. printList():
+   - curr = head; while (curr != null) { print(curr.data); curr = curr.next; }
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Nodes are dynamically allocated anywhere on the heap and chained via references. Inserting at the head requires no element shifting, making it O(1).
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not always use Arrays?
+Arrays have fixed capacity (or require costly O(N) resizing) and inserting at index 0 requires shifting all elements (O(N)). Linked Lists insert at head in O(1) time and grow dynamically.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+List: null
+addFirst("B") -> [B] -> null
+addFirst("A") -> [A] -> [B] -> null
+addLast("C") -> traverse to B -> B.next = [C] -> [A] -> [B] -> [C] -> null
+printList: prints A -> B -> C
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: addFirst: O(1), addLast: O(N) (or O(1) with tail pointer), traversal: O(N)
+  Reason: Traversing to the end takes N steps; head insertion takes 1 step.
+- Space Complexity: O(N)
+  Reason: Each node allocates memory for data and next pointer.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Always check `head == null` before accessing `head.next` to prevent NullPointerException.
+================================================================================

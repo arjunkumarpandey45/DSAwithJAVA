@@ -1,0 +1,72 @@
+================================================================================
+QUESTION: DQ8 - Minimum Add to Make Parentheses Valid
+FILE: DQ8_MinAddToMakeValid.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given a string 's' of '(' and ')' parentheses,
+return the minimum number of parentheses we must add at any position to make the string valid.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+What causes a string to be invalid?
+1. A closing ')' that has no preceding '(' to match it.
+2. An opening '(' that was never closed by the end.
+If we scan from left to right:
+- Track openCount: number of available unmatched '(' seen so far.
+- If we see ')':
+  * If openCount > 0: match it by openCount--.
+  * If openCount == 0: this ')' is stranded! We need to add an opening '(' to fix it -> plus++.
+- At the end, any leftover openCount also needs closing ')' added.
+Total additions = plus + openCount.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Initialize plus = 0 (needed opens) and count = 0 (unmatched opens).
+2. For each character ch in s:
+   - If ch == '(': count++
+   - Else (ch == ')'):
+     * If count < 1: plus++ (need to add '(')
+     * Else: count-- (matched with an available '(')
+3. Return plus + count.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Parentheses validity is greedy:
+An open '(' can only match with a ')' that comes AFTER it.
+So whenever a ')' arrives with count == 0, no future '(' can ever save it.
+It MUST be fixed by adding an open bracket. Everything else is resolved by count.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not use a full Stack?
+- A stack works fine, but push/pop allocates objects on the heap.
+  Since there is only one type of bracket, simple integer counters achieve the exact same result
+  with O(1) auxiliary space and faster execution.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Input: s = '()))((' 
+
+i = 0, '(': count = 1, plus = 0
+i = 1, ')': count = 0, plus = 0 (matched)
+i = 2, ')': count < 1 -> plus = 1
+i = 3, ')': count < 1 -> plus = 2
+i = 4, '(': count = 1, plus = 2
+i = 5, '(': count = 2, plus = 2
+
+Result = plus + count = 2 + 2 = 4 additions needed.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(n)
+  Reason: One linear scan of the string.
+- Space Complexity: O(1)
+  Reason: Only two integer counter variables used.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- No stack allocation needed when only one bracket type is present.
+- Clean, greedy O(1) space solution.
+================================================================================

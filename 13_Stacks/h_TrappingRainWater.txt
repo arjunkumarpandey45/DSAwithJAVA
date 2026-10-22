@@ -1,0 +1,64 @@
+================================================================================
+QUESTION: Trapping Rain Water (LeetCode 42)
+FILE: h_TrappingRainWater.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given n non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it can trap after raining.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+At any index `i`, how much water sits on top of bar `i`?
+`water[i] = min(maxHeightToLeft, maxHeightToRight) - height[i]`.
+Optimal Two-Pointer approach (O(1) space):
+Place `left = 0` and `right = n - 1`.
+Track `leftMax` and `rightMax`.
+If `height[left] <= height[right]`:
+The left side is bounded by `leftMax` (we know for sure there is a wall at `right` that is >= height[left]!).
+So water trapped at left = `leftMax - height[left]`. Advance `left++`.
+Else: water trapped at right = `rightMax - height[right]`. Advance `right--`.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. int left = 0, right = n - 1, leftMax = 0, rightMax = 0, totalWater = 0;
+2. while (left <= right):
+   - if (height[left] <= height[right]):
+     - if (height[left] >= leftMax) leftMax = height[left];
+     - else totalWater += leftMax - height[left];
+     - left++;
+   - else:
+     - if (height[right] >= rightMax) rightMax = height[right];
+     - else totalWater += rightMax - height[right];
+     - right--;
+3. Return totalWater.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Water level is constrained by the shorter wall. Moving inward from the shorter wall guarantees the opposing wall is tall enough to support that water level.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not precompute prefixMax and suffixMax arrays?
+Prefix and suffix arrays use O(N) extra space. Two pointers achieve O(1) space.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+height = [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]
+left=0, right=11: h[0]=0 <= h[11]=1 -> leftMax=0, left=1
+left=1(1) <= right=11(1): leftMax=1, left=2
+left=2(0) <= right=11(1): water += 1 - 0 = 1, left=3
+left=3(2) > right=11(1): rightMax=1, right=10
+... accumulates across all trapped pockets -> Total = 6 units!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Single pass where pointers meet in middle.
+- Space Complexity: O(1)
+  Reason: Only 4 scalar variables.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Remember condition is `left <= right` so that the very last central column is properly processed.
+================================================================================

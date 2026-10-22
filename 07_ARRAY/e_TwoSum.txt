@@ -1,0 +1,55 @@
+================================================================================
+QUESTION: Two Sum (LeetCode 1)
+FILE: e_TwoSum.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given an array of integers and a target sum, find the indices of the two numbers such that they add up to target.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+If you need two numbers that add up to `target`, for any number `x`, you need to find its partner `target - x`.
+As you walk through the array, remember every number you have seen so far in a HashMap: `map.put(number, index)`.
+At each step, look into your map: "Have I already seen `target - arr[i]`?"
+If YES, you found the pair! Return [map.get(target - arr[i]), i].
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Map<Integer, Integer> map = new HashMap<>();
+2. Loop i from 0 to arr.length - 1:
+   - int complement = target - arr[i];
+   - If map.containsKey(complement):
+     - return new int[]{ map.get(complement), i };
+   - map.put(arr[i], i);
+3. Return empty array if not found.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Looking up the complement in a HashMap takes O(1) time. In a single pass, every element checks if its match was previously seen.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not check all pairs with nested loops?
+Nested loops take O(N^2) time. For N = 100,000, N^2 = 10 billion operations (TLE). HashMap solves it in O(N).
+Why not sort + two pointers?
+Sorting scrambles the original indices! If problem asks for indices, you would have to store index pairs before sorting.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+arr = [2, 7, 11, 15], target = 9
+i = 0: arr[0] = 2. Complement = 9 - 2 = 7. Map: {2: 0}
+i = 1: arr[1] = 7. Complement = 9 - 7 = 2. Is 2 in map? YES! at index 0.
+Return: [0, 1]
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Traverse array once, HashMap lookups take O(1) average time.
+- Space Complexity: O(N)
+  Reason: HashMap stores up to N elements.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Do NOT put all elements in the map first before checking! If you do, an element can pair with itself (e.g. target = 6, arr = [3], 6 - 3 = 3). Put elements into the map AFTER checking.
+================================================================================

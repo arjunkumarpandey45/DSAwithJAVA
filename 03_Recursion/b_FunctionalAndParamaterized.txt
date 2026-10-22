@@ -1,0 +1,64 @@
+================================================================================
+QUESTION: Functional vs Parameterized Recursion (Sum of N & Factorial)
+FILE: b_FunctionalAndParamaterized.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Explains the two fundamental ways to write recursion: Parameterized (passing accumulator down) vs Functional (returning values back up).
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Two ways to solve "Sum of 1 to N":
+1. Parameterized: Carry a bag (sum) down with you. Add to the bag at each step. When you reach 0, print the bag.
+2. Functional: Ask the smaller sub-problem for its answer, then add yourself to it on the way back:
+   f(n) = n + f(n - 1).
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+Parameterized Sum:
+- void sum(n, sum):
+  - if (n == 0) { print sum; return; }
+  - sum(n - 1, sum + n);
+
+Functional Sum:
+- int sum(n):
+  - if (n == 0) return 0;
+  - return n + sum(n - 1);
+
+Functional Factorial:
+- int fact(n):
+  - if (n <= 1) return 1;
+  - return n * fact(n - 1);
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+In functional recursion, each stack frame evaluates its sub-expression upon return. In parameterized recursion, the answer is fully computed by the time the deepest call is reached.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why know both?
+Functional recursion is needed when the caller expects a return value (like tree height, DP, divide and conquer).
+Parameterized recursion is useful when keeping track of path states (like backtracking paths).
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Functional Factorial fact(3):
+fact(3) calls 3 * fact(2)
+  fact(2) calls 2 * fact(1)
+    fact(1) returns 1
+  fact(2) returns 2 * 1 = 2
+fact(3) returns 3 * 2 = 6
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: N recursive calls.
+- Space Complexity: O(N)
+  Reason: Stack depth of N calls.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Factorial base case: factorial of 0 is 1, not 0! (0! = 1).
+- Watch out for integer overflow with factorial: 13! exceeds 32-bit signed integer capacity.
+================================================================================

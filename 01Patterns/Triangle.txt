@@ -1,0 +1,57 @@
+================================================================================
+QUESTION: Triangle Patterns (Right Triangle, Inverted, Pyramid, 0-1)
+FILE: Triangle.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Print several classic triangle patterns: right-angled triangle, inverted right-angled triangle, pyramid, and 0-1 alternating triangle.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Every pattern is just math between row index 'i' and column index 'j':
+- Right triangle: row i has (i + 1) stars.
+- Inverted triangle: row i has (n - i) stars.
+- Pyramid: row i has (n - 1 - i) leading spaces and (2*i + 1) stars.
+- 0-1 triangle: if (row + col) is even, print 1; if odd, print 0 (or toggle a boolean flag).
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Right-angle:
+   - i from 0 to n-1: j from 0 to i: print "*".
+2. Inverted Right-angle:
+   - i from n down to 1: j from i down to 1: print "*".
+3. 0-1 Triangle:
+   - i from 1 to n:
+     - start with 1 if i is odd, 0 if i is even.
+     - j from 1 to i: print start, then toggle start = 1 - start.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+The number of stars directly maps to the loop boundary. For the 0-1 pattern, parity (even/odd sum of i + j) naturally alternates values across the grid like a checkerboard.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not use complex if-else conditions inside a single 1D loop?
+A single loop flattening 2D coords with division and modulus is much harder to read, debug, and understand. Nested loops map 1:1 with rows and columns.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+0-1 Triangle with n = 4:
+Row 1: i=1 -> start=1 -> prints "1"
+Row 2: i=2 -> start=0 -> prints "0 1"
+Row 3: i=3 -> start=1 -> prints "1 0 1"
+Row 4: i=4 -> start=0 -> prints "0 1 0 1"
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N^2)
+  Reason: Inner loop runs 1 + 2 + ... + N times = O(N^2).
+- Space Complexity: O(1)
+  Reason: Only primitive loop variables used.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- For 0-1 patterns: either toggle val = 1 - val or check (i + j) % 2 == 0.
+- For pyramids, always make sure you print spaces BEFORE the stars on the same line.
+================================================================================

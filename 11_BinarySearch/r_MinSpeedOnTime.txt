@@ -1,0 +1,58 @@
+================================================================================
+QUESTION: Minimum Speed to Arrive on Time (LeetCode 1870)
+FILE: r_MinSpeedOnTime.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given array dist representing train rides, and a floating-point number hour, find the minimum positive integer speed (km/h) to arrive on time. Trains only depart on integer hours, except the last train.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Binary Search on Answer!
+For every train except the last one, you must wait for the next integer hour: `ceil(dist[i] / speed)`.
+For the last train, no waiting is required: exact `(double) dist[last] / speed`.
+If hour <= dist.length - 1: impossible! Each of the first (n-1) rides takes at least 1 whole hour. Return -1.
+Binary search speed from 1 to 10^7!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. If (hour <= dist.length - 1) return -1;
+2. int low = 1, high = 10_000_000, ans = -1;
+3. while (low <= high):
+   - int mid = low + (high - low) / 2;
+   - if (timeTaken(dist, mid) <= hour): ans = mid; high = mid - 1;
+   - else: low = mid + 1;
+4. timeTaken helper:
+   - double time = 0;
+   - for i = 0 to n - 2: time += Math.ceil((double)dist[i] / speed);
+   - time += (double)dist[n - 1] / speed;
+   - return time;
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Speed is strictly monotonic with respect to time taken. Doubling speed cuts travel time.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not linear search?
+Speed can reach 10^7. Linear search gives TLE.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+dist = [1, 3, 2], hour = 6
+low = 1, high = 10^7
+- speed = 1: ceil(1/1) + ceil(3/1) + 2/1 = 1 + 3 + 2 = 6 <= 6! ans = 1, high = 0 < low -> STOP!
+Minimum speed = 1 km/h.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N * log(10^7))
+  Reason: Binary search over 10^7 range, O(N) evaluation each step.
+- Space Complexity: O(1)
+  Reason: Constant space.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- High must be 10^7 because if the last train distance is 10^5 and remaining time is 0.01, speed needed is 10^5 / 0.01 = 10^7.
+================================================================================

@@ -1,0 +1,61 @@
+================================================================================
+QUESTION: Find the Smallest Divisor Given a Threshold (LeetCode 1283)
+FILE: l_SmallestDivisor.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Find the smallest positive integer divisor such that the sum of division results (ceil(nums[i] / divisor)) is <= threshold.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Binary Search on Answer!
+Notice: As divisor INCREASES, the division sum DECREASES.
+Range for divisor:
+- low = 1
+- high = max(nums)
+If `sum(ceil(nums[i] / mid)) <= threshold`:
+It works! Can we make divisor even smaller? Save `ans = mid`, try smaller (`high = mid - 1`).
+Else: Sum is too big, need a larger divisor (`low = mid + 1`).
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. low = 1, high = max(nums), ans = high;
+2. while (low <= high):
+   - mid = low + (high - low) / 2;
+   - int sum = 0;
+   - for (int x : nums) sum += (x + mid - 1) / mid;
+   - if (sum <= threshold): ans = mid; high = mid - 1;
+   - else: low = mid + 1;
+3. Return ans.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Division sum is inversely proportional to divisor (monotonically decreasing). Perfect for binary search.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not linear search from 1 to max?
+Binary search reduces 10^6 steps down to 20 steps.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+nums = [1, 2, 5, 9], threshold = 6
+low = 1, high = 9
+- mid = 5: ceil(1/5)+ceil(2/5)+ceil(5/5)+ceil(9/5) = 1+1+1+2 = 5 <= 6! ans=5, high=4
+- mid = 2: ceil(1/2)+ceil(2/2)+ceil(5/2)+ceil(9/2) = 1+1+3+5 = 10 > 6! low=3
+- mid = 3: ceil(1/3)+ceil(2/3)+ceil(5/3)+ceil(9/3) = 1+1+2+3 = 7 > 6! low=4
+- mid = 4: ceil(1/4)+ceil(2/4)+ceil(5/4)+ceil(9/4) = 1+1+2+3 = 7 > 6? wait ceil(9/4)=3, 1+1+2+3 = 7 > 6 -> low=5 > high -> STOP!
+Smallest divisor = 5.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N * log(max(nums)))
+  Reason: Binary search over range 1..max(nums) with O(N) sum calculation each step.
+- Space Complexity: O(1)
+  Reason: Constant space.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Use `(num + mid - 1) / mid` for ceil integer division.
+================================================================================

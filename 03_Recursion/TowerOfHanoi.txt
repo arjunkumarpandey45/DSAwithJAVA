@@ -1,0 +1,55 @@
+================================================================================
+QUESTION: Tower of Hanoi
+FILE: TowerOfHanoi.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Move N disks from a source rod to a destination rod using an auxiliary (helper) rod, such that:
+1. Only one disk can be moved at a time.
+2. A larger disk can never be placed on top of a smaller disk.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Think recursively for N disks:
+1. Move the top (N - 1) disks from Source to Helper (using Destination as temp).
+2. Move the 1 remaining largest disk directly from Source to Destination.
+3. Move the (N - 1) disks from Helper to Destination (using Source as temp)!
+That's the entire problem!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+void hanoi(int n, char src, char helper, char dest):
+1. Base case: if (n == 0) return;
+2. Step 1: hanoi(n - 1, src, dest, helper);
+3. Step 2: System.out.println(src + " -> " + dest);
+4. Step 3: hanoi(n - 1, helper, src, dest);
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+By induction: if you can move N-1 disks anywhere safely, you can move the largest disk to destination, and then safely move the N-1 disks on top of it.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not solve iteratively?
+Iterative Tower of Hanoi requires complex bitwise operations or explicit stacks. The recursive solution is 4 lines and mathematically elegant.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+For n = 2, src='A', helper='B', dest='C':
+1. hanoi(1, A, C, B) -> prints "A -> B"
+2. prints "A -> C" (largest disk moved)
+3. hanoi(1, B, A, C) -> prints "B -> C"
+Total moves = 2^2 - 1 = 3 moves!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(2^N)
+  Reason: Total moves required is exactly 2^N - 1.
+- Space Complexity: O(N)
+  Reason: Maximum recursion stack depth is N.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Notice how the parameters swap roles: in step 1 dest acts as the helper; in step 3 src acts as the helper!
+================================================================================

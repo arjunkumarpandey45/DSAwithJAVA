@@ -1,0 +1,54 @@
+================================================================================
+QUESTION: Path With Minimum Effort (LeetCode 1631)
+FILE: e_MinimumEffortPath.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Find a route from (0, 0) to (m-1, n-1) that MINIMIZES the MAXIMUM absolute difference in heights between two consecutive cells.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Dijkstra's algorithm minimizing maximum edge weight along a path!
+- Effort of moving from cell A to cell B = `Math.abs(heights[A] - heights[B])`.
+- Total path effort = `Math.max(currentEffort, stepEffort)`.
+Min-Heap stores tuples: `(effort, r, c)`:
+Always pick the cell with smallest accumulated effort, relax 4 neighbors.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. int[][] dist = new int[m][n]; for row in dist: Arrays.fill(row, INF); dist[0][0] = 0;
+2. PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[0] - b[0]); pq.offer(new int[]{0, 0, 0});
+3. while (!pq.isEmpty()):
+   - curr = pq.poll(); int diff = curr[0], r = curr[1], c = curr[2];
+   - if (r == m - 1 && c == n - 1) return diff; // destination!
+   - for 4 directions (nr, nc):
+     - int newEffort = Math.max(diff, Math.abs(heights[r][c] - heights[nr][nc]));
+     - if (newEffort < dist[nr][nc]): dist[nr][nc] = newEffort; pq.offer(new int[]{ newEffort, nr, nc });
+4. Return 0;
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Dijkstra applies to any path-minimization problem where the path cost metric is monotonic (max-edge metric is monotonic).
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Binary search on answer + BFS also works in O(M*N*log(maxH)), but Dijkstra directly finds the minimum effort without guessing thresholds.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+heights = [[1,2,2],[3,8,2],[5,3,5]]
+Path [1, 2, 2, 2, 5]:
+Diffs: 1->2 (1), 2->2 (0), 2->2 (0), 2->5 (3). Maximum effort = 3!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(M * N * log(M * N))
+  Reason: Dijkstra on M x N grid.
+- Space Complexity: O(M * N)
+  Reason: Distance array and heap.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Remember: `newEffort = Math.max(diff, Math.abs(current - neighbor))`.
+================================================================================

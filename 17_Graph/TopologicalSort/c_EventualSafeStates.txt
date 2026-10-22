@@ -1,0 +1,55 @@
+================================================================================
+QUESTION: Find Eventual Safe States (LeetCode 802)
+FILE: c_EventualSafeStates.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+A node is a terminal node if there are no outgoing edges. A node is a safe node if every possible path starting from that node leads to a terminal node. Return all safe nodes sorted ascending.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Which nodes are NOT safe?
+Nodes that are part of a CYCLE or can REACH a cycle!
+Reversing edges trick (Kahn's Algorithm):
+Terminal nodes have out-degree 0.
+If we REVERSE ALL EDGES in the graph:
+- Terminal nodes now have IN-DEGREE 0!
+- Running Kahn's Algorithm starting from terminal nodes will ONLY visit nodes that can safely reach terminal nodes without hitting cycles!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Build reversed graph: for each edge u -> v, add v -> u to revAdj. Count inDegrees in revAdj.
+2. Queue<Integer> q = new LinkedList<>();
+   for i = 0 to V - 1: if (inDegree[i] == 0) q.offer(i);
+3. List<Integer> safe = new ArrayList<>();
+4. while (!q.isEmpty()):
+   - int node = q.poll(); safe.add(node);
+   - for v in revAdj.get(node): if (--inDegree[v] == 0) q.offer(v);
+5. Collections.sort(safe); return safe;
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Reversing edges turns a destination problem into a source problem. Kahn's BFS from terminal nodes peels away safe layers, leaving cycles stranded.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+DFS cycle detection with 3-state coloring (0=unvisited, 1=visiting, 2=safe) is also O(V+E) and avoids reversing edges.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Nodes 5 and 6 have no outgoing edges (terminal).
+Reversing edges makes inDegree of 5 and 6 equal to 0.
+Kahn's algorithm expands backward from 5 and 6, marking 4, 5, 6 as safe.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(V + E)
+  Reason: Edge reversal + Kahn's BFS.
+- Space Complexity: O(V + E)
+  Reason: Reversed adjacency list.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Result must be sorted in ascending order (`Collections.sort(safe)`).
+================================================================================

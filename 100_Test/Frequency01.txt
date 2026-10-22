@@ -1,0 +1,62 @@
+================================================================================
+QUESTION: Element Frequency Counting Using HashMap
+FILE: Frequency01.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Count and display the frequency of every unique integer in an array using Java's HashMap.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+As you walk through the array, keep a tally notebook (HashMap).
+For each number:
+- If seen before, increment its tally by 1.
+- If first time seeing it, record tally as 1.
+At the end, iterate over the entries in the map and print key-value pairs.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Initialize HashMap<Integer, Integer> map.
+2. Loop i from 0 to arr.length - 1:
+   - map.put(arr[i], map.getOrDefault(arr[i], 0) + 1);
+3. Iterate through map.entrySet():
+   - Print "The Frequency of " + entry.getKey() + " is " + entry.getValue().
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+HashMap computes hash codes of keys for O(1) expected time insertion and retrieval. getOrDefault handles absent keys cleanly in one line.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not sort first and count consecutive elements?
+Sorting takes O(N log N) time and alters the original array order. HashMap takes O(N) linear time and preserves array order.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Input: arr = [1, 2, 2, 3, 1, 4, 2]
+i=0 (1): map = {1: 1}
+i=1 (2): map = {1: 1, 2: 1}
+i=2 (2): map = {1: 1, 2: 2}
+i=3 (3): map = {1: 1, 2: 2, 3: 1}
+i=4 (1): map = {1: 2, 2: 2, 3: 1}
+i=5 (4): map = {1: 2, 2: 2, 3: 1, 4: 1}
+i=6 (2): map = {1: 2, 2: 3, 3: 1, 4: 1}
+Output:
+Frequency of 1 is 2
+Frequency of 2 is 3
+Frequency of 3 is 1
+Frequency of 4 is 1
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Traversing the array of size N takes O(N), and HashMap insertion is O(1) on average.
+- Space Complexity: O(U)
+  Reason: Stores U unique elements in the map (at most N).
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- HashMap does NOT maintain insertion order. If you need insertion order preserved, use LinkedHashMap.
+- If you need sorted keys, use TreeMap (which takes O(log N) per operation).
+================================================================================

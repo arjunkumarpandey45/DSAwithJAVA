@@ -1,0 +1,60 @@
+================================================================================
+QUESTION: Binary Tree DFS Traversals (Preorder, Inorder, Postorder)
+FILE: b_DFS.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+The three classic Depth First Search (DFS) traversals of a binary tree:
+1. Preorder: Root -> Left -> Right
+2. Inorder: Left -> Root -> Right
+3. Postorder: Left -> Right -> Root
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Look at where ROOT is processed:
+- PRE-order: Root comes FIRST (Root, Left, Right).
+- IN-order: Root comes in the MIDDLE (Left, Root, Right).
+- POST-order: Root comes LAST (Left, Right, Root).
+Notice: Left ALWAYS comes before Right in all three!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+Preorder(root):
+- if (root == null) return;
+- print(root.val); preorder(root.left); preorder(root.right);
+
+Inorder(root):
+- if (root == null) return;
+- inorder(root.left); print(root.val); inorder(root.right);
+
+Postorder(root):
+- if (root == null) return;
+- postorder(root.left); postorder(root.right); print(root.val);
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Recursion uses the call stack to traverse down to the leaves and backtrack upward, visiting every subtree in strictly defined hierarchical order.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Inorder traversal on a Binary Search Tree (BST) produces strictly ASCENDING sorted order! That is why Inorder is specially important.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Tree: 1 with left: 2, right: 3
+Preorder: 1, 2, 3
+Inorder: 2, 1, 3
+Postorder: 2, 3, 1
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Every node visited once.
+- Space Complexity: O(H)
+  Reason: Recursion stack proportional to height H.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Base case is always `if (root == null) return;`.
+================================================================================

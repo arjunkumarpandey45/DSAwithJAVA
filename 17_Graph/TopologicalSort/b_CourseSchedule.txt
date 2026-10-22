@@ -1,0 +1,57 @@
+================================================================================
+QUESTION: Course Schedule I & II (LeetCode 207 & 210)
+FILE: b_CourseSchedule.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given numCourses and prerequisites pairs [a, b] (must take b before a):
+- Course Schedule I: Return true if you can finish all courses (detect cycle in DAG).
+- Course Schedule II: Return the exact ordering of courses to take.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+This is a DIRECT application of Topological Sort (Kahn's Algorithm)!
+Edge direction: `b -> a` (course b must be taken BEFORE course a).
+Calculate in-degrees for all courses.
+Run Kahn's BFS:
+- If the number of processed courses == numCourses: all courses can be finished! Return true (or the topo array).
+- If processed courses < numCourses: a deadlock / circular prerequisite cycle exists! Return false (or empty array).
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. List<List<Integer>> adj = new ArrayList<>(); int[] inDegree = new int[n];
+2. For [a, b] in prerequisites: adj.get(b).add(a); inDegree[a]++;
+3. Queue<Integer> q = new LinkedList<>(); for i=0..n-1: if (inDegree[i] == 0) q.offer(i);
+4. int count = 0; int[] order = new int[n];
+5. while (!q.isEmpty()):
+   - int node = q.poll(); order[count++] = node;
+   - for v in adj.get(node): if (--inDegree[v] == 0) q.offer(v);
+6. Return count == n ? order : new int[0];
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+A course can only be taken when all its prerequisites have been cleared (inDegree == 0). Circular prerequisites leave inDegrees > 0, blocking the queue.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Kahn's algorithm solves Course Schedule I and II with the exact same 15 lines of code.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+numCourses = 2, prereq = [[1, 0]] (0 -> 1)
+inDegree: 0:0, 1:1 -> q=[0]
+poll 0 -> count=1, inDegree[1] becomes 0 -> q=[1]
+poll 1 -> count=2 == numCourses -> Possible! Order: [0, 1]
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(V + E)
+  Reason: V = numCourses, E = prerequisites.length.
+- Space Complexity: O(V + E)
+  Reason: Adjacency list and in-degree array.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Watch edge direction: `[a, b]` means `b -> a`, NOT `a -> b`!
+================================================================================

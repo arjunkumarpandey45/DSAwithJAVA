@@ -1,0 +1,55 @@
+================================================================================
+QUESTION: Insertion Sort
+FILE: c_InsertionSort.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Sort an array by taking one element at a time and inserting it into its correct position among the already-sorted elements to its left (like sorting playing cards in your hand).
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Hold playing cards in your hand:
+Card 0 is already sorted by itself.
+Pick up Card 1: if it is smaller than Card 0, slide Card 0 right and insert Card 1.
+Pick up Card 2: compare with Card 1 and Card 0, shifting larger cards right until you find Card 2's spot.
+Keep inserting each card into its correct position in the sorted left hand.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Outer loop i from 0 to n - 1:
+2. Inner loop j = i down to 1:
+   - If arr[j - 1] > arr[j]:
+     - swap(arr[j], arr[j - 1]);
+   - Else: break (it's already in the right spot!).
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+At the end of iteration i, the prefix arr[0...i] is guaranteed to be sorted.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not use it everywhere?
+For completely reversed arrays, it does O(N^2) shifts.
+However, for small arrays (N <= 16) or almost-sorted arrays, Insertion Sort is extremely fast and outperforms even Quick Sort!
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Input: [12, 11, 13, 5, 6]
+i = 1 (ele 11): 11 < 12 -> swap -> [11, 12, 13, 5, 6]
+i = 2 (ele 13): 13 > 12 -> ok -> [11, 12, 13, 5, 6]
+i = 3 (ele 5): 5 slides past 13, 12, 11 -> [5, 11, 12, 13, 6]
+i = 4 (ele 6): 6 slides past 13, 12, 11 to after 5 -> [5, 6, 11, 12, 13]
+Sorted!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: Best: O(N) (nearly sorted); Worst/Average: O(N^2)
+  Reason: When sorted, inner loop breaks immediately (O(1)). When reversed, does N*(N-1)/2 comparisons.
+- Space Complexity: O(1)
+  Reason: In-place sorting.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Insertion Sort is STABLE (preserves relative order of equal elements) and ADAPTIVE (runs in O(N) on sorted data).
+================================================================================

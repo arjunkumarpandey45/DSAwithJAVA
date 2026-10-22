@@ -1,0 +1,73 @@
+================================================================================
+QUESTION: DQ11 - Remove Outermost Parentheses
+FILE: DQ11_RemoveOuterParentheses.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+A valid parentheses string 's' is primitive if it is non-empty and cannot be split into two valid strings.
+Given a valid parentheses string 's', decompose it into primitive valid strings,
+and return 's' after removing the outermost parentheses of every primitive string in the decomposition.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Consider '(()())(())':
+It splits into two primitives: '(()())' and '(())'.
+Removing outer brackets yields: '()()' and '()', concatenated = '()()()'.
+How to identify the outermost brackets without explicitly splitting?
+Look at nesting depth 'count':
+- When '(' arrives: if count > 0, it is NOT the outermost opening bracket! Append it. Then count++.
+- When ')' arrives: count--. If count > 0, it is NOT the outermost closing bracket! Append it.
+The outermost '(' has count == 0 before incrementing (so skipped).
+The outermost ')' drops count to 0 after decrementing (so skipped).
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Create StringBuilder 'st' and integer count = 0.
+2. Loop through each character ch in s:
+   - If ch == '(': 
+     * If count > 0, append ch to st.
+     * count++
+   - Else (ch == ')'):
+     * count--
+     * If count > 0, append ch to st.
+3. Return st.toString().
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Depth invariant:
+- The outermost '(' always starts at depth 0 (count == 0).
+- The outermost ')' always ends at depth 0 (count becomes 0).
+By filtering out characters where depth is 0, we automatically strip the outermost wrapper of each primitive block!
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not find split indices with a stack and use substring?
+- Splitting into substring chunks creates many temporary string objects.
+  Streaming with StringBuilder and depth counter does it in a single pass with minimal overhead.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Input: s = '(()())'
+
+i = 0, '(': count is 0 -> skip. count becomes 1.
+i = 1, '(': count is 1 > 0 -> append '(' -> st: '('. count becomes 2.
+i = 2, ')': count becomes 1 > 0 -> append ')' -> st: '()'.
+i = 3, '(': count is 1 > 0 -> append '(' -> st: '()('. count becomes 2.
+i = 4, ')': count becomes 1 > 0 -> append ')' -> st: '()()'.
+i = 5, ')': count becomes 0 -> skip.
+
+Result: '()()'. Outer brackets stripped perfectly!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(n)
+  Reason: Single pass of length n with O(1) appends.
+- Space Complexity: O(n)
+  Reason: StringBuilder storing the resulting stripped string.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Order matters: for '(', check count > 0 before incrementing.
+- For ')', check count > 0 after decrementing.
+================================================================================

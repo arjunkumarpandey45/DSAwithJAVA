@@ -1,0 +1,64 @@
+================================================================================
+QUESTION: Second Largest Element in Array
+FILE: SecondLargestEle.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Find the second strictly largest element in an unsorted array in a single pass without sorting.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Imagine a tournament with a 1st place champion (largest) and 2nd place runner-up (second):
+For each player current:
+- If current > largest: The old champion gets demoted to runner-up (second = largest), and current becomes the new champion (largest = current).
+- If current < largest BUT current > second: current beats the current runner-up and becomes the new runner-up (second = current).
+- If current == largest or current <= second: ignore!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Initialize largest = Integer.MIN_VALUE, second = Integer.MIN_VALUE.
+2. Loop through each element current in arr:
+   - If current > largest:
+     - second = largest;
+     - largest = current;
+   - Else if current < largest && current > second:
+     - second = current;
+3. If second == Integer.MIN_VALUE, print "No second largest exists" (e.g. all elements are equal).
+4. Else print second.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+By constantly maintaining the top two distinct values seen so far, we guarantee that when the loop finishes, largest holds the maximum value and second holds the strictly second maximum value.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not sort the array and pick arr[n - 2]?
+1. Sorting takes O(N log N) time, while this single pass takes O(N).
+2. If array contains duplicate maximums (e.g. [10, 10, 10]), arr[n - 2] is 10 (not the second largest!). You would have to scan backwards anyway.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Input: arr = [11, 10, 10]
+Start: largest = -INF, second = -INF
+i = 0 (11):
+  11 > -INF -> second = -INF, largest = 11
+i = 1 (10):
+  10 < 11 and 10 > -INF -> second = 10
+i = 2 (10):
+  10 == 10 (not < largest, not > second) -> ignore!
+End of loop: second = 10.
+Output: 10
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Single scan through the array of length N.
+- Space Complexity: O(1)
+  Reason: Only two variables (largest and second) are used.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Watch out for arrays where all elements are identical (e.g. [5, 5, 5]) or array size < 2: no second largest exists!
+- Strictly check current < largest before setting second = current to prevent duplicates of the largest from being counted as second largest.
+================================================================================

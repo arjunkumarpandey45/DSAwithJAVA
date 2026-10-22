@@ -1,0 +1,60 @@
+================================================================================
+QUESTION: Leaders in an Array (Superior Elements)
+FILE: y_LeadersInArray.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+An element is a "Leader" if it is strictly greater than all elements to its right. The rightmost element is always a leader. Find all leaders.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Looking from left to right is slow because you have to look ahead at all right elements.
+Flip your viewpoint: LOOK FROM RIGHT TO LEFT!
+Keep track of the `maxFromRight`.
+If current element > `maxFromRight`:
+It is strictly greater than everything to its right! It is a leader! Update `maxFromRight = currentElement`.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. ArrayList<Integer> ans = new ArrayList<>();
+2. int max = Integer.MIN_VALUE;
+3. For i = n - 1 down to 0:
+   - If arr[i] > max:
+     - ans.add(arr[i]);
+     - max = arr[i];
+4. Reverse ans (if order from left to right is needed).
+5. Return ans.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Any number that beats the maximum of all elements to its right beats every single individual element to its right.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not check right side with a nested loop for each element?
+Nested loops take O(N^2). Right-to-left scan solves it in a single pass O(N) time.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+arr = [10, 22, 12, 3, 0, 6]
+Scan right to left:
+- i=5 (6): 6 > -INF -> LEADER: 6, max = 6
+- i=4 (0): 0 < 6 (skip)
+- i=3 (3): 3 < 6 (skip)
+- i=2 (12): 12 > 6 -> LEADER: 12, max = 12
+- i=1 (22): 22 > 12 -> LEADER: 22, max = 22
+- i=0 (10): 10 < 22 (skip)
+Leaders: [22, 12, 6]
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Single scan from right to left.
+- Space Complexity: O(N)
+  Reason: Space only for output list.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Notice whether the question requires strictly greater (`>`) or greater than or equal to (`>=`).
+================================================================================

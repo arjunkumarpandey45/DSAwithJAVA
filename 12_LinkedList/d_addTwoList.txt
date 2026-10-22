@@ -1,0 +1,58 @@
+================================================================================
+QUESTION: Add Two Numbers Represented as Linked Lists (LeetCode 2)
+FILE: d_addTwoList.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+You are given two non-empty linked lists representing two non-negative integers. The digits are stored in reverse order, and each node contains a single digit. Add the two numbers and return the sum as a linked list.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Like elementary school column addition from right to left:
+Since digits are ALREADY stored in reverse order (units digit first at the head), we can just walk both lists simultaneously, add their digits plus any `carry` from the previous step!
+New digit = `sum % 10`.
+New carry = `sum / 10`.
+Use a dummy head node to build the result list easily.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. ListNode dummy = new ListNode(0), curr = dummy;
+2. int carry = 0;
+3. while (l1 != null || l2 != null || carry != 0):
+   - int sum = carry;
+   - if (l1 != null) { sum += l1.val; l1 = l1.next; }
+   - if (l2 != null) { sum += l2.val; l2 = l2.next; }
+   - carry = sum / 10;
+   - curr.next = new ListNode(sum % 10);
+   - curr = curr.next;
+4. Return dummy.next.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Processing digits from heads to tails mirrors grade-school addition from least-significant to most-significant digit. The dummy node simplifies pointer management.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not convert lists to integer/BigInteger, add, and rebuild list?
+Lists can have 100+ digits! Native integers (int/long) overflow instantly. Building node by node works for numbers of arbitrary size.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+l1 = 2 -> 4 -> 3 (342), l2 = 5 -> 6 -> 4 (465)
+- Step 1: 2 + 5 + carry(0) = 7 -> node(7), carry = 0
+- Step 2: 4 + 6 + carry(0) = 10 -> node(0), carry = 1
+- Step 3: 3 + 4 + carry(1) = 8 -> node(8), carry = 0
+Result: 7 -> 0 -> 8 (807 = 342 + 465)!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(max(N, M))
+  Reason: Loop runs for length of longer list plus possible extra carry.
+- Space Complexity: O(max(N, M))
+  Reason: Space for new result linked list.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Don't forget `carry != 0` in the while loop condition! If both lists finish but carry is 1 (e.g. 5 + 5 = 10), an extra node with value 1 must be appended.
+================================================================================

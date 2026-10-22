@@ -1,0 +1,60 @@
+================================================================================
+QUESTION: Longest Subarray with Sum K
+FILE: d_SumOfSubArray.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Find the length of the longest contiguous subarray whose elements sum up to exactly K.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Think Prefix Sums:
+If the sum of elements from 0 to i is `prefixSum`, and there was some earlier index `j` where sum was `prefixSum - K`...
+Then the subarray between (j + 1) and i MUST have sum K!
+Length = i - j.
+Store earlier prefix sums in a HashMap: `Map<PrefixSum, FirstIndexSeen>`.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Maintain prefixSum = 0, maxLen = 0.
+2. HashMap<Long, Integer> map stores first occurrence of each prefixSum.
+3. Loop i from 0 to n - 1:
+   - prefixSum += arr[i].
+   - If prefixSum == K: maxLen = Math.max(maxLen, i + 1).
+   - If map contains (prefixSum - K):
+     - len = i - map.get(prefixSum - K);
+     - maxLen = Math.max(maxLen, len);
+   - If prefixSum NOT in map: map.put(prefixSum, i).
+4. Return maxLen.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+PrefixSum(i) - PrefixSum(j) = Sum(j+1...i). If this difference equals K, we found a valid subarray. By only saving the FIRST time a prefix sum appears, `i - map.get(...)` is maximized.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not two pointers / sliding window?
+Two pointers ONLY work when all numbers are non-negative (>= 0). If the array contains negative numbers, the sum does not grow monotonically, so sliding window fails! HashMap works for positives, negatives, and zeroes.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+arr = [10, 5, 2, 7, 1, 9], K = 15
+i=0 (10): sum=10, map={10: 0}
+i=1 (5): sum=15 == K -> maxLen = 2, map={10: 0, 15: 1}
+i=2 (2): sum=17, map={10:0, 15:1, 17:2}
+i=3 (7): sum=24, sum-K = 9 (not in map)
+i=4 (1): sum=25, sum-K = 10 (in map at index 0!): len = 4 - 0 = 4! maxLen = 4 [5, 2, 7, 1]
+Result: 4
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Single pass with O(1) hash map operations.
+- Space Complexity: O(N)
+  Reason: HashMap stores up to N prefix sums.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Crucial Trap: If `prefixSum` already exists in the map, DO NOT update its index! Keeping the earliest index ensures maximum subarray length.
+================================================================================

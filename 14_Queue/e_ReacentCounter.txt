@@ -1,0 +1,53 @@
+================================================================================
+QUESTION: Number of Recent Calls (LeetCode 933)
+FILE: e_ReacentCounter.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+You have a RecentCounter class which counts the number of recent requests within a certain time frame. Each ping(t) adds a new request at time t (milliseconds) and returns the number of requests that have happened in the past 3000ms [t - 3000, t].
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Timestamps `t` are strictly increasing.
+Use a Queue to hold timestamps:
+- When `ping(t)` arrives, add `t` to the queue.
+- Look at the oldest timestamp at the front of the queue: if `q.peek() < t - 3000`, it has expired! Poll it from the queue!
+- Repeat until all expired timestamps are removed.
+- The queue size is the number of valid recent calls!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Queue<Integer> q = new LinkedList<>();
+2. ping(int t):
+   - q.offer(t);
+   - while (q.peek() < t - 3000) q.poll();
+   - return q.size();
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Because time is monotonically increasing, expired timestamps will only ever be at the front of the queue, making eviction O(1) amortized.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not store in a list and count with binary search?
+List grows unbounded, consuming O(total pings) memory. Queue discards stale entries, keeping memory proportional to at most 3000ms window.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+ping(1)    -> q=[1], 1 >= 1-3000(-2999) -> return 1
+ping(100)  -> q=[1, 100], 1 >= 100-3000(-2900) -> return 2
+ping(3001) -> q=[1, 100, 3001], 1 >= 3001-3000(1) -> return 3
+ping(3002) -> q=[1, 100, 3001, 3002], 1 < 2 -> pop 1 -> q=[100, 3001, 3002] -> return 3
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(1) amortized per ping
+  Reason: Each timestamp enters and leaves the queue at most once.
+- Space Complexity: O(3000) = O(1)
+  Reason: Queue holds at most requests made within 3000ms.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Condition is `< t - 3000`, NOT `<=`. An event at exactly `t - 3000` is INCLUDED in the window.
+================================================================================

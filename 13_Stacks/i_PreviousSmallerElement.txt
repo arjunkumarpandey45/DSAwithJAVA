@@ -1,0 +1,57 @@
+================================================================================
+QUESTION: Previous Smaller Element
+FILE: i_PreviousSmallerElement.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+For each element in an array, find the first smaller element to its left. If none exists, return -1.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Monotonic Stack scanning from LEFT TO RIGHT:
+Stack keeps elements in increasing order from bottom to top:
+- Pop all elements >= current element (they are larger, so they can never be the previous smaller element).
+- If stack is not empty, top element is the Previous Smaller Element!
+- Else -1.
+- Push current element into stack.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. int[] pse = new int[n]; Stack<Integer> st = new Stack<>();
+2. For i = 0 to n - 1:
+   - while (!st.isEmpty() && st.peek() >= arr[i]) st.pop();
+   - pse[i] = st.isEmpty() ? -1 : st.peek();
+   - st.push(arr[i]);
+3. Return pse.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+By discarding larger elements to the left, only valid smaller candidates remain in the stack.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not scan left with a nested loop?
+Nested loop takes O(N^2). Stack takes O(N).
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+arr = [4, 5, 2, 10, 8]
+i=0 (4): stack empty -> -1, push 4. st=[4]
+i=1 (5): 4 < 5 -> pse=4, push 5. st=[4, 5]
+i=2 (2): pop 5, pop 4 -> stack empty -> -1, push 2. st=[2]
+i=3 (10): 2 < 10 -> pse=2, push 10. st=[2, 10]
+i=4 (8): pop 10, 2 < 8 -> pse=2, push 8. st=[2, 8]
+Result: [-1, 4, -1, 2, 2]
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Each element pushed and popped at most once.
+- Space Complexity: O(N)
+  Reason: Stack holds up to N elements.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Notice: scan LEFT TO RIGHT for previous smaller, and RIGHT TO LEFT for next smaller.
+================================================================================

@@ -1,0 +1,57 @@
+================================================================================
+QUESTION: Binary Search (Iterative & Recursive)
+FILE: a_BasicBinarySearch.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Search for a target value within a sorted array. If target exists, return its index; otherwise, return -1.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Like looking up a word in a dictionary:
+Open to the middle page.
+- Is the word on this page? You found it!
+- Is the word alphabetically BEFORE this page? Throw away the right half and search the left half!
+- Is the word AFTER this page? Throw away the left half and search the right half!
+Every step cuts the search space exactly in HALF!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. low = 0, high = arr.length - 1.
+2. While low <= high:
+   - mid = low + (high - low) / 2;
+   - if (arr[mid] == target) return mid;
+   - else if (arr[mid] < target) low = mid + 1; // search right
+   - else high = mid - 1; // search left
+3. Return -1.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Because the array is sorted, comparing target with `arr[mid]` eliminates N/2 elements with 100% mathematical certainty.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not linear search?
+Linear search takes O(N) time. For 1 billion elements, linear search takes 1 billion operations. Binary search takes only 30 operations!
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+arr = [2, 3, 4, 10, 40], target = 10
+low = 0, high = 4 -> mid = 2 (arr[2] = 4)
+4 < 10 -> low = mid + 1 = 3
+low = 3, high = 4 -> mid = 3 (arr[3] = 10)
+10 == 10! MATCH FOUND AT INDEX 3!
+Output: 3
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(log N)
+  Reason: Search space N is halved on every iteration: N / 2^k = 1 -> k = log2(N).
+- Space Complexity: O(1) iterative, O(log N) recursive
+  Reason: Iterative version uses constant auxiliary space.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Always calculate `mid = low + (high - low) / 2` instead of `(low + high) / 2` to prevent 32-bit integer overflow when `low + high > 2^31 - 1`.
+================================================================================

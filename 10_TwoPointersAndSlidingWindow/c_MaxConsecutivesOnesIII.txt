@@ -1,0 +1,61 @@
+================================================================================
+QUESTION: Max Consecutive Ones III (LeetCode 1004)
+FILE: c_MaxConsecutivesOnesIII.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given a binary array nums and an integer k, return the maximum number of consecutive 1's if you can flip at most k 0's to 1's.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Rephrase the problem:
+"Find the longest subarray containing AT MOST k zeroes!"
+Use sliding window [left, right]:
+- Expand `right`: if nums[right] == 0, zeroesCount++.
+- If zeroesCount > k: shrink from `left` until zeroesCount <= k (or slide the window forward keeping maximum size).
+- Length of window is `right - left + 1`.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. int left = 0, right = 0, zeroes = 0, maxLen = 0;
+2. while (right < nums.length):
+   - if (nums[right] == 0) zeroes++;
+   - if (zeroes > k):
+     - if (nums[left] == 0) zeroes--;
+     - left++;
+   - if (zeroes <= k):
+     - maxLen = Math.max(maxLen, right - left + 1);
+   - right++;
+3. Return maxLen.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+The window never shrinks below the best length found so far. It either expands (finding a larger valid window) or shifts forward.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not test all subarrays?
+O(N^2) checks every subarray. Sliding window runs in O(N).
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+nums = [1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0], k = 2
+r=0..2: 1s -> zeroes=0, len=3
+r=3: 0 -> zeroes=1 <= 2, len=4
+r=4: 0 -> zeroes=2 <= 2, len=5
+r=5: 0 -> zeroes=3 > 2 -> left advances past first 0 -> zeroes=2
+Window slides forward picking up 1s at r=6, 7, 8, 9...
+Max valid window length achieved = 6 ([0, 0, 1, 1, 1, 1]).
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Both left and right pointers traverse the array at most once.
+- Space Complexity: O(1)
+  Reason: Only pointer and count variables.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- The optimal O(N) trick: use `if (zeroes > k)` instead of `while (zeroes > k)`. The window never shrinks in size, maintaining maxLen automatically!
+================================================================================

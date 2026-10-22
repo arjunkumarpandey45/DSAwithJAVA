@@ -1,0 +1,62 @@
+================================================================================
+QUESTION: Binary Subarrays With Sum (LeetCode 930)
+FILE: g_BinaraySubArraySum.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given a binary array nums and an integer goal, return the number of non-empty subarrays with a sum equal to goal.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Classic Golden Sliding Window Identity:
+`Count(Exactly Goal) = Count(At Most Goal) - Count(At Most Goal - 1)`!
+Why?
+Finding subarrays with sum EXACTLY equal to `goal` using two pointers is hard because adding 0s keeps the sum unchanged (window shrinks unpredictably).
+Finding subarrays with sum AT MOST `goal` is super easy with standard sliding window:
+At each step `right`, every subarray ending at `right` starting from `left..right` has sum <= goal.
+Number of valid subarrays = `right - left + 1`!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Helper atMost(nums, goal):
+   - if (goal < 0) return 0;
+   - int left = 0, right = 0, sum = 0, count = 0;
+   - while (right < nums.length):
+     - sum += nums[right];
+     - while (sum > goal): sum -= nums[left++];
+     - count += (right - left + 1);
+     - right++;
+   - return count;
+2. Main:
+   - return atMost(nums, goal) - atMost(nums, goal - 1);
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Subarrays with sum <= goal contains all subarrays with sum 0, 1, ... goal.
+Subarrays with sum <= goal - 1 contains all subarrays with sum 0, 1, ... goal - 1.
+Subtracting the two eliminates all smaller sums, leaving EXACTLY sum == goal.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not prefix sum + HashMap?
+Prefix sum + HashMap takes O(N) space. The `atMost(k) - atMost(k - 1)` sliding window takes O(1) space!
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+nums = [1, 0, 1, 0, 1], goal = 2
+atMost(2) counts all subarrays with sum <= 2 -> returns 12
+atMost(1) counts all subarrays with sum <= 1 -> returns 8
+Answer = 12 - 8 = 4 subarrays with sum exactly 2!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: atMost runs in O(N) time. Called twice: 2 * O(N) = O(N).
+- Space Complexity: O(1)
+  Reason: Only pointer and sum variables.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Don't forget `if (goal < 0) return 0;` inside `atMost`. When `goal = 0`, `goal - 1 = -1`, and sum can never be <= -1 in a binary array!
+================================================================================

@@ -1,0 +1,57 @@
+================================================================================
+QUESTION: Making A Large Island (LeetCode 827)
+FILE: f_MakingALargeIsland.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+You are given an n x n binary grid. You are allowed to change AT MOST ONE 0 to 1. Find the size of the largest island.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Step 1: Treat each cell `(r, c)` as node index `r * n + c`.
+Union all adjacent 1s using DSU. The DSU `size[root]` stores each island's area!
+Step 2: Try flipping each 0:
+For each 0 at `(r, c)`:
+Look at its 4 neighbors. Collect their unique ultimate parents in a `Set` (to avoid adding the same island twice!).
+Total island size = `1 (the flipped cell) + sum(size[uniqueParent])`!
+Track maximum size achieved.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. DSU dsu = new DSU(n * n);
+2. Connect existing 1s with 4 neighbors: if both 1, dsu.unionBySize(r*n+c, nr*n+nc);
+3. int maxIsland = 0; for all 1s: maxIsland = Math.max(maxIsland, dsu.size[dsu.findUPar(r*n+c)]);
+4. For r = 0..n-1, c = 0..n-1 where grid[r][c] == 0:
+   - Set<Integer> uniqueRoots = new HashSet<>();
+   - for 4 neighbors: if valid and grid[nr][nc] == 1: uniqueRoots.add(dsu.findUPar(nr*n+nc));
+   - int current = 1;
+   - for root in uniqueRoots: current += dsu.size[root];
+   - maxIsland = Math.max(maxIsland, current);
+5. Return maxIsland == 0 ? n * n : maxIsland;
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Precomputing island component sizes allows checking the effect of flipping any 0 in O(1) time by adding the sizes of adjacent distinct island components.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Running full BFS for every 0 takes O(N^4). DSU precomputation takes O(N^2).
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+grid = [[1, 0], [0, 1]]
+Two islands of size 1: at (0,0) and (1,1).
+Flip (0, 1) to 1: connects to (0,0) and (1,1) -> size = 1 + 1 + 1 = 3!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N^2)
+  Reason: Two passes over grid with O(1) DSU operations.
+- Space Complexity: O(N^2)
+  Reason: DSU arrays of size N^2.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Always use a `Set` for adjacent roots so that if an island touches the flipped 0 from two sides, its size is only counted ONCE.
+================================================================================

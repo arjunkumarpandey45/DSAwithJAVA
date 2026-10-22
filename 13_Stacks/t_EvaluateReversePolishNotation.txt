@@ -1,0 +1,62 @@
+================================================================================
+QUESTION: Evaluate Reverse Polish Notation (LeetCode 150)
+FILE: t_EvaluateReversePolishNotation.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Evaluate the value of an arithmetic expression in Reverse Polish Notation (Postfix notation). Valid operators are +, -, *, /.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+In Postfix notation, operands come BEFORE the operator (e.g. "2 1 +" means "2 + 1").
+Use a Stack:
+- If token is a number: push it to stack.
+- If token is an operator (+, -, *, /):
+  - Pop second operand: `b = st.pop()`.
+  - Pop first operand: `a = st.pop()`.
+  - Apply operator: `a OP b`.
+  - Push result back to stack!
+Final result is the single number left on stack.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Stack<Integer> st = new Stack<>();
+2. For token in tokens:
+   - if token is "+": st.push(st.pop() + st.pop());
+   - else if token is "*": st.push(st.pop() * st.pop());
+   - else if token is "-": int b = st.pop(), a = st.pop(); st.push(a - b);
+   - else if token is "/": int b = st.pop(), a = st.pop(); st.push(a / b);
+   - else st.push(Integer.parseInt(token));
+3. Return st.pop();
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Postfix eliminates the need for operator precedence and parentheses because evaluation order is explicitly determined by stack position.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not recursive parsing?
+Postfix does not require recursion or grammar parsing trees; a single linear scan with a stack is the optimal and standard evaluation algorithm.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+tokens = ["2", "1", "+", "3", "*"]
+- "2" -> push 2
+- "1" -> push 1
+- "+" -> b=1, a=2 -> 2+1=3 -> push 3
+- "3" -> push 3
+- "*" -> b=3, a=3 -> 3*3=9 -> push 9
+Result: 9
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Scan each token once.
+- Space Complexity: O(N)
+  Reason: Stack holds intermediate numbers.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- ORDER MATTERS FOR SUBTRACTION AND DIVISION: The FIRST popped number is `b`, and the SECOND popped number is `a`! Perform `a - b` and `a / b`, NOT `b - a`!
+================================================================================

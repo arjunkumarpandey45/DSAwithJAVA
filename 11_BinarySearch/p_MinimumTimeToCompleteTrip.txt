@@ -1,0 +1,61 @@
+================================================================================
+QUESTION: Minimum Time to Complete Trips (LeetCode 2187)
+FILE: p_MinimumTimeToCompleteTrip.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given array time where time[i] denotes the time taken by bus i to complete one trip, find the minimum time needed for all buses to complete at least totalTrips trips collectively.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Binary Search on Answer (Time)!
+In `T` units of time, how many trips can bus `i` complete? `T / time[i]` trips!
+Total trips in time T = sum(T / time[i]) across all buses.
+Range for T:
+- low = 1
+- high = (long) min(time) * totalTrips (fastest bus doing all trips alone).
+Binary search for the smallest T where totalTrips completed >= required!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. long low = 1, minTime = time[0];
+   for (int t : time) minTime = Math.min(minTime, t);
+   long high = minTime * totalTrips, ans = high;
+2. while (low <= high):
+   - long mid = low + (high - low) / 2;
+   - if (isPossible(time, mid, totalTrips)): ans = mid; high = mid - 1;
+   - else: low = mid + 1;
+3. isPossible helper:
+   - long trips = 0;
+   - for (int t : time) { trips += mid / t; if (trips >= totalTrips) return true; }
+   - return false;
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+The number of trips completed increases monotonically with time. We binary search for the first second where the target threshold is met.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not priority queue simulation?
+Total trips can be 10^7. Simulating trip-by-trip with a heap takes O(totalTrips * log B) which gives TLE. Binary search takes O(B * log(max_time)).
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+time = [1, 2, 3], totalTrips = 5
+low = 1, high = 1 * 5 = 5
+- mid = 3: trips = 3/1 + 3/2 + 3/3 = 3 + 1 + 1 = 5 >= 5! ans=3, high=2
+- mid = 2: trips = 2/1 + 2/2 + 2/3 = 2 + 1 + 0 = 3 < 5 -> low=3
+Result: 3 units of time.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N * log(min(time) * totalTrips))
+  Reason: Binary search over time range, O(N) trip calculation per step.
+- Space Complexity: O(1)
+  Reason: Constant space.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Use `long` for `high`, `mid`, and `trips`! `minTime * totalTrips` can be 10^7 * 10^7 = 10^14 which overflows 32-bit int.
+================================================================================

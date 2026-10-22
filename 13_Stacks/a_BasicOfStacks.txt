@@ -1,0 +1,56 @@
+================================================================================
+QUESTION: Basics of Stacks (LIFO Principle & Java Stack)
+FILE: a_BasicOfStacks.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Introduction to the Stack data structure following the LIFO (Last In First Out) principle, and using Java's built-in Stack class.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Think of a stack of plates in a cafeteria:
+- You put a plate on TOP (push).
+- You take the plate from the TOP (pop).
+- You look at the TOP plate without removing it (peek).
+The plate added LAST is the one removed FIRST (LIFO)!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Stack<Integer> st = new Stack<>();
+2. st.push(10); // add
+3. int top = st.peek(); // inspect top
+4. int popped = st.pop(); // remove and return top
+5. boolean empty = st.isEmpty();
+6. int size = st.size();
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Restricting insertion and deletion to only one end (the top) guarantees order inversion: elements are popped in reverse of the order they were pushed.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not ArrayList for stack?
+ArrayList can be used, but Stack API enforces LIFO invariants explicitly.
+Note: In modern Java, `ArrayDeque` is preferred over `java.util.Stack` because `Stack` is an older synchronized class extending `Vector`.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+push(1) -> [1]
+push(2) -> [1, 2]
+push(3) -> [1, 2, 3]
+peek() -> 3
+pop() -> returns 3, stack becomes [1, 2]
+pop() -> returns 2, stack becomes [1]
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(1) for push, pop, peek, isEmpty
+  Reason: All top-element operations are constant time.
+- Space Complexity: O(N)
+  Reason: Stores N elements.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Never call `st.pop()` or `st.peek()` on an empty stack! It throws `EmptyStackException`. Always check `!st.isEmpty()` first.
+================================================================================

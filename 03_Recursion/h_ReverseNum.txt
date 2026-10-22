@@ -1,0 +1,48 @@
+================================================================================
+QUESTION: Reverse a Number Using Recursion
+FILE: h_ReverseNum.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Reverse the digits of a number using recursion with an accumulator parameter.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Same as the iterative reverse number, but each step is a function call:
+Pass the remaining number n / 10 and the accumulated reversed number r * 10 + n % 10.
+Base case: when n reaches 0, the accumulator r holds the fully reversed number!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. void reverseNum(int n, int r):
+2. Base Case: if (n == 0) { print r; return; }
+3. Recurse: reverseNum(n / 10, r * 10 + n % 10).
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+This is a tail-recursive function. Each call peels off the last digit and places it into the units position of r while shifting existing digits of r to the left.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not use a global variable?
+Passing r as a parameter keeps the function self-contained and avoids state bugs across multiple runs.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+reverseNum(23, 0)
+Call 1: n = 23, r = 0 -> calls reverseNum(2, 0*10 + 3 = 3)
+Call 2: n = 2, r = 3  -> calls reverseNum(0, 3*10 + 2 = 32)
+Call 3: n = 0 -> prints 32, returns!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(log10(N))
+  Reason: Number of calls equals the number of digits.
+- Space Complexity: O(log10(N))
+  Reason: Stack frames equal to the number of digits.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Initial call must pass 0 as the second argument: reverseNum(num, 0).
+================================================================================

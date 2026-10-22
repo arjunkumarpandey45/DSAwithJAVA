@@ -1,0 +1,53 @@
+================================================================================
+QUESTION: Circular Queue Using Array
+FILE: c_CircularQueue.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Implement a queue using a fixed-size array where the end of the array connects back to the beginning using modulo arithmetic.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+In a standard array queue, when `rear` hits `capacity - 1`, no more elements can be pushed, even if spaces became available at the front due to dequeues!
+Circular Queue connects index `capacity - 1` back to `0`:
+- `rear = (rear + 1) % capacity`
+- `front = (front + 1) % capacity`
+Track `currentSize` to easily check empty (`currentSize == 0`) and full (`currentSize == capacity`).
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. int[] arr, int front = 0, rear = 0, size = 0, cap;
+2. enqueue(x): if (size == cap) return false; arr[rear] = x; rear = (rear + 1) % cap; size++; return true;
+3. dequeue(): if (size == 0) return -1; int v = arr[front]; front = (front + 1) % cap; size--; return v;
+4. Front(): return size == 0 ? -1 : arr[front];
+5. Rear(): return size == 0 ? -1 : arr[(rear - 1 + cap) % cap];
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Modulo arithmetic wraps indices around the array boundaries, reusing freed slots without shifting elements.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Shifting elements in an array takes O(N). Modulo wrap-around takes O(1).
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+cap = 3, front=0, rear=0, size=0
+enqueue(1) -> arr[0]=1, rear=1, size=1
+enqueue(2) -> arr[1]=2, rear=2, size=2
+dequeue() -> returns arr[0]=1, front=1, size=1
+enqueue(3) -> arr[2]=3, rear=0 (wrapped!), size=2
+enqueue(4) -> arr[0]=4 (uses slot 0!), rear=1, size=3
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(1) for all operations
+  Reason: Modulo arithmetic and array indexing.
+- Space Complexity: O(N)
+  Reason: Fixed array allocation.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- To get the last element: `arr[(rear - 1 + cap) % cap]`. Adding `cap` prevents negative modulo when `rear == 0`.
+================================================================================

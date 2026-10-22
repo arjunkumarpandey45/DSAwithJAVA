@@ -1,0 +1,49 @@
+================================================================================
+QUESTION: Floyd-Warshall Algorithm (All-Pairs Shortest Path)
+FILE: a_FloydWarshall.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Find the shortest distance between EVERY pair of vertices in a weighted graph in O(V^3) time. Detects negative cycles.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Can we improve the path from `i` to `j` by going through an intermediate vertex `k`?
+`matrix[i][j] = Math.min(matrix[i][j], matrix[i][k] + matrix[k][j]);`
+Loop `k` from 0 to V - 1 on the OUTSIDE!
+A negative cycle exists if `matrix[i][i] < 0` for any vertex `i` (distance to itself becomes negative).
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. For k = 0 to V - 1: // intermediate vertex
+   - For i = 0 to V - 1:
+     - For j = 0 to V - 1:
+       - if (matrix[i][k] != 1e9 && matrix[k][j] != 1e9):
+         - matrix[i][j] = Math.min(matrix[i][j], matrix[i][k] + matrix[k][j]);
+2. Negative cycle check: if any matrix[i][i] < 0, negative cycle exists.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Dynamic programming: iteration `k` computes shortest paths considering {0, 1, ... k} as permitted intermediate hops.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Running Dijkstra V times takes O(V * E log V), which is faster on sparse graphs, but Floyd-Warshall is 4 lines of code, works on dense graphs, and handles negative edges.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+matrix[0][1] = 4, matrix[1][2] = 2, matrix[0][2] = 10
+With k = 1: matrix[0][2] = min(10, matrix[0][1] + matrix[1][2] = 4 + 2 = 6)! Shortened to 6.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(V^3)
+  Reason: Three nested loops of size V.
+- Space Complexity: O(1) auxiliary space
+  Reason: Updates the distance matrix in-place.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- The loop over `k` MUST be the OUTERMOST loop! Placing `k` in the inner loop breaks the DP recurrence.
+================================================================================

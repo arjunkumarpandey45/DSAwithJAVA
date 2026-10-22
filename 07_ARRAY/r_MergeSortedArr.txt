@@ -1,0 +1,59 @@
+================================================================================
+QUESTION: Merge Two Sorted Arrays Without Extra Space
+FILE: r_MergeSortedArr.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given two sorted arrays arr1 and arr2, merge them such that arr1 holds the smallest elements and arr2 holds the largest, in sorted order, using O(1) extra space.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+If we could combine them, the first n elements go to arr1 and the next m go to arr2.
+Approach 1 (Pointer Swap from ends):
+Compare the largest element of arr1 (from end, left = n - 1) with the smallest of arr2 (from start, right = 0).
+If arr1[left] > arr2[right], swap them! Decrement left, increment right.
+Once done, simply sort arr1 and sort arr2 individually!
+
+Approach 2 (Gap Method - Shell Sort logic):
+Use gap = ceil((n + m) / 2). Compare elements at distance `gap` and swap if left > right. Halve gap until gap == 0.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+Swap from ends method:
+1. left = n - 1, right = 0.
+2. while (left >= 0 && right < m):
+   - if (arr1[left] > arr2[right]): swap(arr1[left], arr2[right]); left--; right++;
+   - else: break; // all remaining elements are already in correct array!
+3. Arrays.sort(arr1);
+4. Arrays.sort(arr2);
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Swapping transfers all elements that belong in the second array into arr2, and elements belonging in the first into arr1. Individual sorts put them in final order.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not merge into a 3rd array and copy back?
+That takes O(N + M) extra memory. The problem requires O(1) auxiliary space.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+arr1 = [1, 3, 5, 7], arr2 = [0, 2, 6, 8, 9]
+left = 3 (val 7), right = 0 (val 0): 7 > 0 -> swap -> arr1=[1,3,5,0], arr2=[7,2,6,8,9]
+left = 2 (val 5), right = 1 (val 2): 5 > 2 -> swap -> arr1=[1,3,2,0], arr2=[7,5,6,8,9]
+left = 1 (val 3), right = 2 (val 6): 3 < 6 -> break!
+Sort arr1 -> [0, 1, 2, 3]
+Sort arr2 -> [5, 6, 7, 8, 9]
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(min(N, M) + N log N + M log M)
+  Reason: Swapping takes O(min(N, M)), followed by sorting both arrays.
+- Space Complexity: O(1)
+  Reason: In-place modifications.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- The Gap method avoids the final sort and runs in O((N + M) log(N + M)) time with O(1) space.
+================================================================================

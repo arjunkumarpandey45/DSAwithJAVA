@@ -1,0 +1,77 @@
+================================================================================
+QUESTION: DQ4 - Minimum Operations to Reduce X to Zero
+FILE: DQ4_MinOperationsToReduceXToZero.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given an integer array 'nums' and an integer 'x'.
+In each operation, you can remove either the leftmost or the rightmost element of the array
+and subtract its value from 'x'.
+Return the minimum number of operations to reduce 'x' to exactly 0.
+If it is impossible, return -1.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Removing elements from the ends (prefix and suffix) to sum to 'x'
+is mathematically IDENTICAL to leaving a contiguous subarray in the middle that sums to:
+  neededSum = totalSum - x
+To MINIMIZE the elements removed from the ends, we must MAXIMIZE the length of the middle subarray!
+  minOperations = n - maxSubarrayLength
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Compute totalSum = sum of all elements in nums.
+2. If totalSum == x, return nums.length (remove all elements).
+3. If totalSum < x, return -1 (cannot reach x even removing everything).
+4. Calculate neededSum = totalSum - x.
+5. Use Sliding Window (two pointers i and j):
+   - Expand window by adding nums[j] to currSum.
+   - While currSum > neededSum and i <= j: shrink window by subtracting nums[i] and incrementing i.
+   - When currSum == neededSum: update maxLen = max(maxLen, j - i + 1).
+6. If maxLen was never updated, return -1.
+7. Otherwise, return (nums.length - maxLen).
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Since all numbers in nums are positive (>= 1):
+- The window sum monotonically increases when expanding right (j),
+  and monotonically decreases when shrinking left (i).
+- This allows standard two-pointer sliding window in O(n) without back-tracking.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not greedy (always pick the larger of left and right)?
+- Greedy fails! Example: [100, 1, 1, 1], x = 3. Greedy picks 100 first, which immediately overshoots x.
+  The correct answer is removing the three 1s from the right side.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Input: nums = [1, 1, 4, 2, 3], x = 5
+
+totalSum = 1 + 1 + 4 + 2 + 3 = 11.
+neededSum = totalSum - x = 11 - 5 = 6.
+
+Sliding window looking for longest subarray with sum = 6:
+  j = 0, num = 1, currSum = 1
+  j = 1, num = 1, currSum = 2
+  j = 2, num = 4, currSum = 6 == 6! maxLen = 2 - 0 + 1 = 3 ([1, 1, 4])
+  j = 3, num = 2, currSum = 8 > 6 -> shrink: drop nums[0](1), currSum = 7 > 6 -> drop nums[1](1), currSum = 6 == 6!
+         Window [4, 2], len = 2 <= maxLen(3)
+  j = 4, num = 3, currSum = 9 > 6 -> shrink: drop nums[2](4), currSum = 5
+
+Max middle subarray length = 3.
+Min operations = len - maxLen = 5 - 3 = 2 (remove 2 and 3 from right side).
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(n)
+  Reason: Both pointers i and j iterate through the array at most once.
+- Space Complexity: O(1)
+  Reason: Only uses a few scalar variables for pointers and sums.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Always invert the problem: 'remove minimum from ends' -> 'keep maximum contiguous in middle'.
+- If neededSum < 0, return -1 immediately.
+================================================================================

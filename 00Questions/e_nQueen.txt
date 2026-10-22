@@ -1,0 +1,73 @@
+================================================================================
+QUESTION: N-Queens Problem (Classic Backtracking)
+FILE: e_nQueen.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Place N chess queens on an N x N chessboard such that no two queens attack each other (no two queens share the same row, column, or diagonal).
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Queens attack horizontally, vertically, and diagonally.
+Because each queen must be in a different column, we can proceed column by column (from col = 0 to col = N - 1).
+In column col, try placing a queen in row 0, row 1, ..., row N-1.
+Before placing, check if it is safe from already-placed queens to the left:
+- Same row to the left?
+- Upper-left diagonal?
+- Lower-left diagonal?
+If safe, place the queen ('Q') and recurse to col + 1.
+If col + 1 fails to find a solution, backtrack: remove the queen (reset to '.') and try the next row.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Create an N x N board initialized with empty markers ('.').
+2. Recursive function placeQueen(col, board):
+   - Base case: If col == N, all N queens are successfully placed! Add board configuration to result.
+   - For row from 0 to N - 1:
+     - Check if safe(board, row, col):
+       - If yes: board[row][col] = 'Q'.
+       - Recurse: placeQueen(col + 1, board).
+       - Backtrack: board[row][col] = '.'.
+3. IsSafe function checks:
+   - Row to the left: board[row][c] for c < col.
+   - Upper-left diagonal: board[r][c] going (row-1, col-1).
+   - Lower-left diagonal: board[r][c] going (row+1, col-1).
+   (No need to check right sides because queens are placed left-to-right).
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+By placing one queen per column and verifying safety against all previously placed queens to the left, we only explore configurations that are valid so far. When a path cannot lead to a solution, backtracking un-places the queen and tries another spot.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not try all board combinations?
+There are (N^2 choose N) ways to place N pieces on N^2 squares. For N=8, that is ~4.4 billion positions!
+Backtracking prunes invalid branches immediately, reducing the search space to a tiny fraction.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Input: N = 4
+col = 0: place Q at (0,0)
+  col = 1: rows 0,1 attacked. Safe at row 2 -> place Q at (2,1)
+    col = 2: all rows 0,1,2,3 attacked! Dead end -> Backtrack!
+  col = 1: safe at row 3 -> place Q at (3,1)
+    col = 2: safe at row 1 -> place Q at (1,2)
+      col = 3: all rows attacked! Dead end -> Backtrack!
+col = 0: backtrack, try row 1 -> place Q at (1,0)
+  col = 1: safe at row 3 -> place Q at (3,1)
+    col = 2: safe at row 0 -> place Q at (0,2)
+      col = 3: safe at row 2 -> place Q at (2,3) -> col == 4 -> SOLUTION FOUND!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N!)
+  Reason: In the first column we have N choices, in the second at most N-2, then N-4, giving roughly O(N!).
+- Space Complexity: O(N^2)
+  Reason: For storing the N x N board representation and O(N) recursion stack.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Optimization: Instead of looping to check safety in O(N), use 3 boolean arrays / hash arrays: one for row, one for lower diagonal (row + col), and one for upper diagonal (N - 1 + col - row). This makes isSafe O(1)!
+- Always reset board[row][col] = '.' when backtracking.
+================================================================================

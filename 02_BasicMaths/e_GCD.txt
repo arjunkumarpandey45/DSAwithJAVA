@@ -1,0 +1,56 @@
+================================================================================
+QUESTION: Greatest Common Divisor (GCD / HCF)
+FILE: e_GCD.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Find the greatest common divisor (GCD) of two numbers - the largest positive integer that divides both numbers without leaving a remainder.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Naive way: Start from min(a, b) down to 1. The first number that divides both is the GCD.
+Smart way (Euclidean Algorithm):
+If a divides b, then b is the answer.
+Otherwise, GCD(a, b) == GCD(b % a, a).
+Why? Because any number that divides both 'a' and 'b' must also divide the remainder when 'b' is divided by 'a'!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. While (num1 > 0 && num2 > 0):
+   - If num1 > num2: num1 = num1 % num2.
+   - Else: num2 = num2 % num1.
+2. If num1 == 0, return num2; else return num1.
+Recursive one-liner:
+public static int gcd(int a, int b) { return a == 0 ? b : gcd(b % a, a); }
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+The Euclidean algorithm uses the division property: gcd(a, b) = gcd(b, a % b). The remainder shrinks rapidly by at least half every two steps, converging to 0 very quickly.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not simple loop from min(a, b) down to 1?
+If both numbers are 10^9, a countdown loop takes 10^9 operations (takes several seconds and gives TLE).
+Euclid's algorithm solves 10^9 in fewer than 30 steps!
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Input: num1 = 12, num2 = 15
+Step 1: 15 % 12 = 3 -> pair becomes (12, 3)
+Step 2: 12 % 3 = 0 -> pair becomes (3, 0)
+One number reached 0! The other number is 3.
+GCD = 3.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(log(min(A, B)))
+  Reason: Euclidean algorithm reduces the numbers logarithmically.
+- Space Complexity: O(1)
+  Reason: Iterative version uses constant auxiliary space.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- GCD(0, x) is always x.
+- Formula to find LCM using GCD: LCM(a, b) = (a * b) / GCD(a, b).
+================================================================================

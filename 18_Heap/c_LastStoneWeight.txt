@@ -1,0 +1,62 @@
+================================================================================
+QUESTION: Last Stone Weight (LeetCode 1046)
+FILE: c_LastStoneWeight.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+You have a collection of stones with positive integer weights. In each turn, choose the two heaviest stones and smash them together:
+- If x == y: both stones are destroyed.
+- If x != y: stone of weight x is destroyed, and stone of weight y has new weight (y - x).
+Return the weight of the last remaining stone (or 0 if none remain).
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+We always need the TWO HEAVIEST stones at every step.
+What data structure always gives the maximum element in O(log N)?
+A MAX-HEAP (PriorityQueue with reverse order)!
+1. Put all stones into max-heap.
+2. While heap has >= 2 stones:
+   - Poll `y` (heaviest) and `x` (second heaviest).
+   - If `y != x`: push `y - x` back into heap.
+3. Return heap.isEmpty() ? 0 : heap.peek().
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
+2. For stone in stones: pq.offer(stone);
+3. while (pq.size() > 1):
+   - int y = pq.poll();
+   - int x = pq.poll();
+   - if (y != x) pq.offer(y - x);
+4. Return pq.isEmpty() ? 0 : pq.peek();
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+PriorityQueue dynamically re-heapifies after insertions and deletions in O(log N), keeping the heaviest stones accessible at the top.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Sorting the array on every smash takes O(N^2 log N). Max-heap takes O(N log N).
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+stones = [2, 7, 4, 1, 8, 1]
+Max-heap: [8, 7, 4, 2, 1, 1]
+- smash 8 and 7 -> 8-7=1 -> push 1 -> [4, 2, 1, 1, 1]
+- smash 4 and 2 -> 4-2=2 -> push 2 -> [2, 1, 1, 1]
+- smash 2 and 1 -> 2-1=1 -> push 1 -> [1, 1, 1]
+- smash 1 and 1 -> destroyed -> [1]
+Last stone: 1.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N log N)
+  Reason: At most N - 1 smashes, each takes O(log N).
+- Space Complexity: O(N)
+  Reason: Heap storing N stones.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Default PriorityQueue in Java is MIN-HEAP. Always use `Collections.reverseOrder()` for Max-Heap.
+================================================================================

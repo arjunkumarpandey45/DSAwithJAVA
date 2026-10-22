@@ -1,0 +1,57 @@
+================================================================================
+QUESTION: Prim's Algorithm for Minimum Spanning Tree (MST)
+FILE: a_PrimMST.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Find the Minimum Spanning Tree of an undirected weighted graph starting from an arbitrary node and expanding greedily.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Grow the tree from node 0 outward:
+Maintain a Min-Heap storing `(weight, node)` and a `visited[]` array:
+- Pick the edge with smallest weight connecting an unvisited node to our growing tree.
+- Mark node as visited, add weight to MST total.
+- Push all unvisited neighbors of this node into the Min-Heap.
+- Repeat until all vertices are visited!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. PriorityQueue<Pair> pq = new PriorityQueue<>((a, b) -> a.wt - b.wt); pq.offer(new Pair(0, 0));
+2. boolean[] vis = new boolean[V]; int sum = 0;
+3. while (!pq.isEmpty()):
+   - Pair p = pq.poll(); int wt = p.wt, u = p.node;
+   - if (vis[u]) continue;
+   - vis[u] = true; sum += wt;
+   - for (v, edgeWt) in adj.get(u):
+     - if (!vis[v]) pq.offer(new Pair(edgeWt, v));
+4. Return sum.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+At each step, Prim's selects the minimum weight cut-edge connecting the visited tree to an unvisited vertex, guaranteeing an optimal MST.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Kruskal sorts all edges upfront; Prim grows from a source vertex. Prim is faster for dense graphs where E ~ V^2.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+0-1(2), 1-2(3), 0-2(1)
+pq=[(0, 0)] -> vis[0]=true, sum=0 -> push (1, 2) and (2, 1)
+poll (1, 2) -> vis[2]=true, sum=1 -> push (3, 1)
+poll (2, 1) -> vis[1]=true, sum=1+2=3
+MST = 3.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(E log V)
+  Reason: Each edge pushed to priority queue of size V.
+- Space Complexity: O(V + E)
+  Reason: Heap and visited array.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Mark `vis[u] = true` when POLLING from the heap, NOT when pushing, because multiple edges to the same node can exist in the heap.
+================================================================================

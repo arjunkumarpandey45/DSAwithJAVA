@@ -1,0 +1,53 @@
+================================================================================
+QUESTION: Sum of Subarray Ranges (LeetCode 2104)
+FILE: m_SumofSubarrayRanges.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+The range of a subarray is the difference between its maximum and minimum element: (max - min). Return the sum of all subarray ranges across all subarrays.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Sum of (max - min) across all subarrays = `Sum(Subarray Maximums) - Sum(Subarray Minimums)`!
+Calculate each independently using the Contribution Technique:
+How many subarrays have `arr[i]` as the minimum?
+`count = (i - prevSmallerIndex) * (nextSmallerIndex - i)`!
+Similarly for maximums:
+`count = (i - prevGreaterIndex) * (nextGreaterIndex - i)`!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Find PSE (Previous Smaller Index) and NSE (Next Smaller Index) for all elements.
+2. Find PGE (Previous Greater Index) and NGE (Next Greater Index) for all elements.
+3. sumMin = sum(arr[i] * (i - pse[i]) * (nse[i] - i)).
+4. sumMax = sum(arr[i] * (i - pge[i]) * (nge[i] - i)).
+5. Return sumMax - sumMin.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Separating max and min decomposes a difficult problem into two standard Subarray Minimum problems solvable in O(N) using monotonic stacks.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not check all subarrays?
+O(N^2) brute force TLEs for N = 100,000. Monotonic stack solves it in O(N).
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+arr = [1, 2, 3]
+Subarrays: [1](0), [2](0), [3](0), [1, 2](1), [2, 3](1), [1, 2, 3](2)
+Sum of ranges = 0 + 0 + 0 + 1 + 1 + 2 = 4.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Four linear monotonic stack passes.
+- Space Complexity: O(N)
+  Reason: Index arrays and stack.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Use `long` for sumMax and sumMin to prevent 32-bit overflow!
+- To prevent double-counting duplicate numbers: use `<` on one side and `<=` on the other.
+================================================================================

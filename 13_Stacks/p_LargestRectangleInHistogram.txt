@@ -1,0 +1,63 @@
+================================================================================
+QUESTION: Largest Rectangle in Histogram (LeetCode 84)
+FILE: p_LargestRectangleInHistogram.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given an array of integers heights representing the histogram's bar height where the width of each bar is 1, return the area of the largest rectangle in the histogram.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+For each bar `i`, what is the widest rectangle with height = `heights[i]`?
+It can extend left until the Previous Smaller Element (`pse[i]`).
+It can extend right until the Next Smaller Element (`nse[i]`).
+Width = `(nse[i] - pse[i] - 1)`.
+Area = `heights[i] * width`!
+Single-pass Monotonic Stack trick:
+Whenever `heights[i] < heights[st.peek()]`: the popped bar has found its `nse` (current index `i`) and its `pse` is the new stack top!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+Single Pass Method:
+1. Stack<Integer> st = new Stack<>(); int maxArea = 0;
+2. For i = 0 to n:
+   - int h = (i == n) ? 0 : heights[i]; // dummy 0 at end pops everything
+   - while (!st.isEmpty() && h < heights[st.peek()]):
+     - int height = heights[st.pop()];
+     - int width = st.isEmpty() ? i : (i - st.peek() - 1);
+     - maxArea = Math.max(maxArea, height * width);
+   - st.push(i);
+3. Return maxArea.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Maintaining an increasing stack guarantees that when a bar is popped, its right boundary is `i` and its left boundary is `st.peek()`, computing its exact maximum rectangle in O(1).
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not check all pairs of bars?
+O(N^2) checks all bar ranges. Monotonic stack does it in O(N).
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+heights = [2, 1, 5, 6, 2, 3]
+- push 0 (val 2)
+- i=1 (val 1 < 2): pop 0 -> h=2, w=1 -> area = 2. push 1 (val 1)
+- push 2 (val 5)
+- push 3 (val 6)
+- i=4 (val 2 < 6): pop 3 -> h=6, w=4-2-1=1 -> area = 6
+- val 2 < 5: pop 2 -> h=5, w=4-1-1=2 -> area = 10! (maxArea = 10)
+Result: 10
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Each bar index pushed and popped once.
+- Space Complexity: O(N)
+  Reason: Stack stores up to N indices.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Adding a dummy 0 at index `n` cleanly pops and evaluates all remaining bars without needing post-loop cleanup code.
+================================================================================

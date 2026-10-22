@@ -1,0 +1,64 @@
+================================================================================
+QUESTION: Pascal's Triangle (LeetCode 118)
+FILE: o_PascalTriangle.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given an integer numRows, generate the first numRows of Pascal's triangle.
+In Pascal's triangle, each number is the sum of the two numbers directly above it.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Every row `n` has `n` elements.
+Element at row `r` and col `c` is given by combination formula: (r - 1) choose (c - 1).
+Fast row generation trick:
+Start with 1.
+Next element = previous_element * (row - col) / col!
+This allows generating any row in O(row) time without calculating factorials!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Helper generateRow(row):
+   - List<Integer> ans = new ArrayList<>();
+   - long val = 1; ans.add(1);
+   - For col = 1 to row - 1:
+     - val = val * (row - col);
+     - val = val / col;
+     - ans.add((int) val);
+   - return ans;
+2. Main generate(numRows):
+   - For i = 1 to numRows: add generateRow(i) to result list.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+The ratio between consecutive terms in row N is: C(N, k) / C(N, k - 1) = (N - k + 1) / k. Multiplying sequentially produces exact integers at every step without overflow.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not compute n! / (r! * (n-r)!) directly?
+n! overflows standard 64-bit long integer even for n = 21!
+Why not use 2D DP matrix?
+DP matrix takes extra space. Generating each row directly takes O(1) auxiliary space.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Row 5:
+col 0: 1
+col 1: 1 * (5 - 1) / 1 = 4
+col 2: 4 * (5 - 2) / 2 = 6
+col 3: 6 * (5 - 3) / 3 = 4
+col 4: 4 * (5 - 4) / 4 = 1
+Row 5: [1, 4, 6, 4, 1]
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(numRows^2)
+  Reason: Row 1 takes 1 step, row 2 takes 2... total = N*(N+1)/2 = O(N^2).
+- Space Complexity: O(1)
+  Reason: Auxiliary space is O(1) beyond the returned list.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Remember to use `long` for `val` during multiplication `val * (row - col)` before division to prevent integer overflow.
+================================================================================

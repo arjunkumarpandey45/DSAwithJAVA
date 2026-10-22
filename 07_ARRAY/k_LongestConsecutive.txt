@@ -1,0 +1,63 @@
+================================================================================
+QUESTION: Longest Consecutive Sequence (LeetCode 128)
+FILE: k_LongestConsecutive.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given an unsorted array of integers, find the length of the longest consecutive elements sequence in O(N) time.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Put every number in a HashSet for O(1) lookup.
+Now, how do you avoid redundant counting?
+ONLY start counting if a number is the START of a streak!
+How do you know if `x` is the start of a streak?
+If `x - 1` is NOT in the set!
+If `x - 1` is in the set, skip `x` (because `x - 1` will handle the streak for us!).
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Add all numbers to HashSet<Integer> set.
+2. int longestStreak = 0.
+3. For each num in set:
+   - If (!set.contains(num - 1)): // start of streak!
+     - int currentNum = num, currentStreak = 1;
+     - while (set.contains(currentNum + 1)):
+       - currentNum++; currentStreak++;
+     - longestStreak = Math.max(longestStreak, currentStreak);
+4. Return longestStreak.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Every element is visited at most twice (once in the outer loop, and once as part of a while-loop streak). Even though there is a nested while loop, total operations across all numbers is O(N)!
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not sort first and count consecutive elements?
+Sorting takes O(N log N). The problem explicitly demands an O(N) solution.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+arr = [100, 4, 200, 1, 3, 2]
+set = {100, 4, 200, 1, 3, 2}
+- num = 100: 99 not in set -> streak=1 (101 not in set) -> max=1
+- num = 4: 3 IS in set -> skip!
+- num = 200: 199 not in set -> streak=1 -> max=1
+- num = 1: 0 not in set -> START STREAK: 2 in set, 3 in set, 4 in set -> streak=4! max=4
+- num = 3: 2 IS in set -> skip!
+- num = 2: 1 IS in set -> skip!
+Result: 4 (sequence: [1, 2, 3, 4])
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Each number is processed at most twice due to the `!set.contains(num - 1)` check.
+- Space Complexity: O(N)
+  Reason: HashSet storing N elements.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Handle empty array: return 0 if `arr.length == 0`.
+- Loop over the SET, not the array, to automatically ignore duplicates.
+================================================================================

@@ -1,0 +1,61 @@
+================================================================================
+QUESTION: Single Number III - Two Single Numbers (LeetCode 260)
+FILE: e_SingleNumberIII.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Every element appears twice except for TWO numbers that appear only once. Find both numbers in O(N) time and O(1) space.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Step 1: XOR all numbers together.
+Duplicates cancel out, leaving: `XOR_total = a ^ b` (where a and b are the two unique numbers).
+Since a != b, `XOR_total` has at least one bit set to 1.
+Step 2: Find any set bit in `XOR_total` (the rightmost set bit: `mask = XOR_total & -XOR_total`).
+This set bit means: number `a` has a 1 at this position, and number `b` has a 0 at this position!
+Step 3: Split the array into two groups based on this bit!
+- Group 1: numbers with this bit == 1
+- Group 2: numbers with this bit == 0
+XOR each group separately. Duplicates cancel inside their group, leaving `a` in group 1 and `b` in group 2!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. long xor = 0; for num in arr: xor ^= num;
+2. long rightmostSetBit = xor & (-xor);
+3. int b1 = 0, b2 = 0;
+4. For num in arr:
+   - if ((num & rightmostSetBit) != 0) b1 ^= num;
+   - else b2 ^= num;
+5. Return new int[]{ b1, b2 }.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+A differing bit partitions `a` and `b` into distinct buckets. Identical pairs have identical bits, so both copies always land in the same bucket and cancel each other out.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not HashMap?
+HashMap takes O(N) memory. This bit partitioning method uses O(1) memory and only two passes.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+arr = [1, 2, 1, 3, 2, 5]
+Step 1: xor = 1^2^1^3^2^5 = 3 ^ 5 = 011 ^ 101 = 110 (6)
+Step 2: rightmost set bit of 6 (0110) is 2 (0010)
+Step 3: Partition by bit 1:
+- Bit 1 is SET: [2, 3, 2] -> 2 ^ 3 ^ 2 = 3!
+- Bit 1 is NOT SET: [1, 1, 5] -> 1 ^ 1 ^ 5 = 5!
+Output: [3, 5]
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Two linear passes over the array.
+- Space Complexity: O(1)
+  Reason: Only primitive variables.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Use `(long) xor & (-xor)`: if `xor = Integer.MIN_VALUE` (-2^31), `-xor` overflows 32-bit signed int!
+================================================================================

@@ -1,0 +1,58 @@
+================================================================================
+QUESTION: Alien Dictionary (Topological Sort on Character Rules)
+FILE: d_AlienDictionary.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given a sorted dictionary of an alien language containing words, find the unique order of characters in the alien language.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+How do you know which character comes first in a dictionary?
+Compare ADJACENT words in the dictionary:
+Example: words "wrt" and "wrf".
+First mismatch is at letter 3: 't' vs 'f'.
+Since "wrt" comes BEFORE "wrf", letter 't' MUST come before letter 'f' in the alien alphabet!
+Create a directed edge: `'t' -> 'f'`!
+Do this for all adjacent words, then run TOPOLOGICAL SORT on the character graph!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Compare adjacent words dict[i] and dict[i + 1]:
+   - Find first mismatch: char c1 = w1.charAt(j), c2 = w2.charAt(j);
+   - Add directed edge c1 -> c2 in graph;
+   - Edge case: if w1 starts with w2 and w1.length() > w2.length() (e.g. "abc" before "ab"), invalid dictionary! Return "".
+2. Run Kahn's Algorithm (Topological Sort) on the character graph.
+3. If topo order length < unique characters: cycle exists (invalid)! Return "".
+4. Else return topo order as a String.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Dictionary ordering defines pairwise precedence constraints. Topological sort resolves all constraints into a linear sequence.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Pairwise character comparisons across non-adjacent words is redundant. Comparing consecutive adjacent words captures all necessary ordering constraints.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+words = ["wrt","wrf","er","ett","rftt"]
+- "wrt" vs "wrf" -> t -> f
+- "wrf" vs "er" -> w -> e
+- "er" vs "ett" -> r -> t
+- "ett" vs "rftt" -> e -> r
+Rules: w -> e -> r -> t -> f
+Topo Sort output: "wertf"
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(Total Characters + K + E)
+  Reason: Compare adjacent words, then Kahn's on K unique alphabet letters.
+- Space Complexity: O(K + E)
+  Reason: Adjacency list of characters.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Prefix trap: If "apple" comes before "app", the dictionary is INVALID (longer word cannot come before its prefix).
+================================================================================

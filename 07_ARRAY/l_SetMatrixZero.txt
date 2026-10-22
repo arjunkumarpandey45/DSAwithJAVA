@@ -1,0 +1,67 @@
+================================================================================
+QUESTION: Set Matrix Zeroes (LeetCode 73)
+FILE: l_SetMatrixZero.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given an m x n integer matrix, if an element is 0, set its entire row and column to 0 in-place.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Naive idea: create a dummy row array and dummy col array of size M and N.
+Mark row[i]=1 and col[j]=1 whenever matrix[i][j] == 0.
+Then set zeros in a second pass.
+Optimal idea (O(1) extra space):
+Use the FIRST ROW and FIRST COLUMN of the matrix itself as the dummy marker arrays!
+Since matrix[0][0] overlaps both row 0 and col 0, use a separate boolean variable `col0` for the first column.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. col0 = 1.
+2. Step 1 (Marking):
+   - For i = 0..m-1, j = 0..n-1:
+     - If matrix[i][j] == 0:
+       - matrix[i][0] = 0 (mark row)
+       - if j != 0: matrix[0][j] = 0 (mark col)
+       - else: col0 = 0 (mark first col)
+3. Step 2 (Modify inner matrix from 1..m-1 and 1..n-1):
+   - If matrix[i][0] == 0 || matrix[0][j] == 0: matrix[i][j] = 0.
+4. Step 3 (Modify first row and first col):
+   - If matrix[0][0] == 0: set all row 0 to 0.
+   - If col0 == 0: set all col 0 to 0.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+By utilizing matrix[...][0] and matrix[0][...] as storage, we avoid allocating extra memory. Processing the inner matrix first prevents markers from prematurely zeroing out other markers.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not set rows and cols to 0 immediately when a zero is found?
+If you set rows/cols to 0 immediately, newly placed zeroes will trigger further zeroing, turning the ENTIRE matrix into zeroes!
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+matrix = [
+  [1, 1, 1],
+  [1, 0, 1],
+  [1, 1, 1]
+]
+i=1, j=1 has 0 -> mark matrix[1][0]=0 and matrix[0][1]=0.
+Inner update: cell (1, 2) has row marker 0 -> becomes 0. Cell (2, 1) has col marker 0 -> becomes 0.
+Result:
+  [1, 0, 1]
+  [0, 0, 0]
+  [1, 0, 1]
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(M * N)
+  Reason: Two passes through the matrix.
+- Space Complexity: O(1)
+  Reason: Modifications done in-place using row 0 and col 0.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Always update from bottom-right (or inner cells 1..m-1) towards top-left to avoid overwriting the marker row and column too early.
+================================================================================

@@ -1,0 +1,60 @@
+================================================================================
+QUESTION: Kth Missing Positive Number (LeetCode 1539)
+FILE: m_FindKthPositive.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given an array arr of positive integers sorted in strictly increasing order, and an integer k, return the kth positive integer that is missing from this array.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+If no numbers were missing, at index `i`, the value would be `i + 1` (e.g. at index 0, value should be 1).
+So at index `mid`, how many numbers are missing before it?
+`missing = arr[mid] - (mid + 1)`!
+Binary Search:
+- If `missing < k`: The k-th missing number is further to the right! `low = mid + 1`.
+- If `missing >= k`: The k-th missing number is to the left! `high = mid - 1`.
+When loop ends, answer is simply `low + k`!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. low = 0, high = arr.length - 1.
+2. while (low <= high):
+   - mid = low + (high - low) / 2;
+   - int missing = arr[mid] - (mid + 1);
+   - if (missing < k) low = mid + 1;
+   - else high = mid - 1;
+3. Return low + k.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+At the end of binary search, `high` and `low` cross. The number of missing elements before `high` is less than `k`.
+Formula: `ans = arr[high] + (k - missing) = arr[high] + k - (arr[high] - high - 1) = high + 1 + k = low + k`!
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not linear scan checking numbers from 1 upwards?
+Linear scan takes O(N + K). Binary search takes O(log N) time and O(1) space.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+arr = [2, 3, 4, 7, 11], k = 5
+low=0, high=4
+- mid=2 (val 4): missing = 4 - (2 + 1) = 1 < 5 -> low = 3
+- mid=3 (val 7): missing = 7 - (3 + 1) = 3 < 5 -> low = 4
+- mid=4 (val 11): missing = 11 - (4 + 1) = 6 >= 5 -> high = 3
+Loop ends: low = 4.
+Result: low + k = 4 + 5 = 9!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(log N)
+  Reason: Binary search over array of length N.
+- Space Complexity: O(1)
+  Reason: Constant space.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- The formula `low + k` directly gives the exact answer without any special post-processing.
+================================================================================

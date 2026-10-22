@@ -1,0 +1,55 @@
+================================================================================
+QUESTION: Find Bottom Left Tree Value (LeetCode 513)
+FILE: n_leftBottomValue.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given the root of a binary tree, return the leftmost value in the last row of the tree.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Reverse BFS (Right to Left Queue Traversal):
+Normally BFS pushes LEFT child then RIGHT child.
+Instead, push RIGHT child first, then LEFT child!
+Why?
+Because the last node to be polled from the queue will be the BOTTOM-LEFTMOST node in the entire tree!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Queue<TreeNode> q = new LinkedList<>(); q.offer(root);
+2. TreeNode curr = root;
+3. while (!q.isEmpty()):
+   - curr = q.poll();
+   - if (curr.right != null) q.offer(curr.right); // right first!
+   - if (curr.left != null) q.offer(curr.left);
+4. Return curr.val;
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Traversing level by level from right to left ensures that the very last node processed at the deepest level is the leftmost node.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Standard BFS requires keeping track of the first element of the last level array. Reverse BFS simply returns the last polled node directly!
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Tree: 2 -> left: 1, right: 3
+q = [2]
+poll 2 -> add right 3, then left 1 -> q = [3, 1]
+poll 3 -> no children
+poll 1 -> no children
+Loop ends! curr was 1. Return 1.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Each node queued once.
+- Space Complexity: O(W)
+  Reason: Queue width.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Push `curr.right` BEFORE `curr.left`!
+================================================================================

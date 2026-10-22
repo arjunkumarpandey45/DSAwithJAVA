@@ -1,0 +1,77 @@
+================================================================================
+QUESTION: DQ10 - Minimum Insertions to Balance a Parentheses String
+FILE: DQ10_minInsertions.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given a parentheses string 's' containing only '(' and ')'.
+A parentheses string is balanced if:
+1. Any left parenthesis '(' must have a corresponding two consecutive right parentheses '))'.
+2. Left parenthesis '(' must go before the corresponding two right parentheses '))'.
+Return the minimum number of insertions needed to make 's' balanced.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+The rule is: 1 '(' requires EXACTLY TWO '))'.
+When scanning:
+- If we see '(': increment open count (open++).
+- If we see ')':
+  * Does the next character also have ')'? If yes, consume it together (i++).
+  * If not, we only have one ')', so we must insert 1 more ')' right now (close++) to make a pair!))
+  * Now we have a complete '))' pair.
+  * Does it have a matching '(' available (open > 0)? If yes, match it (open--).
+  * If no open bracket is available, we must insert a '(' (close++).
+At the end, each leftover '(' needs two ')', adding 2 * open insertions!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Maintain open = 0 (unmatched '(') and close = 0 (insertions needed).
+2. For i = 0 to s.length() - 1:
+   - If s.charAt(i) == '(': open++
+   - Else (ch is ')'):
+     * Check if i + 1 < n and s.charAt(i + 1) == ')': if so, skip next char (i++).
+     * Else: we only had a single ')', insert one ')' (close++).
+     * Now we have a pair '))':
+       - If open > 0: open-- (matched).
+       - Else: close++ (need to insert '(').
+3. Return close + 2 * open.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Greedy pairing:
+Whenever a ')' appears, matching it immediately with the next char to form '))' minimizes insertions.
+If a second ')' is missing, inserting it immediately is mandatory.
+Then each formed pair cancels one existing '(', or requires inserting a '(' if none exists.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not convert string or use stack?
+- Modifying strings causes O(n^2) allocations.
+- Using a stack is overkill because we only track the count of open brackets.
+  Two simple integer counters give O(n) time and O(1) space.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Input: s = '())'
+
+i = 0, '(': open = 1
+i = 1, ')': next char is ')' at i = 2 -> i++ (now i = 2).
+            We have a pair '))'.
+            open > 0? Yes (1). open-- -> open = 0.
+
+Loop ends. open = 0, close = 0.
+Return close + 2 * open = 0 + 0 = 0 (already balanced).
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(n)
+  Reason: Linear scan through string of length n.
+- Space Complexity: O(1)
+  Reason: Only two integer counter variables (open, close).
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Remember that 1 '(' = 2 * ')'. Remaining open brackets contribute 2 * open at the end.
+- Advancing i++ when the second ')' is present correctly consumes both characters in one step.
+================================================================================

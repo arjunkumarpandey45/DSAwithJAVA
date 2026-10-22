@@ -1,0 +1,65 @@
+================================================================================
+QUESTION: Maximum Width of Binary Tree (LeetCode 662)
+FILE: o_MaximumWidthOfBinaryTree.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Find the maximum width among all levels. Width is the length between the leftmost and rightmost non-null nodes at that level, including null nodes in between.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Index nodes like in a binary heap:
+If parent has index `i`:
+- Left child = `2 * i + 1`
+- Right child = `2 * i + 2`
+Width of a level = `(lastIndex - firstIndex + 1)`!
+
+Integer Overflow Prevention:
+For depth 50, 2^50 overflows 64-bit integer!
+Fix: At the start of each level, subtract `minIndexOfLevel` from all indices so that indices restart near 0 on every level!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. class Pair { TreeNode node; long index; }
+2. Queue<Pair> q = new LinkedList<>(); q.offer(new Pair(root, 0));
+3. long maxWidth = 0;
+4. while (!q.isEmpty()):
+   - int size = q.size(); long minIndex = q.peek().index;
+   - long first = 0, last = 0;
+   - for i = 0 to size - 1:
+     - Pair p = q.poll(); long currIndex = p.index - minIndex;
+     - if (i == 0) first = currIndex;
+     - if (i == size - 1) last = currIndex;
+     - if (p.node.left != null) q.offer(new Pair(p.node.left, 2 * currIndex + 1));
+     - if (p.node.right != null) q.offer(new Pair(p.node.right, 2 * currIndex + 2));
+   - maxWidth = Math.max(maxWidth, last - first + 1);
+5. Return (int) maxWidth.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Heap index math accurately counts null slots between existing nodes without actually storing nulls in the queue.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Adding null nodes into the queue directly causes memory overflow (O(2^H) memory for sparse trees). Index subtraction uses O(N) memory.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Tree: 1 with left: 3 (indices 1->2*0+1=1), right: 2 (2*0+2=2)
+Level 1: size=2, minIndex=1
+- node 3: normalized idx = 0
+- node 2: normalized idx = 1
+Width = 1 - 0 + 1 = 2.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Standard BFS traversal.
+- Space Complexity: O(N)
+  Reason: Queue storing node-index pairs.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Always normalize `currIndex = p.index - minIndex` to prevent integer overflow.
+================================================================================

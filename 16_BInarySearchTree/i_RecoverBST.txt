@@ -1,0 +1,60 @@
+================================================================================
+QUESTION: Recover Binary Search Tree (LeetCode 99)
+FILE: i_RecoverBST.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+You are given the root of a binary search tree where the values of EXACTLY two nodes were swapped by mistake. Recover the tree without changing its structure in O(1) auxiliary space.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Inorder traversal of a valid BST must be strictly increasing.
+When two nodes are swapped, the sorted order has inversions (`prev.val > curr.val`):
+- First inversion: `prev` is the first wrong node (`first = prev`), and `curr` is the candidate second node (`middle = curr`).
+- Second inversion (if swapped nodes are not adjacent): `curr` is the actual second wrong node (`last = curr`).
+After traversal: swap values of `first` and `(last != null ? last : middle)`!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. TreeNode first = null, middle = null, last = null, prev = new TreeNode(Integer.MIN_VALUE);
+2. inorder(root):
+   - if (root == null) return;
+   - inorder(root.left);
+   - if (prev.val > root.val):
+     - if (first == null) { first = prev; middle = root; }
+     - else last = root;
+   - prev = root;
+   - inorder(root.right);
+3. Swap values of first and (last != null ? last : middle).
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+In any sorted array with two swapped elements [1, 2, 8, 4, 5, 6, 3, 9]:
+The first defect is 8 > 4 (first = 8).
+The second defect is 6 > 3 (last = 3).
+Swapping 8 and 3 restores sorted order.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Storing inorder in a list and sorting takes O(N) space. Finding inversions on the fly takes O(H) space (or O(1) with Morris traversal).
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Tree: [1, 3, null, null, 2]
+Inorder: 3, 2, 1
+- 3 > 2: first = 3, middle = 2
+- 2 > 1: last = 1
+Swap first(3) and last(1) -> Inorder becomes 1, 2, 3! Recovered!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Single inorder traversal.
+- Space Complexity: O(H)
+  Reason: Recursion stack.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- If the two swapped nodes are adjacent (e.g. 1, 3, 2 -> 3 and 2 swapped), there is only ONE inversion! That is why `middle` must be saved.
+================================================================================

@@ -1,0 +1,58 @@
+================================================================================
+QUESTION: Surrounded Regions - Replace O with X (LeetCode 130)
+FILE: i_SurroundedRegions.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given an m x n matrix board containing 'X' and 'O', capture all regions surrounded by 'X' by flipping all 'O's into 'X's. An 'O' on the border can NEVER be captured.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+REVERSE THE LOGIC:
+Instead of finding which 'O's ARE surrounded by 'X'...
+Find which 'O's are NOT surrounded!
+Any 'O' on the BOUNDARY (row 0, row m-1, col 0, col n-1) can NEVER be surrounded!
+Furthermore, any 'O' connected to a boundary 'O' can NEVER be surrounded!
+Algorithm:
+1. Start DFS/BFS from all 'O's on the boundary and mark them as "SAFE" (e.g. visited).
+2. Now iterate through the entire board: any 'O' that was NOT marked safe is surrounded: flip it to 'X'!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. boolean[][] vis = new boolean[m][n];
+2. Run DFS for boundary rows (r=0, r=m-1) and boundary cols (c=0, c=n-1) where board[r][c] == 'O'.
+3. dfs(r, c): mark vis[r][c] = true; explore 4 neighbors if board[nr][nc] == 'O' and !vis[nr][nc].
+4. For r = 0..m-1, c = 0..n-1:
+   - if (board[r][c] == 'O' && !vis[r][c]) board[r][c] = 'X';
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Boundary-connected 'O's have an escape path to the border. Only inland 'O's without any path to the border are enclosed by 'X's.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Checking every inland 'O' to see if it reaches the border takes repeated DFS runs. Boundary-inward DFS solves it in a single pass.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Board:
+X X X X
+X O O X
+X X O X
+X O X X
+- Boundary has 'O' at (3, 1).
+- DFS from (3, 1) visits nothing else (surrounded by X).
+- Inland 'O's at (1,1), (1,2), (2,2) were never touched by boundary DFS -> all flipped to 'X'!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(M * N)
+  Reason: Each cell visited a constant number of times.
+- Space Complexity: O(M * N)
+  Reason: Visited array and DFS stack.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Boundary loops: check `i == 0 || i == m - 1 || j == 0 || j == n - 1`.
+================================================================================

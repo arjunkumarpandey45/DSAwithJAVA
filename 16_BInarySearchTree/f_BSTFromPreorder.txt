@@ -1,0 +1,58 @@
+================================================================================
+QUESTION: Construct BST from Preorder Traversal (LeetCode 1008)
+FILE: f_BSTFromPreorder.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Construct a BST from its preorder traversal in O(N) time.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Preorder visits Root -> Left -> Right.
+Use an Upper Bound constraint:
+The next value in preorder can only be the child of the current subtree if `val < bound`!
+- Left child bound = `root.val`
+- Right child bound = current parent's `bound`
+If `arr[i] > bound`, this value does NOT belong to this subtree, return null!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. int[] i = new int[]{ 0 };
+2. bstFromPreorder(A): return build(A, Integer.MAX_VALUE, i);
+3. build(A, bound, i):
+   - if (i[0] == A.length || A[i[0]] > bound) return null;
+   - TreeNode root = new TreeNode(A[i[0]++]);
+   - root.left = build(A, root.val, i);
+   - root.right = build(A, bound, i);
+   - return root;
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Preorder naturally presents roots before their descendants. The upper bound tells recursion when the current subtree has finished, advancing the index exactly N times.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Sorting preorder to get inorder and building with two traversals takes O(N log N). Upper bound method takes O(N) linear time.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+A = [8, 5, 1, 7, 10, 12]
+- root = 8 (bound INF)
+  - root.left = 5 (bound 8)
+    - left = 1 (bound 5)
+    - right = 7 (bound 8, since 7 > 5)
+  - root.right = 10 (bound INF)
+    - right = 12 (bound INF)
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Index `i[0]` advances once per node.
+- Space Complexity: O(H)
+  Reason: Recursion stack.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Pass index `i` as an array `int[] i = {0}` or object reference so updates persist across recursive calls.
+================================================================================

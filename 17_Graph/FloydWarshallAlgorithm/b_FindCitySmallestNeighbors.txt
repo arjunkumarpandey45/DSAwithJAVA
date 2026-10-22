@@ -1,0 +1,46 @@
+================================================================================
+QUESTION: Find the City with Smallest Number of Neighbors (Floyd-Warshall)
+FILE: b_FindCitySmallestNeighbors.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+LeetCode 1334 solved with Floyd-Warshall All-Pairs Shortest Path.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+1. Initialize an N x N matrix with INF, and `matrix[i][i] = 0`.
+2. Fill edge weights.
+3. Run Floyd-Warshall 3-nested loops.
+4. Count how many cities are reachable within `threshold` for each city, return the best.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. int[][] dist = new int[n][n]; fill with 1e9; for i=0..n-1: dist[i][i]=0;
+2. for [u, v, w] in edges: dist[u][v] = w; dist[v][u] = w;
+3. Floyd-Warshall: k from 0..n-1, i from 0..n-1, j from 0..n-1: dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j]);
+4. Find city with min reachable count <= threshold.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+N is at most 100 in LeetCode 1334. N^3 = 100^3 = 1,000,000 operations, which finishes in < 5 milliseconds.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Floyd-Warshall is the cleanest and fastest implementation when N <= 400.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Computes all n x n distances, counts row entries <= threshold, returns city with minimum reachable count.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N^3)
+  Reason: Three nested loops over N cities.
+- Space Complexity: O(N^2)
+  Reason: Distance matrix.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Edges are UNDIRECTED: remember `dist[u][v] = w` AND `dist[v][u] = w`.
+================================================================================

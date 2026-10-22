@@ -1,0 +1,57 @@
+================================================================================
+QUESTION: Maximum Sum Circular Subarray (LeetCode 918)
+FILE: i_maxSubarraySumCircular.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Find the maximum subarray sum in a circular array (where the end connects back to the beginning).
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+A maximum subarray in a circular array can be of two types:
+Case 1: Normal subarray (does NOT wrap around). Just standard Kadane's max!
+Case 2: Circular subarray (wraps around the boundary).
+Notice: If the circular subarray has maximum sum, the remaining unpicked middle part MUST have the MINIMUM sum!
+So: Max Circular Sum = Total Array Sum - Minimum Subarray Sum!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Calculate:
+   - totalSum: sum of all elements.
+   - maxKadane: maximum subarray sum (standard Kadane).
+   - minKadane: minimum subarray sum (inverted Kadane).
+2. If maxKadane < 0 (all numbers negative):
+   - Return maxKadane (wrapping around would pick empty array).
+3. Return Math.max(maxKadane, totalSum - minKadane).
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+By subtracting the minimum contiguous subarray from the total sum, the remaining wrap-around elements are guaranteed to form the maximum circular contiguous segment.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not duplicate the array to size 2N and run Kadane?
+Standard Kadane on 2N array can pick a subarray of length > N (which is invalid because you cannot reuse elements). Managing a sliding window of length at most N requires monotonic deques, which is much more complex.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+arr = [5, -3, 5]
+totalSum = 5 + (-3) + 5 = 7
+maxKadane: [5], [-3], [5] -> maxKadane = 5 + (-3) + 5 = 7 (or wrap [5, 5])
+minKadane: [-3]
+circularMax = totalSum - minKadane = 7 - (-3) = 10 (wrap picks 5 + 5)
+Math.max(maxKadane=7, circularMax=10) = 10!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Single pass calculating max and min Kadane simultaneously.
+- Space Complexity: O(1)
+  Reason: Constant extra variables.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Edge case: If all elements are negative (e.g. [-3, -2, -3]):
+- totalSum - minKadane = 0 (empty array). But non-empty subarray is required! You must return `maxKadane`.
+================================================================================

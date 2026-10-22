@@ -1,0 +1,54 @@
+================================================================================
+QUESTION: Middle of the Linked List (LeetCode 876) - Tortoise and Hare
+FILE: c_MiddleOfLinkedList.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given the head of a singly linked list, return the middle node. If there are two middle nodes, return the second middle node.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Tortoise and Hare (Slow and Fast Pointers):
+Two runners start at the head:
+- `slow` runs at speed 1 (moves 1 step: `slow = slow.next`).
+- `fast` runs at speed 2 (moves 2 steps: `fast = fast.next.next`).
+When `fast` reaches the finish line (end of list), `slow` will be EXACTLY at the halfway mark (the middle)!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. ListNode slow = head, fast = head;
+2. while (fast != null && fast.next != null):
+   - slow = slow.next;
+   - fast = fast.next.next;
+3. Return slow.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Since `fast` travels twice as fast as `slow`, distance traveled by slow = (distance of fast) / 2 = N / 2.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not count total length first?
+Counting length takes 2 passes (Pass 1: count N, Pass 2: advance to N/2). Slow and fast pointers find the middle in exactly ONE single pass.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+List: 1 -> 2 -> 3 -> 4 -> 5
+Start: slow = 1, fast = 1
+Step 1: slow = 2, fast = 3
+Step 2: slow = 3, fast = 5
+Next step: fast.next is null -> loop terminates!
+slow is at 3! Middle node = 3.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Single pass of N/2 iterations.
+- Space Complexity: O(1)
+  Reason: Only two pointer variables.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Order of condition matters: `while (fast != null && fast.next != null)`. Checking `fast.next != null` before `fast != null` will crash with NullPointerException on odd lengths!
+================================================================================

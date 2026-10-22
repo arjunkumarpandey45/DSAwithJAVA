@@ -1,0 +1,78 @@
+================================================================================
+QUESTION: DQ9 - Find Two Non-Overlapping Subarrays Each With Target Sum
+FILE: DQ9_FindTwoNonOverlappingSubarrays.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given an array of integers 'arr' and an integer 'target'.
+Find two non-overlapping sub-arrays of 'arr' each with a sum equal to 'target'.
+There may be multiple answers, but you must find the two sub-arrays such that
+the sum of their lengths is MINIMIZED.
+Return the minimum sum of the lengths, or -1 if you cannot find two such sub-arrays.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+1. All elements in arr are positive, so a sliding window can find any subarray summing to target.
+2. Suppose current valid subarray spans [left..right] with length currL = (right - left + 1).
+3. For the other subarray to be non-overlapping, it MUST end at or before (left - 1).
+4. If we pre-record 'best[k]' = the minimum length of ANY valid subarray found ending at or before index k,
+   then combining current subarray with the best previous one gives:
+     candidate = currL + best[left - 1]
+5. We take the minimum across all possible pairs!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Maintain an array 'best' of size n, initialized to Integer.MAX_VALUE.
+2. Maintain minL = Integer.MAX_VALUE, ans = Integer.MAX_VALUE.
+3. Sliding window pointers (left = 0, right = 0), running sum = 0.
+4. For right = 0 to n - 1:
+   - sum += arr[right]
+   - While sum > target: sum -= arr[left], left++
+   - If sum == target:
+     * currL = right - left + 1
+     * If left > 0 and best[left - 1] != MAX_VALUE:
+       ans = min(ans, currL + best[left - 1])
+     * minL = min(minL, currL)
+   - best[right] = minL (minimum length valid subarray seen so far up to right)
+5. Return ans == MAX_VALUE ? -1 : ans.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Dynamic programming + Sliding Window:
+- Sliding window discovers valid subarrays ending at index 'right'.
+- The 'best' array memorizes the historical shortest subarray ending strictly before the current one,
+  guaranteeing zero overlap and optimal sum of lengths in O(n) total time.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not find all subarrays with sum = target and compare all pairs?
+- There could be O(n) valid subarrays. Comparing all pairs takes O(n^2) time.
+  Prefix minimum DP array reduces pair comparison to O(1) lookup.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Input: arr = [3, 2, 2, 4, 3], target = 3
+
+right = 0: val 3, sum = 3 == target. currL = 1. best[0] = 1.
+right = 1: val 2, sum = 2. best[1] = 1.
+right = 2: val 2, sum = 4 > 3 -> drop 2, sum = 2. best[2] = 1.
+right = 3: val 4, sum = 6 > 3 -> drop 2, 4 -> sum = 4. best[3] = 1.
+right = 4: val 3, sum = 3 == target. currL = 1. left = 4.
+           left - 1 = 3. best[3] = 1.
+           ans = min(inf, currL + best[3]) = 1 + 1 = 2!
+
+Return 2 (subarrays [3] at index 0 and [3] at index 4).
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(n)
+  Reason: Both sliding window pointers advance at most n times.
+- Space Complexity: O(n)
+  Reason: Auxiliary array 'best' of size n to store prefix minimum lengths.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Elements are positive; if negative numbers existed, prefix sum + hash map would be needed instead.
+- Check left > 0 before accessing best[left - 1] to prevent ArrayIndexOutOfBoundsException.
+================================================================================

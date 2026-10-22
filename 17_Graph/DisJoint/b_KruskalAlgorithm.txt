@@ -1,0 +1,56 @@
+================================================================================
+QUESTION: Kruskal's Algorithm for Minimum Spanning Tree (MST)
+FILE: b_KruskalAlgorithm.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Find the Minimum Spanning Tree of a connected weighted undirected graph using Disjoint Set Union.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+GREEDY EDGE SELECTION:
+1. Sort ALL edges in the graph in ascending order of their weights.
+2. Pick edges one by one from smallest to largest:
+   - If the two endpoints of the edge belong to DIFFERENT components (they don't form a cycle):
+     - Include this edge in the MST! Add its weight to total!
+     - Union the two components together using DSU!
+   - If they already belong to the same component: SKIP (would form a cycle)!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Sort all edges: Collections.sort(edges, (a, b) -> a.weight - b.weight);
+2. DSU dsu = new DSU(V); int mstWeight = 0;
+3. For each edge (u, v, wt):
+   - if (dsu.findUPar(u) != dsu.findUPar(v)):
+     - mstWeight += wt;
+     - dsu.unionBySize(u, v);
+4. Return mstWeight.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+By the Cut Property: the minimum weight edge crossing any cut must be part of the MST. Sorting and DSU cycle rejection guarantees a minimal acyclic spanning tree.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Prim's algorithm grows from a node; Kruskal's grows by picking global minimum edges. Kruskal is especially simple when edges are already given as a list.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Edges sorted: (1-2, 1), (2-3, 2), (1-3, 3)
+- Pick (1-2, 1): union(1, 2), mst = 1
+- Pick (2-3, 2): union(2, 3), mst = 1 + 2 = 3
+- Edge (1-3, 3): find(1) == find(3) -> CYCLE! Skip.
+MST Weight = 3.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(E log E + E * 4 * alpha)
+  Reason: Sorting edges dominates O(E log E).
+- Space Complexity: O(V + E)
+  Reason: DSU and edge list.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- An MST always has exactly `V - 1` edges. You can break early when `edgesCount == V - 1`.
+================================================================================

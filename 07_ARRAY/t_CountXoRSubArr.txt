@@ -1,0 +1,62 @@
+================================================================================
+QUESTION: Count Subarrays with Given XOR K
+FILE: t_CountXoRSubArr.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given an array of integers and an integer K, count the total number of subarrays having bitwise XOR equal to K.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Identical logic to "Subarray Sum Equals K", but using XOR instead of Addition!
+Let `xr` be the prefix XOR from index 0 to i.
+Suppose there is an earlier prefix with XOR `x` such that the subarray between them has XOR `K`.
+Formula: x ^ K = xr
+XOR both sides with K: x ^ K ^ K = xr ^ K
+Since K ^ K = 0: x = xr ^ K!
+So we just need to check how many times `xr ^ K` has appeared in our prefix XOR HashMap!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Map<Integer, Integer> map = new HashMap<>();
+2. map.put(0, 1); // base case: empty prefix has XOR 0
+3. int xr = 0, count = 0;
+4. For each num in arr:
+   - xr = xr ^ num;
+   - int targetXor = xr ^ K;
+   - count += map.getOrDefault(targetXor, 0);
+   - map.put(xr, map.getOrDefault(xr, 0) + 1);
+5. Return count.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+XOR is self-inverting (A ^ B = C implies A = B ^ C). A prefix XOR difference equals K if and only if the earlier prefix had value `xr ^ K`.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not check all subarrays?
+Nested loops take O(N^2). With HashMap, we do it in a single pass O(N) time.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+arr = [4, 2, 2, 6, 4], K = 6
+map = {0: 1}, xr = 0, count = 0
+i=0 (4): xr = 4. target = 4^6 = 2. map has 2? No. map={0:1, 4:1}
+i=1 (2): xr = 4^2 = 6. target = 6^6 = 0. map has 0? Yes (1 time)! count = 1. map={0:1, 4:1, 6:1}
+i=2 (2): xr = 6^2 = 4. target = 4^6 = 2. map has 2? No. map={0:1, 4:2, 6:1}
+i=3 (6): xr = 4^6 = 2. target = 2^6 = 4. map has 4? Yes (2 times)! count = 1 + 2 = 3.
+i=4 (4): xr = 2^4 = 6. target = 6^6 = 0. map has 0? Yes (1 time)! count = 3 + 1 = 4.
+Total count = 4.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Single pass with O(1) map operations.
+- Space Complexity: O(N)
+  Reason: HashMap stores up to N distinct prefix XOR values.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Never forget `map.put(0, 1)` at the start! If a prefix itself equals K, `xr ^ K = 0`, so it must count 1.
+================================================================================

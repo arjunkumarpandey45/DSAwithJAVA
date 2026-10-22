@@ -1,0 +1,65 @@
+================================================================================
+QUESTION: Magnetic Force Between Two Balls / Aggressive Cows (LeetCode 1552)
+FILE: n_MagneticForce.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given position array of baskets and m balls, distribute m balls into baskets such that the MINIMUM magnetic force (distance) between any two balls is as LARGE as possible (Maximize the Minimum).
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Whenever a problem asks to "MAXIMIZE THE MINIMUM", it is ALWAYS Binary Search on Answer!
+Sort basket positions first.
+Search range for distance `d`:
+- Minimum possible distance = 1
+- Maximum possible distance = position[n - 1] - position[0]
+Can we place all m balls such that every adjacent pair is at least distance `mid` apart?
+Greedy placement:
+Place 1st ball at position[0]. Walk forward and place next ball at the first basket that is >= lastPosition + mid.
+- If we can place >= m balls: It is possible! Can we achieve an EVEN LARGER distance? Save `ans = mid`, search right (`low = mid + 1`).
+- Else: Distance too large, try smaller (`high = mid - 1`).
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Arrays.sort(position);
+2. low = 1, high = position[n - 1] - position[0], ans = 1;
+3. while (low <= high):
+   - mid = low + (high - low) / 2;
+   - if (canPlace(position, mid, m)): ans = mid; low = mid + 1; // try larger
+   - else: high = mid - 1;
+4. canPlace helper:
+   - balls = 1, last = position[0];
+   - for i = 1 to n - 1:
+     - if (position[i] - last >= dist): balls++; last = position[i];
+   - return balls >= m;
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Greedily placing balls as early as possible leaves the maximum remaining room for the remaining balls. If distance `d` is feasible, all distances < `d` are also feasible.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not check all combinations of ball placements?
+Combinations (N choose M) is astronomical (NP-hard brute force). Binary search on answer solves it in O(N log(max_dist)).
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+position = [1, 2, 3, 4, 7], m = 3
+low = 1, high = 6
+- mid = 3: place at 1, next at 4 (4-1=3>=3), next at 7 (7-4=3>=3) -> 3 balls placed! ans=3, low=4
+- mid = 5: place at 1, next at 7 (7-1=6>=5) -> only 2 balls placed < 3! high=4
+- mid = 4: place at 1, next at 7 -> 2 balls placed < 3! high=3 < low -> STOP!
+Max minimum distance = 3.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N log N + N log(max_dist))
+  Reason: Sorting takes O(N log N). Binary search takes O(N log(range)).
+- Space Complexity: O(1)
+  Reason: In-place.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Do NOT forget to sort the array first! The greedy distance check only works on sorted coordinates.
+================================================================================

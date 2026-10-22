@@ -1,0 +1,76 @@
+================================================================================
+QUESTION: All Permutations of Array / String
+FILE: c_AllPermutaion.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given an array or string of distinct values, return or print all possible arrangements (permutations) of these elements.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Permutation means reordering. If you have 3 spots, you can put any unused element into spot 1, any remaining unused element into spot 2, and the last remaining element into spot 3.
+You can track what is already used using:
+Approach A: A boolean visited or frequency array.
+Approach B: In-place swapping (swap current index with every forward index, recurse, then swap back to restore).
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+Method 1 (Frequency / Visited Array):
+1. Keep a boolean array visited[] of size N and a temporary list ds.
+2. If ds.size() == arr.length, we found a complete permutation! Print/store it.
+3. Loop from 0 to N - 1:
+   - If not visited[i]:
+     - Mark visited[i] = true.
+     - Add arr[i] to ds.
+     - Recurse.
+     - Backtrack: unmark visited[i] = false, remove last from ds.
+
+Method 2 (In-place Swapping - Space Optimized):
+1. Recurse with current index ind.
+2. If ind == arr.length - 1, print the array.
+3. Loop i from ind to arr.length - 1:
+   - swap(arr[ind], arr[i])
+   - recurse(ind + 1)
+   - swap(arr[ind], arr[i]) (backtrack back)
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+At each step, we place each unused number at the current position and recursively permute the rest. Backtracking restores the state so the next iteration can try placing a different number.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not just shuffle randomly until we find all?
+Random shuffling has no guarantee of finishing, will produce massive duplicate work, and cannot guarantee all N! permutations are found.
+Method 2 (swapping) is superior to Method 1 because it does not need the extra boolean visited array!
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Input: [1, 2, 3] with swapping:
+ind = 0:
+- Swap 0 with 0 -> [1, 2, 3]
+  ind = 1:
+  - Swap 1 with 1 -> [1, 2, 3] -> ind=2: PRINT [1, 2, 3]
+  - Swap 1 with 2 -> [1, 3, 2] -> ind=2: PRINT [1, 3, 2]
+- Swap 0 with 1 -> [2, 1, 3]
+  ind = 1:
+  - Swap 1 with 1 -> [2, 1, 3] -> ind=2: PRINT [2, 1, 3]
+  - Swap 1 with 2 -> [2, 3, 1] -> ind=2: PRINT [2, 3, 1]
+- Swap 0 with 2 -> [3, 2, 1]
+  ind = 1:
+  - Swap 1 with 1 -> [3, 2, 1] -> ind=2: PRINT [3, 2, 1]
+  - Swap 1 with 2 -> [3, 1, 2] -> ind=2: PRINT [3, 1, 2]
+Total: 6 permutations = 3!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N! * N)
+  Reason: There are N! permutations, and printing/copying each takes O(N) time.
+- Space Complexity: O(N)
+  Reason: Stack depth is O(N). Method 2 uses O(1) auxiliary space beyond recursion stack.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Permutation means EVERY element is used, but order matters. Subsets means ANY number of elements can be used.
+- Always remember the second swap in the swap approach, otherwise the array gets scrambled and answers get skipped.
+================================================================================

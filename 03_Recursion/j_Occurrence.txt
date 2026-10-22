@@ -1,0 +1,52 @@
+================================================================================
+QUESTION: Count Occurrences in Array Using Recursion
+FILE: j_Occurrence.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Count how many times a given target element appears in an array using recursion.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Walk through the array index by index recursively.
+If current element equals target, increment our count.
+Pass the updated count to the next index.
+When index reaches array length, return the accumulated count.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. int recOccurrence(int target, int occ, int[] arr, int ind):
+2. Base case: if (ind > arr.length - 1) return occ;
+3. If arr[ind] == target: occ++;
+4. Return recOccurrence(target, occ, arr, ind + 1);
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+It visits every index once, checking and counting target matches until the end of the array is reached.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not use a loop?
+A loop is O(1) space, but this exercises recursive array traversal and accumulator passing.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+arr = [1, 2, 4, 4], target = 4
+ind=0: arr[0]=1 != 4 -> occ=0
+ind=1: arr[1]=2 != 4 -> occ=0
+ind=2: arr[2]=4 == 4 -> occ=1
+ind=3: arr[3]=4 == 4 -> occ=2
+ind=4: ind > 3 -> return occ = 2
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Each index checked once.
+- Space Complexity: O(N)
+  Reason: Stack depth is N.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Make sure base case checks ind >= arr.length to avoid ArrayIndexOutOfBoundsException.
+================================================================================

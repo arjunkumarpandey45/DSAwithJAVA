@@ -1,0 +1,63 @@
+================================================================================
+QUESTION: Minimum Window Substring (LeetCode 76)
+FILE: i_MinimumWindowSubstring.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given two strings s and t, return the minimum window substring of s such that every character in t (including duplicates) is included in the window. Return "" if no such substring exists.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+1. Count frequencies of all characters in `t` in a hash table (or array of 128).
+2. Keep a `matchedCount` of how many required characters from `t` are satisfied in our window.
+3. Expand `right`: if s.charAt(right) is in `t` and needed, increment `matchedCount`. Decrement its count in hash table.
+4. When `matchedCount == t.length()` (all characters satisfied!):
+   - Update minimum window found so far.
+   - Shrink from `left` to remove unnecessary characters and find the tightest possible window!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. int[] map = new int[128]; for (char c : t.toCharArray()) map[c]++;
+2. int left = 0, right = 0, minLen = Integer.MAX_VALUE, startIndex = -1, count = 0;
+3. while (right < s.length()):
+   - if (map[s.charAt(right)] > 0) count++;
+   - map[s.charAt(right)]--;
+   - while (count == t.length()): // window is valid!
+     - if (right - left + 1 < minLen): minLen = right - left + 1; startIndex = left;
+     - map[s.charAt(left)]++;
+     - if (map[s.charAt(left)] > 0) count--; // lost a required char
+     - left++;
+   - right++;
+4. Return startIndex == -1 ? "" : s.substring(startIndex, startIndex + minLen);
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Negative values in `map` indicate surplus characters. When `map[ch] > 0`, that character was strictly required by `t`. This gives O(1) checks for validity at each step.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not check all substrings?
+O(N^2 * M) is massively slow. Sliding window checks each character twice (once by right, once by left) in O(N + M) time.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+s = "ADOBECODEBANC", t = "ABC"
+Needed: A:1, B:1, C:1. count=0, target=3.
+Expand right until index 5: "ADOBEC" -> contains A, B, C! count=3, minLen=6 ("ADOBEC").
+Shrink left: 'A' removed -> count becomes 2, left=1.
+Expand right to index 10: "CODEBA" -> contains C, B, A! count=3.
+Shrink left past 'D', 'O'... tightens window to "BANC" at index 9..12 (length 4).
+Output: "BANC"
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N + M)
+  Reason: N = s.length(), M = t.length(). Scan t once, both pointers traverse s once.
+- Space Complexity: O(128) = O(1)
+  Reason: Fixed ASCII frequency array.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Do not create substrings inside the loop (`s.substring(...)`)! Substring allocates new memory every time. Only save `startIndex` and `minLen`, and extract the substring ONCE at the end.
+================================================================================

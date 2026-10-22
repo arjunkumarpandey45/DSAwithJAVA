@@ -1,0 +1,59 @@
+================================================================================
+QUESTION: Fibonacci Number (Recursion Tree & Analysis)
+FILE: e_Fibonacci.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Compute the N-th Fibonacci number where F(0) = 0, F(1) = 1, and F(N) = F(N - 1) + F(N - 2).
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Each Fibonacci number is the sum of the two preceding ones.
+So to find fib(n), make two recursive calls: one for fib(n - 1) and one for fib(n - 2), then add their results together.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Base Cases:
+   - if (n <= 0) return 0;
+   - if (n == 1) return 1;
+2. Recursive Case:
+   - return fib(n - 1) + fib(n - 2);
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+It directly models the mathematical definition of the Fibonacci sequence.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why is naive recursion bad here?
+It creates an exponential number of redundant calculations!
+For example, to calculate fib(5), fib(3) is calculated 2 times, fib(2) is calculated 3 times!
+This makes time complexity O(2^N).
+For large N, use Dynamic Programming (memoization) or iteration to solve it in O(N) time and O(1) space.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Calculate fib(4):
+          fib(4)
+         /      \
+     fib(3)      fib(2)
+     /    \      /    \
+  fib(2) fib(1) fib(1) fib(0)
+  /    \
+fib(1) fib(0)
+fib(1)=1, fib(0)=0 -> fib(2)=1
+fib(3) = 1 + 1 = 2
+fib(4) = fib(3) + fib(2) = 2 + 1 = 3
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(2^N)
+  Reason: Every call branches into 2 more calls, forming a binary tree of depth N.
+- Space Complexity: O(N)
+  Reason: Maximum depth of the call stack is N.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Never use naive 2^N recursion for N > 40; it will hang your computer. Use DP or iterative loops for N >= 40.
+================================================================================

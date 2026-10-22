@@ -1,0 +1,80 @@
+================================================================================
+QUESTION: Target Subsequences (Combination Sum to Target)
+FILE: a_TargetSubsequences.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given an array of numbers and a target value, find all subsequences or combinations
+whose sum adds up exactly to the target value.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Imagine standing in front of each number with two choices:
+Choice 1: Take this number into your basket and add its value to your sum.
+Choice 2: Leave this number and do not add it.
+Follow both choices using recursion. When you reach the end of the array, check if your sum equals the target.
+
+If duplicates exist and you only want unique combinations:
+First sort the array. In a loop, if the current number is the same as the previous one, skip it to avoid making the exact same combination again!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Define a helper function with: index, array, current list, current sum, and target.
+2. Base case: If index reaches array length:
+   - If sum == target, print or save the current list.
+   - Return.
+3. Pick (Include):
+   - Add arr[index] to the list.
+   - Call helper with index + 1 and sum + arr[index].
+4. Backtrack:
+   - Remove the element you just added (remove last).
+5. Don't Pick (Exclude):
+   - Call helper with index + 1 and unchanged sum.
+6. For unique combinations (getAllUniqueCombinationOfTarget):
+   - Sort the array first.
+   - Use a loop from current index to n - 1.
+   - Skip duplicates: if (i > ind && arr[i] == arr[i - 1]) continue.
+   - If arr[i] > remaining target, break early.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Exploring every pick and don't-pick branch generates all 2^N possible subsets.
+Backtracking resets our list state before exploring alternate paths, preventing contamination of subsequent branches.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not use nested loops?
+Subsequences can have any length from 1 to N. To check all lengths with nested loops, you would need N nested loops, which is impossible to write when N is variable.
+Why not generate all 2^N subsets and then filter?
+Filtering after generating everything wastes memory and time. Pruning branches (when sum > target on sorted positive arrays) stops wasted work immediately.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Input: arr = [1, 1, 2], target = 2
+Start: index = 0, sum = 0, list = []
+- Pick arr[0]=1 -> list=[1], sum=1
+  - Pick arr[1]=1 -> list=[1, 1], sum=2
+    - Pick arr[2]=2 -> sum=4 > 2 (returns at end or pruned)
+    - Don't pick arr[2] -> end reached, sum==2! FOUND: [1, 1]
+  - Don't pick arr[1] -> list=[1], sum=1
+    - Pick arr[2]=2 -> sum=3 != 2
+    - Don't pick arr[2] -> sum=1 != 2
+- Don't pick arr[0]=1 -> list=[], sum=0
+  - Pick arr[1]=1 -> ...
+  - Don't pick arr[1], pick arr[2]=2 -> list=[2], sum=2! FOUND: [2]
+Result printed: [1, 1] and [2]
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(2^N)
+  Reason: Each element has 2 choices (pick or skip). In the worst case we explore 2^N subsets.
+- Space Complexity: O(N)
+  Reason: The recursion call stack goes at most N levels deep, and the temporary list stores at most N elements.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Always remember to backtrack: remove the last added element after returning from the recursive call.
+- If the array has duplicate numbers, sort first and skip adjacent duplicates to avoid duplicate answers.
+- If all numbers are positive, break early when arr[i] > target to speed up execution.
+================================================================================

@@ -1,0 +1,54 @@
+================================================================================
+QUESTION: Most Stones Removed with Same Row or Column (LeetCode 947)
+FILE: g_RemoveStones.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+A stone can be removed if it shares either the same row or column as another stone that has not been removed. Find the largest possible number of stones that can be removed.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+In any connected component of `K` stones (connected by shared rows/cols), we can always remove `K - 1` stones, leaving exactly 1 stone behind!
+Therefore:
+`Max Stones Removed = Total Stones - Number of Connected Components`!
+How to connect stones using DSU?
+Connect `row` to `column`! To prevent row 0 and col 0 from colliding, offset columns by `maxRow + 1` (e.g. `col + 10001`)!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. DSU dsu = new DSU(20002); // 10000 rows + 10000 cols
+2. Set<Integer> stoneNodes = new HashSet<>();
+3. For [r, c] in stones:
+   - int rowNode = r, colNode = c + 10001;
+   - dsu.unionBySize(rowNode, colNode);
+   - stoneNodes.add(rowNode); stoneNodes.add(colNode);
+4. int components = 0;
+   for node in stoneNodes: if (dsu.findUPar(node) == node) components++;
+5. Return stones.length - components;
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Treating rows and columns as bipartite graph nodes partitions the stones into connected components. Each component can be reduced to 1 stone.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Pairwise stone comparison takes O(N^2). Row-column DSU takes O(N).
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+stones = [[0,0],[0,1],[1,0],[1,2],[2,1],[2,2]] (6 stones)
+All 6 stones are interconnected in 1 single component.
+Can remove 6 - 1 = 5 stones!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N * alpha)
+  Reason: Linear in number of stones.
+- Space Complexity: O(maxRow + maxCol)
+  Reason: DSU arrays.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Offset column coordinates (`c + 10001`) to avoid index collision with rows.
+================================================================================

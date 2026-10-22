@@ -1,0 +1,65 @@
+================================================================================
+QUESTION: XOR of Numbers in Range [L, R]
+FILE: f_XorinRange.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Find the XOR sum of all integers from L to R: L ^ (L + 1) ^ ... ^ R in O(1) time.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Look at the pattern of XOR from 1 to N:
+N = 1: 1
+N = 2: 1 ^ 2 = 3
+N = 3: 3 ^ 3 = 0
+N = 4: 0 ^ 4 = 4
+N = 5: 4 ^ 5 = 1
+N = 6: 1 ^ 6 = 7
+N = 7: 7 ^ 7 = 0
+N = 8: 0 ^ 8 = 8
+Notice the cycle of 4:
+- if N % 4 == 0 -> N
+- if N % 4 == 1 -> 1
+- if N % 4 == 2 -> N + 1
+- if N % 4 == 3 -> 0
+To find XOR from L to R: `XOR(L..R) = XOR(1..R) ^ XOR(1..L-1)`!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Helper xorTillN(n):
+   - if (n % 4 == 0) return n;
+   - if (n % 4 == 1) return 1;
+   - if (n % 4 == 2) return n + 1;
+   - return 0;
+2. xorInRange(L, R):
+   - return xorTillN(R) ^ xorTillN(L - 1);
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Numbers in groups of 4 (like 4k, 4k+1, 4k+2, 4k+3) always XOR to 0. XOR from 1 to L-1 cancels out the prefix from XOR 1 to R, leaving exactly L to R.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not a simple loop from L to R?
+If L = 1 and R = 10^9, a loop takes 10^9 operations (several seconds, TLE). This formula runs in 1 nanosecond (O(1) time)!
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+L = 4, R = 7
+xorTillN(7): 7 % 4 = 3 -> returns 0
+xorTillN(3): 3 % 4 = 3 -> returns 0
+xorInRange = 0 ^ 0 = 0.
+Manual verification: 4 ^ 5 ^ 6 ^ 7 = (4 ^ 5) ^ (6 ^ 7) = 1 ^ 1 = 0! Correct!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(1)
+  Reason: Calculated using direct modulo 4 math.
+- Space Complexity: O(1)
+  Reason: No extra storage.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Remember that XOR from 1 to L-1 requires `xorTillN(L - 1)`, NOT `xorTillN(L)`!
+================================================================================

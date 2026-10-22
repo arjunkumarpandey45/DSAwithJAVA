@@ -1,0 +1,57 @@
+================================================================================
+QUESTION: Reverse an Array Using Recursion
+FILE: c_ReverseArr.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Reverse all elements of an array in-place using two-pointer recursion and single-pointer recursion.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+To reverse an array:
+Swap the first and last elements.
+Then recursively reverse the remaining inner subarray!
+Two-pointer: pointers l (left) and r (right). Swap arr[l] and arr[r], then call for l + 1 and r - 1.
+Single-pointer: pointer i. The matching opposite element is always at index n - 1 - i. Swap arr[i] and arr[n - 1 - i], then call for i + 1. Stop when i >= n / 2.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+Two-pointer:
+1. Base Case: if (l >= r) return.
+2. Swap arr[l] and arr[r].
+3. Recurse: reverse(l + 1, r - 1, arr).
+
+Single-pointer:
+1. Base Case: if (i >= arr.length / 2) return.
+2. Swap arr[i] and arr[arr.length - 1 - i].
+3. Recurse: reverse(i + 1, arr).
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Every call swaps one symmetric pair from the outside moving toward the center. When pointers meet or cross in the middle, every pair has been swapped once.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not use a new array?
+Copying to a second array takes O(N) extra space. Reversing in-place with swapping uses O(1) auxiliary space (excluding recursion stack).
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Input: [1, 2, 3, 4]
+Call 1: i = 0 -> swap arr[0] and arr[3] -> [4, 2, 3, 1]
+Call 2: i = 1 -> swap arr[1] and arr[2] -> [4, 3, 2, 1]
+Call 3: i = 2 >= 4/2 (2) -> return!
+Array is reversed: [4, 3, 2, 1]
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: N / 2 swaps are performed.
+- Space Complexity: O(N)
+  Reason: Stack depth is N / 2 = O(N).
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Stopping condition must be i >= n / 2. If you let the loop go all the way to n, it swaps everything twice and restores the original array!
+================================================================================

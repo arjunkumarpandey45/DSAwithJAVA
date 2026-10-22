@@ -1,0 +1,62 @@
+================================================================================
+QUESTION: Number of Provinces / Connected Components (LeetCode 547)
+FILE: c_ProvisonCount.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+A province is a group of directly or indirectly connected cities. Given an n x n adjacency matrix isConnected, find the total number of provinces.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+This is the classic "Count Connected Components" problem in an undirected graph.
+Iterate through every city from 0 to n - 1:
+If city `i` has NOT been visited yet:
+- You found a brand new province!
+- Increment `provincesCount++`.
+- Launch DFS or BFS from city `i` to mark ALL cities connected to it as visited.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. boolean[] vis = new boolean[n]; int count = 0;
+2. For i = 0 to n - 1:
+   - if (!vis[i]):
+     - count++;
+     - dfs(i, isConnected, vis);
+3. dfs(node, isConnected, vis):
+   - vis[node] = true;
+   - for j = 0 to n - 1:
+     - if (isConnected[node][j] == 1 && !vis[j]) dfs(j, isConnected, vis);
+4. Return count.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+One DFS run completely traverses and marks every node in that connected component. The outer loop only triggers when an untouched component is encountered.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Can also be solved with Disjoint Set Union (DSU), but DFS is simple and takes O(N^2) directly on adjacency matrix.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+isConnected = [
+  [1, 1, 0],
+  [1, 1, 0],
+  [0, 0, 1]
+]
+- i = 0: not visited -> count = 1. DFS visits 0 and 1.
+- i = 1: already visited (skip)
+- i = 2: not visited -> count = 2. DFS visits 2.
+Total Provinces = 2.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N^2)
+  Reason: Traversing the N x N adjacency matrix.
+- Space Complexity: O(N)
+  Reason: Visited array of size N.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Notice the graph is given as an adjacency matrix `isConnected[i][j]`, so check `isConnected[node][j] == 1`.
+================================================================================

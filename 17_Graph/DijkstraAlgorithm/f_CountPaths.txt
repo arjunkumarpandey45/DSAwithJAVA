@@ -1,0 +1,60 @@
+================================================================================
+QUESTION: Number of Ways to Arrive at Destination (LeetCode 1976)
+FILE: f_CountPaths.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Find the number of different paths from intersection 0 to intersection n - 1 that take the SHORTEST amount of time. Return modulo 10^9 + 7.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Modified Dijkstra maintaining TWO arrays:
+1. `dist[i]`: shortest distance from 0 to i.
+2. `ways[i]`: number of shortest paths from 0 to i.
+When relaxing edge u -> v with weight wt:
+- Case 1: `d + wt < dist[v]` (found a strictly shorter path!):
+  `dist[v] = d + wt;`
+  `ways[v] = ways[u];` // inherits all shortest ways from u
+  `pq.offer(new Pair(dist[v], v));`
+- Case 2: `d + wt == dist[v]` (found ANOTHER path with the EXACT same shortest distance!):
+  `ways[v] = (ways[v] + ways[u]) % MOD;` // add ways!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. long[] dist = new long[n]; Arrays.fill(dist, Long.MAX_VALUE); dist[0] = 0;
+2. long[] ways = new long[n]; ways[0] = 1; int MOD = 1_000_000_007;
+3. PriorityQueue<Pair> pq = new PriorityQueue<>((a, b) -> Long.compare(a.d, b.d));
+4. pq.offer(new Pair(0, 0));
+5. while (!pq.isEmpty()):
+   - curr = pq.poll(); if (curr.d > dist[curr.u]) continue;
+   - for (v, wt) in adj.get(curr.u):
+     - if (curr.d + wt < dist[v]): dist[v] = curr.d + wt; ways[v] = ways[curr.u]; pq.offer(new Pair(dist[v], v));
+     - else if (curr.d + wt == dist[v]): ways[v] = (ways[v] + ways[curr.u]) % MOD;
+6. Return (int) ways[n - 1];
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Shortest path sub-paths form a Directed Acyclic Graph (DAG). Combining Dijkstra with path DP counts all shortest combinations.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Running Dijkstra then running DFS to count paths is slower (2 passes). Combining counting into Dijkstra takes 1 pass.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Two paths from 0 to 2: 0->1->2 (dist 3) and 0->3->2 (dist 3).
+First path sets dist[2]=3, ways[2]=1.
+Second path arrives with dist 3 == dist[2] -> ways[2] += 1 = 2 ways!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(E log V)
+  Reason: Standard Dijkstra.
+- Space Complexity: O(V + E)
+  Reason: Adjacency list, dist, ways, and heap.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Use `long` for distance! Road times can accumulate and exceed 32-bit int.
+================================================================================

@@ -1,0 +1,67 @@
+================================================================================
+QUESTION: Min Stack - O(1) Minimum Element (LeetCode 155)
+FILE: g_MinStack.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Design a stack that supports push, pop, top, and retrieving the minimum element (getMin) in O(1) time.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Approach 1 (Pair Stack): Store pairs `(val, minSoFar)`. Uses 2x memory.
+
+Approach 2 (O(1) Space Encoding Trick):
+Keep a variable `min`.
+When pushing `x`:
+- If x >= min: push x normally.
+- If x < min: push a modified/encoded value `2 * x - min` and update `min = x`!
+Notice: Since x < min, `2*x - min < x`, which means the stored value is strictly LESS than the new min!
+This serves as a flag during pop:
+- If popped value < min: the previous min was `2 * min - storedVal`!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Stack<Long> st = new Stack<>(); Long min = Long.MAX_VALUE;
+2. push(val):
+   - if (st.isEmpty()): st.push((long)val); min = (long)val;
+   - else if (val >= min) st.push((long)val);
+   - else { st.push(2L * val - min); min = (long)val; }
+3. pop():
+   - long top = st.pop();
+   - if (top < min) min = 2 * min - top;
+4. top():
+   - long top = st.peek();
+   - return top < min ? min.intValue() : (int)top;
+5. getMin(): return min.intValue();
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+The formula `2 * val - min` stores both the value and the information needed to restore the previous minimum upon popping, using only a single stack.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not find min with a loop on getMin()?
+Loop takes O(N). Problem requires O(1) time for all operations.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+push(-2): st=[-2], min=-2
+push(0): 0 >= -2 -> st=[-2, 0], min=-2
+push(-3): -3 < -2 -> push 2*(-3) - (-2) = -4 -> st=[-2, 0, -4], min=-3
+getMin() -> -3
+pop(): popped -4 < min(-3) -> restore min = 2*(-3) - (-4) = -2! st=[-2, 0]
+top() -> 0
+getMin() -> -2
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(1) for all operations (push, pop, top, getMin)
+  Reason: Simple mathematical evaluations.
+- Space Complexity: O(1) auxiliary space
+  Reason: Single stack storing 1 value per element.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Always use `Long` for the stack and math! `2 * val - min` easily overflows 32-bit integer limits.
+================================================================================

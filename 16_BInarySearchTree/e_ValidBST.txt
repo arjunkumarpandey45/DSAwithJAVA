@@ -1,0 +1,52 @@
+================================================================================
+QUESTION: Validate Binary Search Tree (LeetCode 98)
+FILE: e_ValidBST.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Determine if a given binary tree is a valid Binary Search Tree (BST).
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+COMMON TRAP:
+Checking only `root.left.val < root.val` and `root.right.val > root.val` is WRONG! Every node in the left subtree must be smaller than root, and every node in the right subtree must be larger than root.
+Solution: Range Constraints `(minVal, maxVal)`:
+- Root can have any value: `(-INF, +INF)`.
+- When going LEFT: upper bound becomes `root.val` -> `(minVal, root.val)`.
+- When going RIGHT: lower bound becomes `root.val` -> `(root.val, maxVal)`.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. isValidBST(root): return isValid(root, Long.MIN_VALUE, Long.MAX_VALUE);
+2. isValid(root, min, max):
+   - if (root == null) return true;
+   - if (root.val <= min || root.val >= max) return false;
+   - return isValid(root.left, min, root.val) && isValid(root.right, root.val, max);
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Every node inherits an allowed open interval `(min, max)` from its ancestors. Any violation anywhere in the tree triggers an immediate return of false.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Local neighbor checks fail on trees like [5, 1, 6, null, null, 3, 7] where 3 is smaller than root 5 but sits in root's right subtree.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Tree: 5 -> left: 1, right: 4 (children 3, 6)
+- Root 5: valid in (-INF, +INF)
+- Left 1: valid in (-INF, 5)
+- Right 4: 4 <= 5 (lower bound was 5) -> INVALID! Return FALSE.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Visits each node once.
+- Space Complexity: O(H)
+  Reason: Recursion stack.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Use `Long.MIN_VALUE` and `Long.MAX_VALUE` for bounds! If node value is `Integer.MIN_VALUE` or `Integer.MAX_VALUE`, standard int bounds fail.
+================================================================================

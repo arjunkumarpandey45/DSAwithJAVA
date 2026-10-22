@@ -1,0 +1,66 @@
+================================================================================
+QUESTION: Search in Rotated Sorted Array (LeetCode 33)
+FILE: d_SearchInRotatedSortedArray.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Search for a target value in a sorted array that has been rotated at some unknown pivot. Must run in O(log N) time.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Key insight: If you divide a rotated sorted array in half at `mid`, AT LEAST ONE HALF IS ALWAYS COMPLETELY SORTED!
+How to identify the sorted half?
+- If `arr[low] <= arr[mid]`: The LEFT half is sorted!
+- Else: The RIGHT half is sorted!
+Once you know which half is sorted, check if target falls inside that sorted range:
+- If yes, search inside that half!
+- If no, throw that half away and search the other half!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. low = 0, high = n - 1.
+2. while (low <= high):
+   - mid = low + (high - low) / 2;
+   - if (arr[mid] == target) return mid;
+   - If Left half is sorted (arr[low] <= arr[mid]):
+     - If (arr[low] <= target && target < arr[mid]): high = mid - 1;
+     - Else: low = mid + 1;
+   - Else (Right half is sorted):
+     - If (arr[mid] < target && target <= arr[high]): low = mid + 1;
+     - Else: high = mid - 1;
+3. Return -1.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+In any rotated array, the pivot point can only exist in one of the two halves. The other half is guaranteed to be strictly monotonically increasing, allowing boundary checks.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not find pivot first, then do standard binary search?
+Finding pivot first takes 2 passes. Identifying the sorted half on the fly does it in a single clean pass.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+arr = [4, 5, 6, 7, 0, 1, 2], target = 0
+low=0 (4), high=6 (2), mid=3 (7)
+Left half [4, 5, 6, 7] is sorted because 4 <= 7.
+Is target 0 in [4..7]? No! (0 < 4).
+So search RIGHT: low = mid + 1 = 4.
+low=4 (0), high=6 (2), mid=5 (1)
+Right half [1, 2] is sorted (1 <= 2).
+arr[mid] = 1 != 0. Is target 0 in [1..2]? No.
+Search LEFT: high = mid - 1 = 4.
+low=4, high=4, mid=4: arr[4] == 0 == target! RETURN 4!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(log N)
+  Reason: Halves the search space on every iteration.
+- Space Complexity: O(1)
+  Reason: Constant space.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Use `<=` when checking `arr[low] <= arr[mid]`, because when low == mid, the single element is considered sorted.
+================================================================================

@@ -1,0 +1,63 @@
+================================================================================
+QUESTION: Rotate Matrix by 90 Degrees Clockwise (LeetCode 48)
+FILE: m_RotateMatrix.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Rotate an N x N 2D matrix by 90 degrees clockwise in-place without allocating another 2D matrix.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Notice this amazing linear algebra symmetry:
+Rotating by 90 degrees clockwise is equivalent to:
+Step 1: TRANSPOSE the matrix (swap matrix[i][j] with matrix[j][i]).
+Step 2: REVERSE each row of the transposed matrix!
+That is all! Two simple operations.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Transpose Matrix:
+   - For i = 0 to n - 1:
+     - For j = i + 1 to n - 1: swap(matrix[i][j], matrix[j][i]).
+2. Reverse Each Row:
+   - For i = 0 to n - 1:
+     - left = 0, right = n - 1;
+     - while (left < right): swap(matrix[i][left], matrix[i][right]), left++, right--.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Transpose converts row `i` into column `i`. Reversing each row mirrors the columns horizontally, effectively rotating the coordinates (i, j) -> (j, n - 1 - i), which is exactly 90 degrees clockwise.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not create a new matrix ans[j][n - 1 - i] = matrix[i][j]?
+That uses O(N^2) extra memory. The problem explicitly requires in-place rotation.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Input:
+1 2 3
+4 5 6
+7 8 9
+Step 1 (Transpose):
+1 4 7
+2 5 8
+3 6 9
+Step 2 (Reverse each row):
+Row 0: [1, 4, 7] -> [7, 4, 1]
+Row 1: [2, 5, 8] -> [8, 5, 2]
+Row 2: [3, 6, 9] -> [9, 6, 3]
+Final result rotated 90 degrees clockwise!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N^2)
+  Reason: Transpose visits N*(N-1)/2 cells, row reverse visits N*(N/2) cells.
+- Space Complexity: O(1)
+  Reason: In-place modifications.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- In transpose, inner loop MUST start at `j = i + 1`. If `j` starts from 0, every cell gets swapped twice and returns to original!
+================================================================================

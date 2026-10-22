@@ -1,0 +1,59 @@
+================================================================================
+QUESTION: Row with Maximum Ones in Binary Matrix
+FILE: s_Maximum1s.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given an m x n binary matrix where each row is sorted, find the 0-indexed row that contains the maximum number of 1s. If multiple rows have the same number of 1s, return the smallest row index.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Because each row is SORTED (0s followed by 1s):
+The number of 1s in row `r` is: `n - (first index of 1 in row r)`!
+How do you find the first index of 1 in a sorted row?
+Binary Search (Lower Bound of 1)!
+Run lower bound on each row, track max 1s seen and best row index.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. int maxCount = 0, bestRow = -1;
+2. For r = 0 to m - 1:
+   - Find first 1 using binary search (lowerBound(matrix[r], 1));
+   - int count = n - firstIndex;
+   - if (count > maxCount): maxCount = count; bestRow = r;
+3. Return bestRow.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Since rows are sorted, finding the first occurrence of 1 in O(log N) tells you all remaining elements in that row are 1s.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not count all 1s by scanning every element?
+Full matrix scan takes O(M * N). Binary search per row takes O(M * log N).
+Even faster O(M + N) ladder approach exists: start top-right (r=0, c=n-1) and move left when 1, down when 0!
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+matrix = [
+  [0, 1, 1, 1],
+  [0, 0, 1, 1],
+  [1, 1, 1, 1]
+]
+Row 0: first 1 at index 1 -> count = 4 - 1 = 3. maxCount = 3, bestRow = 0
+Row 1: first 1 at index 2 -> count = 4 - 2 = 2.
+Row 2: first 1 at index 0 -> count = 4 - 0 = 4 > 3! maxCount = 4, bestRow = 2
+Result: Row 2.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(M * log N)
+  Reason: Binary search of length N performed for M rows.
+- Space Complexity: O(1)
+  Reason: Constant space.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- If a row has no 1s, lower bound returns N, making count = N - N = 0.
+================================================================================

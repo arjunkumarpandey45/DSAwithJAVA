@@ -1,0 +1,73 @@
+================================================================================
+QUESTION: DQ14 - Subarrays Distinct Element Sum of Squares I
+FILE: DQ14_SubarraysDistinctElementSumOfSquaresI.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+You are given a 0-indexed integer array 'nums'.
+The distinct count of a subarray is the number of distinct values in it.
+Let distinct(nums[i..j]) be the distinct count of subarray from index i to j.
+Return the sum of the squares of distinct counts of all subarrays of nums:
+  ans = sum of (distinct(nums[i..j]))^2 for all 0 <= i <= j < nums.length.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+For small array lengths (n <= 100), we can evaluate all O(n^2) subarrays directly.
+Fix starting index 'i' from 0 to n - 1.
+As we expand ending index 'j' from i to n - 1:
+- Insert nums[j] into a HashSet.
+- The size of the HashSet at each step is the exact count of distinct elements in subarray nums[i..j].
+- Square the size and add to the running total sum!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Initialize ans = 0.
+2. Loop starting pointer i from 0 to nums.size() - 1:
+   - Create a new HashSet<Integer> 'st'.
+   - Loop ending pointer j from i to nums.size() - 1:
+     * st.add(nums.get(j))
+     * len = st.size()
+     * ans += len * len
+3. Return ans.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+A subarray nums[i..j] is formed by extending nums[i..j-1] by 1 element.
+Maintaining a HashSet incrementally avoids recomputing distinct counts from scratch,
+computing each subarray distinct count in O(1) amortized time.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not generate subarrays and then count unique elements from scratch?
+- Doing that would take O(n^3) time.
+  Growing the set from j = i to n - 1 reuses previously seen elements and takes O(n^2) time.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Input: nums = [1, 2, 1]
+
+i = 0:
+  j = 0: set = {1}, size = 1 -> ans += 1^2 = 1
+  j = 1: set = {1, 2}, size = 2 -> ans += 2^2 = 4 (ans = 5)
+  j = 2: set = {1, 2}, size = 2 -> ans += 2^2 = 4 (ans = 9)
+i = 1:
+  j = 1: set = {2}, size = 1 -> ans += 1^2 = 1 (ans = 10)
+  j = 2: set = {2, 1}, size = 2 -> ans += 2^2 = 4 (ans = 14)
+i = 2:
+  j = 2: set = {1}, size = 1 -> ans += 1^2 = 1 (ans = 15)
+
+Result = 15.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(n^2)
+  Reason: Nested loops examine all n*(n+1)/2 subarrays with O(1) set operations.
+- Space Complexity: O(n)
+  Reason: HashSet stores at most n distinct integers.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- For large n (version II of this problem), a Segment Tree with lazy propagation is required to achieve O(n log n).
+- For version I, nested loops + HashSet is simple and optimal.
+================================================================================

@@ -1,0 +1,67 @@
+================================================================================
+QUESTION: 3Sum - Triplets that Sum to 0 (LeetCode 15)
+FILE: p_ThreeSum.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Find all unique triplets [nums[i], nums[j], nums[k]] such that i != j != k and nums[i] + nums[j] + nums[k] == 0.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Sort the array first! Sorting makes finding pairs easy and duplicate skipping trivial.
+Fix the first element `nums[i]` using a loop.
+Now you need two remaining elements that sum to `-nums[i]`. That's standard Two Sum II on a sorted array using two pointers (left and right)!
+- If sum == 0: record triplet, advance left and right while skipping duplicates.
+- If sum < 0: increment left.
+- If sum > 0: decrement right.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Arrays.sort(nums);
+2. For i = 0 to n - 3:
+   - If i > 0 && nums[i] == nums[i - 1] continue; // skip dup i
+   - left = i + 1, right = n - 1;
+   - while (left < right):
+     - sum = nums[i] + nums[left] + nums[right];
+     - if (sum == 0):
+       - add to ans;
+       - left++; right--;
+       - while (left < right && nums[left] == nums[left - 1]) left++;
+       - while (left < right && nums[right] == nums[right + 1]) right--;
+     - else if (sum < 0) left++;
+     - else right--;
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Sorting orders elements so two-pointer convergence works. Skipping adjacent duplicate values ensures that identical triplets are never generated.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not 3 nested loops?
+O(N^3) time TLEs on N = 3000. Sorting + 2 pointers is O(N^2).
+Why not HashSet of triplets?
+HashSet requires storing and hashing lists, causing large memory overhead. Two-pointer skipping avoids duplicates natively with O(1) extra space.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+nums = [-1, 0, 1, 2, -1, -4]
+Sorted: [-4, -1, -1, 0, 1, 2]
+i = 0 (-4): left=1(-1), right=5(2): max sum = -4 + 1 + 2 = -1 < 0 -> no triplet.
+i = 1 (-1): left=2(-1), right=5(2): sum = -1 + (-1) + 2 = 0! ADD [-1, -1, 2].
+  skip dup left, right -> left=3(0), right=4(1): sum = -1 + 0 + 1 = 0! ADD [-1, 0, 1].
+i = 2 (-1): nums[2] == nums[1] -> SKIP DUPLICATE!
+Result: [[-1, -1, 2], [-1, 0, 1]]
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N^2)
+  Reason: Sorting takes O(N log N). Outer loop runs N times, inner two-pointer runs O(N). Total = O(N^2).
+- Space Complexity: O(1)
+  Reason: In-place two-pointer traversal (excluding output list).
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Always skip duplicates for `i`, `left`, AND `right` to guarantee unique triplet outputs.
+- Early exit: If `nums[i] > 0`, break immediately because all subsequent numbers are also > 0, so sum cannot equal 0.
+================================================================================

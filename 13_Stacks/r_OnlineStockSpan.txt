@@ -1,0 +1,62 @@
+================================================================================
+QUESTION: Online Stock Span (LeetCode 901)
+FILE: r_OnlineStockSpan.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Design an algorithm that collects daily stock prices and returns the span of that stock's price for the current day. The span is the maximum number of consecutive days (starting today and going backward) where the price was <= today's price.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+We need the number of consecutive days price was <= today's price.
+This means looking backward until we hit the Previous Greater Element!
+Monotonic Stack storing pairs: `(price, span)`:
+- When today's price arrives:
+- `span = 1`
+- While stack is not empty and `st.peek().price <= today's price`:
+  - Add the popped element's span to today's span: `span += st.pop().span`!
+- Push `(price, span)` to stack.
+- Return span!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. class Pair { int price, span; }
+2. Stack<Pair> st = new Stack<>();
+3. next(int price):
+   - int span = 1;
+   - while (!st.isEmpty() && st.peek().price <= price):
+     - span += st.pop().span;
+   - st.push(new Pair(price, span));
+   - return span;
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Because each element accumulates the spans of all elements it swallowed, we never have to traverse historical days individually.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not store prices in an ArrayList and scan backward?
+Scanning backward takes O(N) per call -> O(N^2) total. Monotonic stack takes O(1) amortized per call.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+next(100) -> st=[(100, 1)], return 1
+next(80)  -> 80 < 100 -> st=[(100, 1), (80, 1)], return 1
+next(60)  -> st=[..., (60, 1)], return 1
+next(70)  -> pop (60, 1) -> span = 1 + 1 = 2 -> st=[..., (70, 2)], return 2
+next(60)  -> return 1
+next(75)  -> pop 60(span 1), pop 70(span 2) -> span = 1 + 1 + 2 = 4 -> return 4
+next(85)  -> pop 75(4), pop 80(1) -> span = 1 + 4 + 1 = 6 -> return 6
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(1) amortized per call
+  Reason: Each price is pushed once and popped at most once across all calls.
+- Space Complexity: O(N)
+  Reason: Stack holds up to N pairs.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Condition is `st.peek().price <= price`: equal prices are included in the span.
+================================================================================

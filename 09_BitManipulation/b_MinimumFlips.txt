@@ -1,0 +1,57 @@
+================================================================================
+QUESTION: Minimum Bit Flips to Convert Number (LeetCode 2220)
+FILE: b_MinimumFlips.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Find the minimum number of bit flips required to convert integer `start` to integer `goal`.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+When do you need to flip a bit?
+Whenever a bit in `start` differs from the bit in `goal`!
+Which operator tells you where two numbers differ?
+XOR (`^`)! In XOR, matching bits give 0 and differing bits give 1!
+So: `diff = start ^ goal`.
+Now just count how many 1s (set bits) are in `diff`!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. int diff = start ^ goal;
+2. Count set bits in diff using Brian Kernighan's algorithm:
+   - int count = 0;
+   - while (diff > 0):
+     - diff = diff & (diff - 1); // clears lowest set bit
+     - count++;
+3. Return count.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+`n & (n - 1)` flips the lowest set bit from 1 to 0. Running this in a loop counts set bits in operations equal to the number of set bits (faster than 32 full shifts).
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not check all 32 bits with a loop?
+Looping 32 times always takes 32 iterations. Brian Kernighan only iterates as many times as there are 1-bits (e.g., if only 2 bits differ, it loops twice).
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+start = 10 (1010), goal = 7 (0111)
+diff = 10 ^ 7 = 1101 (13 in decimal)
+Iteration 1: diff = 1101 & 1100 = 1100 (12), count = 1
+Iteration 2: diff = 1100 & 1011 = 1000 (8), count = 2
+Iteration 3: diff = 1000 & 0111 = 0, count = 3
+Output: 3 flips needed.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(number of set bits) <= O(32)
+  Reason: Loop executes once per flipped bit.
+- Space Complexity: O(1)
+  Reason: Constant space.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- In Java, you can also use `Integer.bitCount(start ^ goal)` in one line!
+================================================================================

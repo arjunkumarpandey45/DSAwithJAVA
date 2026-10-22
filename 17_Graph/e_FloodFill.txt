@@ -1,0 +1,57 @@
+================================================================================
+QUESTION: Flood Fill (LeetCode 733)
+FILE: e_FloodFill.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Perform flood fill on an image starting from pixel (sr, sc) with a new color, changing all 4-directionally connected pixels of the same original color to the new color.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Like the "Paint Bucket" tool in Microsoft Paint:
+Click on a pixel (sr, sc).
+Remember its `originalColor = image[sr][sc]`.
+If `originalColor == newColor`, no work needed (return image immediately)!
+Otherwise, recolor this pixel and recursively spread to 4 neighbors (Up, Down, Left, Right) having `originalColor`.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. int initColor = image[sr][sc];
+2. if (initColor == color) return image; // already painted
+3. dfs(sr, sc, image, initColor, color);
+4. dfs(r, c, image, initColor, newColor):
+   - if (r < 0 || r >= m || c < 0 || c >= n || image[r][c] != initColor) return;
+   - image[r][c] = newColor;
+   - dfs(r + 1, c, image, initColor, newColor);
+   - dfs(r - 1, c, image, initColor, newColor);
+   - dfs(r, c + 1, image, initColor, newColor);
+   - dfs(r, c - 1, image, initColor, newColor);
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Repainting pixels in-place ensures pixels that have been changed will fail `image[r][c] != initColor`, preventing infinite recursion cycles.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Simple DFS is optimal because it modifies the grid in-place in O(M*N) time.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+image = [[1,1,1],[1,1,0],[1,0,1]], sr=1, sc=1, newColor=2
+initColor = 1
+- (1, 1) painted 2
+- spreads to (0,1), (2,1)[no, 0], (1,0), (1,2)[no, 0]...
+All connected 1s turned into 2.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(M * N)
+  Reason: Each pixel visited at most 4 times.
+- Space Complexity: O(M * N)
+  Reason: Recursion call stack.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- CRITICAL: If `initColor == newColor`, return immediately! Without this check, the algorithm enters infinite recursion and crashes with StackOverflowError!
+================================================================================

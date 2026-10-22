@@ -1,0 +1,54 @@
+================================================================================
+QUESTION: Kth Smallest Element in a BST (LeetCode 230)
+FILE: d_KthSmallest.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Find the kth smallest value (1-indexed) in a BST.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+FUNDAMENTAL BST PROPERTY:
+The INORDER traversal (Left -> Root -> Right) of ANY BST visits nodes in strictly ASCENDING SORTED ORDER!
+So finding the kth smallest element is simply:
+Run Inorder traversal and stop at the k-th node visited!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. int[] count = new int[]{ 0 }; int[] ans = new int[]{ -1 };
+2. inorder(root, k, count, ans):
+   - if (root == null) return;
+   - inorder(root.left, k, count, ans);
+   - count[0]++;
+   - if (count[0] == k) { ans[0] = root.val; return; }
+   - inorder(root.right, k, count, ans);
+3. Return ans[0].
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Inorder visits left subtree (all smaller values) first, then current node, then right subtree. The k-th visited node is mathematically the k-th smallest element.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not collect all elements in a list and sort?
+Collecting and sorting takes O(N log N) time and O(N) space. Inorder early exit takes O(H + k) time and O(H) space.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Tree: 3 -> left: 1 (right: 2), right: 4. k = 1
+Inorder visits:
+1st: 1 (count=1 == k! ans = 1, return!)
+Output: 1
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(H + k)
+  Reason: Stops immediately once k-th element is reached.
+- Space Complexity: O(H)
+  Reason: Recursion stack.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- To find K-th LARGEST element: run REVERSE INORDER (Right -> Root -> Left) and stop at the k-th node!
+================================================================================

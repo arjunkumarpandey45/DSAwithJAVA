@@ -1,0 +1,56 @@
+================================================================================
+QUESTION: Top K Frequent Elements (LeetCode 347)
+FILE: a_TopKFrequent.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given an integer array nums and an integer k, return the k most frequent elements in any order.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+1. Count frequencies using a HashMap: `{ num: frequency }`.
+2. We want the K elements with largest frequencies.
+Use a MIN-HEAP of size K storing pairs `(frequency, num)`:
+- For each entry in the map, push to heap.
+- If heap size exceeds K, pop the minimum frequency element!
+- At the end, only the K largest frequencies remain in the heap!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Map<Integer, Integer> map = new HashMap<>();
+   for (int n : nums) map.put(n, map.getOrDefault(n, 0) + 1);
+2. PriorityQueue<Integer> pq = new PriorityQueue<>((a, b) -> map.get(a) - map.get(b)); // min-heap
+3. For key in map.keySet():
+   - pq.offer(key);
+   - if (pq.size() > k) pq.poll();
+4. int[] ans = new int[k]; for i = 0 to k-1: ans[i] = pq.poll(); return ans;
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+A Min-Heap of size K evicts smaller frequencies and retains the K largest frequencies.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Sorting the map entries takes O(N log N). Min-heap takes O(N log K), which is much faster when K << N. (Bucket Sort achieves O(N)).
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+nums = [1, 1, 1, 2, 2, 3], k = 2
+Map: {1: 3, 2: 2, 3: 1}
+- push 1: pq=[1(freq 3)]
+- push 2: pq=[2(freq 2), 1(freq 3)]
+- push 3: size 3 > 2 -> poll min (3, freq 1) -> pq=[2, 1]
+Result: [2, 1]
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N log K)
+  Reason: Counting takes O(N), heap operations of size K take O(N log K).
+- Space Complexity: O(N)
+  Reason: HashMap and heap storage.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Notice: To find Top K LARGEST, use a MIN-HEAP of size K! To find Top K SMALLEST, use a MAX-HEAP of size K!
+================================================================================

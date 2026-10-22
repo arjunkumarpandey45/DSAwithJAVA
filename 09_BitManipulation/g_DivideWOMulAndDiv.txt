@@ -1,0 +1,68 @@
+================================================================================
+QUESTION: Divide Two Integers Without Multiplication, Division, and Mod Operators (LeetCode 29)
+FILE: g_DivideWOMulAndDiv.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Divide two integers without using multiplication (*), division (/), or mod (%) operators.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Repeated subtraction takes too long (e.g. 2^31 / 1 takes 2 billion subtractions).
+Instead, subtract in POWERS OF 2 (binary shifts `<<`)!
+How many times can you double the divisor before it exceeds the dividend?
+If dividend = 22, divisor = 3:
+- 3 * 2^2 = 12 <= 22: subtract 12 (remainder 10), add 2^2 = 4 to quotient.
+- 3 * 2^1 = 6 <= 10: subtract 6 (remainder 4), add 2^1 = 2 to quotient.
+- 3 * 2^0 = 3 <= 4: subtract 3 (remainder 1), add 2^0 = 1 to quotient.
+Total quotient = 4 + 2 + 1 = 7!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Handle overflow: if (dividend == Integer.MIN_VALUE && divisor == -1) return Integer.MAX_VALUE;
+2. Determine sign: boolean sign = (dividend >= 0) == (divisor >= 0);
+3. Convert to positive long: long n = Math.abs((long)dividend), d = Math.abs((long)divisor);
+4. int ans = 0;
+5. While n >= d:
+   - int count = 0;
+   - while (n >= (d << (count + 1))) count++;
+   - ans += (1 << count);
+   - n -= (d << count);
+6. Return sign ? ans : -ans;
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Every integer can be represented in binary as a sum of powers of 2. Exponential jumping reduces division from O(N) to O((log N)^2).
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not simple while (n >= d) { n -= d; ans++; }?
+For 2147483647 / 1, simple subtraction takes 2.1 billion iterations (TLE). Bit shifts finish in ~30 iterations.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+dividend = 10, divisor = 3
+n = 10, d = 3
+Count loop:
+- 3 << 1 = 6 <= 10
+- 3 << 2 = 12 > 10 -> count = 1
+ans += 1 << 1 = 2
+n -= 6 = 4
+Next loop: n = 4, d = 3
+- 3 << 1 = 6 > 4 -> count = 0
+ans += 1 << 0 = 1 (ans = 3)
+n -= 3 = 1 < 3 -> loop terminates.
+Result: 3
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O((log N)^2)
+  Reason: At each step, we find the highest power of 2 in log N, and dividend shrinks exponentially.
+- Space Complexity: O(1)
+  Reason: Only a few primitive variables.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Crucial overflow case: `dividend = Integer.MIN_VALUE (-2^31)` and `divisor = -1`. The answer is `2^31`, which exceeds `Integer.MAX_VALUE (2^31 - 1)`. Must return `Integer.MAX_VALUE`!
+================================================================================

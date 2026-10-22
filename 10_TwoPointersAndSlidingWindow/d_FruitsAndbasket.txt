@@ -1,0 +1,62 @@
+================================================================================
+QUESTION: Fruit Into Baskets (LeetCode 904)
+FILE: d_FruitsAndbasket.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+You have 2 baskets, and each basket can only hold a single type of fruit. Find the maximum number of fruits you can pick from trees in a row (must be a contiguous subarray containing at most 2 distinct types).
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Rephrase the problem:
+"Find the longest subarray with at most 2 distinct numbers!"
+Classic sliding window with a HashMap tracking `{ fruit_type: count }`:
+- Expand right: add `arr[right]` to map.
+- If map.size() > 2: shrink from left: decrement `arr[left]` count; if count reaches 0, remove it from map! Increment left.
+- Update `maxLen = Math.max(maxLen, right - left + 1)`.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Map<Integer, Integer> map = new HashMap<>();
+2. int left = 0, right = 0, maxLen = 0;
+3. while (right < arr.length):
+   - map.put(arr[right], map.getOrDefault(arr[right], 0) + 1);
+   - if (map.size() > 2):
+     - map.put(arr[left], map.get(arr[left]) - 1);
+     - if (map.get(arr[left]) == 0) map.remove(arr[left]);
+     - left++;
+   - if (map.size() <= 2): maxLen = Math.max(maxLen, right - left + 1);
+   - right++;
+4. Return maxLen.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+The condition `map.size() <= 2` strictly enforces that at most 2 distinct fruits are in our window at any time.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not check all pairs?
+O(N^2) brute force is too slow for N = 100,000. Sliding window takes O(N).
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+arr = [1, 2, 3, 2, 2]
+r=0 (1): map={1:1}, len=1
+r=1 (2): map={1:1, 2:1}, len=2
+r=2 (3): map={1:1, 2:1, 3:1} -> size 3 > 2! Shrink: remove 1, left=1 -> map={2:1, 3:1}
+r=3 (2): map={2:2, 3:1}, len=3
+r=4 (2): map={2:3, 3:1}, len=4! [2, 3, 2, 2]
+Result: 4
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Each tree is added and removed from window at most once.
+- Space Complexity: O(1)
+  Reason: Map holds at most 3 entries at any time.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Always remove the key from the map when its frequency reaches 0 (`map.remove(key)`), otherwise `map.size()` remains incorrectly inflated!
+================================================================================

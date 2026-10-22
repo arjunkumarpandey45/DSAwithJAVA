@@ -1,0 +1,75 @@
+================================================================================
+QUESTION: DQ5 - Valid Parentheses
+FILE: DQ5_ValidParentheses.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given a string 's' containing just the characters '(', ')', '{', '}', '[' and ']',
+determine if the input string is valid.
+An input string is valid if:
+1. Open brackets must be closed by the same type of brackets.
+2. Open brackets must be closed in the correct order.
+3. Every close bracket has a corresponding open bracket of the same type.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Brackets naturally follow Last-In, First-Out (LIFO) behavior:
+The most recently opened bracket must be the very first one to close!
+This makes a Stack the perfect data structure:
+- When you see an opener '(', '{', '[', push it onto the stack.
+- When you see a closer ')', '}', ']', pop from stack and check if it matches.
+- If stack is empty when closer appears, or popped element doesn't match, it is invalid.
+- At the end, if anything remains in stack, an opener was left unclosed.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. If string length is odd, return false immediately (brackets must be paired).
+2. Create a Stack of characters.
+3. Loop through each character 'ch' in string:
+   - If ch is '(', '{', or '[', push onto stack.
+   - Else (closing bracket):
+     * If stack is empty, return false.
+     * Pop 'top' character from stack.
+     * Check matching pairs: ')' matches '(', '}' matches '{', ']' matches '['.
+     * If mismatch, return false.
+4. Return stack.isEmpty() (true if all matched, false if leftover open brackets).
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+The stack guarantees nested structure correctness:
+In '([{}])', '{' is pushed on top of '[', which is on top of '('.
+When '}' arrives, it matches '{' first. Then ']' matches '[', then ')' matches '('.
+Any interleaved improper crossing like '([)]' will encounter top '[' when ')' arrives and fail immediately.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not just count brackets with three integer counters?
+- Counters fail on ordering! For example, '[(])' has 1 square pair and 1 round pair,
+  but it is completely invalid because ordering is interleaved. A stack enforces order.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Input: s = '([{}])'
+
+i = 0, ch = '(': push '(' -> Stack: ['(']
+i = 1, ch = '[': push '[' -> Stack: ['(', '[']
+i = 2, ch = '{': push '{' -> Stack: ['(', '[', '{']
+i = 3, ch = '}': pop '{'. Matches '}'! -> Stack: ['(', '[']
+i = 4, ch = ']': pop '['. Matches ']'! -> Stack: ['(']
+i = 5, ch = ')': pop '('. Matches ')'! -> Stack: []
+
+Loop ends. Stack is empty -> return true.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(n)
+  Reason: Each character in the string is processed and pushed/popped at most once.
+- Space Complexity: O(n)
+  Reason: In worst case (e.g. '(((((('), the stack holds all n characters.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- If s.length() % 2 != 0, return false in O(1) immediately.
+- Always verify !st.isEmpty() before calling st.pop() to prevent EmptyStackException.
+================================================================================

@@ -1,0 +1,56 @@
+================================================================================
+QUESTION: Cheapest Flights Within K Stops (LeetCode 787)
+FILE: d_CheapestFlightsWithinKStops.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Find the cheapest price from src to dst with at most k stops. Return -1 if no such route exists.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Notice: Priority should be given to STOPS, NOT cost!
+Use BFS with a Queue storing `(stops, node, cost)`:
+Why queue instead of PriorityQueue?
+Because `stops` increases by exactly 1 at each step! A simple FIFO queue naturally keeps stops in non-decreasing order!
+- If `stops > k`, cannot take any more flights.
+- Relax edge if `cost + price < dist[neighbor]`.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. int[] dist = new int[n]; Arrays.fill(dist, Integer.MAX_VALUE); dist[src] = 0;
+2. Queue<Tuple> q = new LinkedList<>(); q.offer(new Tuple(0, src, 0)); // stops, node, cost
+3. while (!q.isEmpty()):
+   - Tuple t = q.poll();
+   - if (t.stops > k) continue;
+   - for (v, price) in adj.get(t.node):
+     - if (t.cost + price < dist[v]):
+       - dist[v] = t.cost + price;
+       - q.offer(new Tuple(t.stops + 1, v, dist[v]));
+4. Return dist[dst] == Integer.MAX_VALUE ? -1 : dist[dst];
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Level-order BFS ensures we explore paths by increasing stop counts, strictly observing the <= k stops limit.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Standard Dijkstra prioritizing cost can exhaust all k stops on a cheap path that hits a dead end, blocking a valid slightly more expensive path with fewer stops.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+src=0, dst=2, k=1. Flights: 0->1(100), 1->2(100), 0->2(500)
+Path 0->1->2 takes 1 stop, cost = 200 <= 500 direct flight.
+Cheapest within 1 stop = 200.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(K * E)
+  Reason: At most K levels of BFS over E edges.
+- Space Complexity: O(V + E)
+  Reason: Queue and graph storage.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Condition is `stops <= k`. A flight from u to v adds 1 stop at node u.
+================================================================================

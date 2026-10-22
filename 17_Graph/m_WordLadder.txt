@@ -1,0 +1,66 @@
+================================================================================
+QUESTION: Word Ladder (LeetCode 127)
+FILE: m_WordLadder.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given beginWord, endWord, and wordList, find the length of the shortest transformation sequence from beginWord to endWord where each step changes exactly one letter and every intermediate word is in wordList.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Shortest transformation sequence = SHORTEST PATH IN AN UNWEIGHTED GRAPH!
+Nodes = words. Edges = words that differ by 1 letter.
+Use BFS (Queue of `Pair(word, steps)`):
+Put all words in a `HashSet` for O(1) existence lookup.
+At each step:
+- Try replacing every character (index 0 to L-1) with all 26 letters 'a' to 'z'.
+- If transformed word exists in set:
+  - If it is `endWord`, return `steps + 1`!
+  - Otherwise: remove it from set (acts as visited!) and push `(newWord, steps + 1)` to queue.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Set<String> set = new HashSet<>(wordList);
+   if (!set.contains(endWord)) return 0;
+2. Queue<Pair> q = new LinkedList<>(); q.offer(new Pair(beginWord, 1)); set.remove(beginWord);
+3. while (!q.isEmpty()):
+   - Pair p = q.poll(); String word = p.word; int steps = p.steps;
+   - if (word.equals(endWord)) return steps;
+   - char[] arr = word.toCharArray();
+   - for i = 0 to arr.length - 1:
+     - char original = arr[i];
+     - for c = 'a' to 'z':
+       - arr[i] = c; String newWord = new String(arr);
+       - if (set.contains(newWord)): set.remove(newWord); q.offer(new Pair(newWord, steps + 1));
+     - arr[i] = original; // restore
+4. Return 0.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+BFS explores level-by-level, guaranteeing that the first time `endWord` is reached, it is via the minimum possible transformation steps.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Comparing current word against every other word in wordList takes O(N * L). Mutating 26 letters takes O(26 * L), which is much faster when N = 5000 and L = 5!
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+begin = "hit", end = "cog", list = ["hot","dot","dog","lot","log","cog"]
+q = [("hit", 1)]
+- "hit" -> "hot" (step 2), q=[("hot", 2)]
+- "hot" -> "dot" (step 3), "lot" (step 3)
+- "dot" -> "dog" (step 4)
+- "dog" -> "cog" (step 5 == endWord!) -> Return 5!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N * L * 26)
+  Reason: N words, L length, 26 letter replacements.
+- Space Complexity: O(N * L)
+  Reason: Queue and HashSet.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Remove word from `set` immediately upon pushing to queue to prevent cycles and duplicate queue additions.
+================================================================================

@@ -1,0 +1,62 @@
+================================================================================
+QUESTION: Split Array Largest Sum / Book Allocation Problem (LeetCode 410)
+FILE: o_SplitArray.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Split an array into k non-empty contiguous subarrays such that the LARGEST sum of any subarray is MINIMIZED (Minimize the Maximum).
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+The twin sibling of "Maximize the Minimum": "MINIMIZE THE MAXIMUM" is also Binary Search on Answer!
+Search space for the maximum subarray sum:
+- low = max(nums) (every element must fit into some subarray)
+- high = sum(nums) (all in 1 subarray)
+Can we split the array into <= k subarrays such that each subarray sum <= `mid`?
+- If yes: possible! Can we achieve an even SMALLER maximum sum? Save `ans = mid`, search left (`high = mid - 1`).
+- If no: mid is too small, need larger sum (`low = mid + 1`).
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. low = max(nums), high = sum(nums), ans = high;
+2. while (low <= high):
+   - mid = low + (high - low) / 2;
+   - if (countPartitions(nums, mid) <= k): ans = mid; high = mid - 1;
+   - else: low = mid + 1;
+3. countPartitions(nums, maxSum):
+   - parts = 1, currentSum = 0;
+   - for num in nums:
+     - if (currentSum + num <= maxSum) currentSum += num;
+     - else { parts++; currentSum = num; }
+   - return parts;
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Identical to Ship Packages Within D Days: fewer partitions are required as the allowed subarray capacity increases.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not Dynamic Programming?
+2D DP takes O(k * N^2) time. Binary Search on Answer takes O(N * log(sum)) which is thousands of times faster!
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+nums = [7, 2, 5, 10, 8], k = 2
+low = 10, high = 32
+- mid = 21: [7, 2, 5](14), [10, 8](18) -> 2 parts <= 2! ans = 21, high = 20
+- mid = 15: [7, 2, 5](14), [10](10), [8](8) -> 3 parts > 2 -> low = 16
+- mid = 18: [7, 2, 5](14), [10, 8](18) -> 2 parts <= 2! ans = 18, high = 17
+Output: 18.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N * log(sum - max))
+  Reason: Binary search over sum range, linear check each step.
+- Space Complexity: O(1)
+  Reason: Constant space.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- This exact same problem appears under different names: Book Allocation Problem, Painter's Partition Problem, and Split Array Largest Sum!
+================================================================================

@@ -1,0 +1,66 @@
+================================================================================
+QUESTION: Letter Combinations of a Phone Number (LeetCode 17)
+FILE: f_keyPad.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given a string containing digits from 2-9 inclusive, return all possible letter combinations that the number could represent based on classic phone keypad mappings (e.g. 2 -> "abc", 3 -> "def").
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Each digit corresponds to a list of letters.
+For example, digit '2' gives ['a', 'b', 'c'] and digit '3' gives ['d', 'e', 'f'].
+For the first digit '2', pick each letter ('a', 'b', or 'c').
+Then for the next digit '3', attach each of its letters to what you have picked so far.
+This naturally forms a tree of choices: recursion!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Store keypad mapping in an array:
+   ["", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"].
+2. If digits string is empty, return empty list.
+3. Recursive helper getC(digits, resultList, index, currentString, map):
+   - Base Case: If index == digits.length():
+     - Add currentString to resultList.
+     - Return.
+   - Get the letters for digits[index].
+   - Loop through each letter:
+     - Recurse: getC(digits, resultList, index + 1, currentString + letter, map).
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+At index 0, we branch for each letter of the first digit. At index 1, each branch divides again for the next digit's letters. When index reaches the end, a complete word combination is formed.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not use multiple nested loops?
+The number of digits in the input is variable! If input has 2 digits you would need 2 loops; if 4 digits, 4 loops. You cannot write variable nested loops without recursion (or a queue / BFS).
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Input: digits = "23"
+Map: '2' -> "abc", '3' -> "def"
+getC(index=0, str="")
+  Letter 'a': getC(index=1, str="a")
+    Letter 'd': getC(index=2, str="ad") -> index==2 -> add "ad"
+    Letter 'e': getC(index=2, str="ae") -> index==2 -> add "ae"
+    Letter 'f': getC(index=2, str="af") -> index==2 -> add "af"
+  Letter 'b': getC(index=1, str="b")
+    Letter 'd' -> "bd", 'e' -> "be", 'f' -> "bf"
+  Letter 'c': getC(index=1, str="c")
+    Letter 'd' -> "cd", 'e' -> "ce", 'f' -> "cf"
+Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"]
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(4^N * N)
+  Reason: Each digit maps to at most 4 letters (e.g., 7 and 9 have 4 letters). For N digits, there are up to 4^N combinations, each taking O(N) to build.
+- Space Complexity: O(N)
+  Reason: The recursive call stack goes up to depth N.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Edge case: If input string is empty (""), return an empty list immediately, NOT a list containing an empty string [" "].
+- Notice how digits are converted to numbers: int digit = digits.charAt(index) - '0'. Always subtract character '0'!
+================================================================================

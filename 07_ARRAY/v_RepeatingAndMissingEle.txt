@@ -1,0 +1,67 @@
+================================================================================
+QUESTION: Find Missing and Repeating Number
+FILE: v_RepeatingAndMissingEle.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given an unsorted array of size N containing numbers from 1 to N, one number is missing and one number is repeating. Find both numbers in O(N) time and O(1) extra space.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Math Approach (Sum and Sum of Squares):
+Let repeating = X, missing = Y.
+1. Sum of 1 to N: Sn = N * (N + 1) / 2.
+   Actual sum of array: S.
+   S - Sn = X - Y (Equation 1).
+2. Sum of squares of 1 to N: S2n = N * (N + 1) * (2N + 1) / 6.
+   Actual sum of squares: S2.
+   S2 - S2n = X^2 - Y^2 = (X - Y) * (X + Y).
+3. Divide (Equation 2) by (Equation 1) to get X + Y!
+4. Now you have X - Y and X + Y: solve for X and Y in simple arithmetic!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. long n = arr.length;
+2. long sn = n * (n + 1) / 2;
+3. long s2n = n * (n + 1) * (2 * n + 1) / 6;
+4. long s = 0, s2 = 0;
+   For each num: s += num; s2 += (long)num * num;
+5. val1 = s - sn; // X - Y
+6. val2 = (s2 - s2n) / val1; // X + Y
+7. long x = (val1 + val2) / 2; // repeating
+8. long y = x - val1; // missing
+9. Return [x, y].
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Two independent equations (sum of first powers and sum of second powers) uniquely identify two unknown variables without requiring any hashing or sorting.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not frequency array or HashMap?
+Frequency array takes O(N) extra space. The math or XOR approach uses O(1) auxiliary space.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+arr = [3, 1, 2, 5, 3], N = 5
+Sn = 15, S2n = 55
+Actual S = 3 + 1 + 2 + 5 + 3 = 14
+Actual S2 = 9 + 1 + 4 + 25 + 9 = 48
+val1 = S - Sn = 14 - 15 = -1 (X - Y = -1)
+S2 - S2n = 48 - 55 = -7
+val2 = (X^2 - Y^2) / (X - Y) = -7 / -1 = 7 (X + Y = 7)
+X = (-1 + 7) / 2 = 3 (Repeating = 3)
+Y = 7 - 3 = 4 (Missing = 4)!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Single pass to calculate sums.
+- Space Complexity: O(1)
+  Reason: Only primitive long variables.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- ALWAYS use `long` for sum and sum of squares! For N = 10^5, N^3 reaches 10^15 which overflows 32-bit int.
+================================================================================

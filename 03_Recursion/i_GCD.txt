@@ -1,0 +1,50 @@
+================================================================================
+QUESTION: Recursive Greatest Common Divisor (Euclid's Algorithm)
+FILE: i_GCD.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Compute the GCD of two numbers using Euclid's recursive algorithm in one line.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Euclid's rule:
+GCD(a, b) = GCD(b % a, a).
+Base case: when a == 0, GCD is b.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+public static int getGCD(int n1, int n2) {
+    if (n1 == 0) return n2;
+    return getGCD(n2 % n1, n1);
+}
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Any common divisor of a and b also divides b - k*a (and therefore b % a). By repeatedly replacing the larger number with the remainder, the problem size drops exponentially.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not subtraction (Euclid's subtraction version: while a != b: a -= b)?
+If a = 1 and b = 1,000,000, subtraction takes 1,000,000 steps. Modulo % does it in 1 step!
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+getGCD(12, 15)
+Call 1: n1 = 12, n2 = 15 -> getGCD(15 % 12, 12) = getGCD(3, 12)
+Call 2: n1 = 3, n2 = 12  -> getGCD(12 % 3, 3) = getGCD(0, 3)
+Call 3: n1 = 0 -> returns n2 which is 3!
+Output: 3
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(log(min(A, B)))
+  Reason: The remainder reduces the problem by at least half every two steps.
+- Space Complexity: O(log(min(A, B)))
+  Reason: Depth of the recursive call stack.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Order does not matter: if you call getGCD(15, 12), the first modulo call automatically swaps them to getGCD(12 % 15 = 12, 15) -> getGCD(3, 12).
+================================================================================

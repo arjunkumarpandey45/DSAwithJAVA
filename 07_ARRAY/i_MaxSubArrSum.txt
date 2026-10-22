@@ -1,0 +1,60 @@
+================================================================================
+QUESTION: Maximum Subarray Sum (Kadane's Algorithm)
+FILE: i_MaxSubArrSum.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Find the maximum possible sum of a contiguous non-empty subarray.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Kadane's intuition is simple:
+Carry a running sum as you walk.
+If your running sum becomes NEGATIVE, it is toxic! It can never help any future subarray to have a negative baggage added to it.
+So whenever sum < 0, reset sum = 0!
+Keep track of the maximum sum seen so far.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. int maxi = Integer.MIN_VALUE, sum = 0.
+2. For each num in arr:
+   - sum += num;
+   - maxi = Math.max(maxi, sum);
+   - if (sum < 0) sum = 0;
+3. Return maxi.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Any prefix with negative sum reduces the sum of any larger subarray that includes it. Dropping negative prefixes ensures we only build upon positive contributions.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not check all subarrays (nested loops)?
+All subarrays = O(N^2) or O(N^3). Kadane does it in O(N) single pass.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+arr = [-2, 1, -3, 4, -1, 2, 1, -5, 4]
+- num=-2: sum=-2, maxi=-2, sum<0 -> sum=0
+- num=1:  sum=1,  maxi=1
+- num=-3: sum=-2, maxi=1, sum<0 -> sum=0
+- num=4:  sum=4,  maxi=4
+- num=-1: sum=3,  maxi=4
+- num=2:  sum=5,  maxi=5
+- num=1:  sum=6,  maxi=6! [4, -1, 2, 1]
+- num=-5: sum=1,  maxi=6
+- num=4:  sum=5,  maxi=6
+Result: 6
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Single pass through array.
+- Space Complexity: O(1)
+  Reason: Only primitive variables.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Crucial Trap: Initialize `maxi = Integer.MIN_VALUE` (or arr[0]), NOT 0! If all elements in array are negative (e.g. [-5, -2, -8]), the answer should be -2, not 0.
+================================================================================

@@ -1,0 +1,50 @@
+================================================================================
+QUESTION: Delete Node in a Linked List Without Head Pointer (LeetCode 237)
+FILE: b_DeleteNode.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Delete a given node in a singly linked list when you are given access ONLY to that node to be deleted, NOT to the head of the list.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Normally, to delete a node, you need its previous node (`prev.next = curr.next`).
+Here, you CANNOT look backward to find `prev`!
+The clever imposter trick:
+Copy the data of the NEXT node into the CURRENT node!
+Now current node looks just like the next node.
+Then delete the next node: `node.next = node.next.next`! Done!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. node.val = node.next.val; // copy next value into current node
+2. node.next = node.next.next; // bypass and delete next node
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+From the perspective of anyone traversing the list, the current node's original value has vanished, replaced by the rest of the list.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Can this delete the very last node?
+NO! If `node.next == null`, this trick is impossible because there is no next node to copy from. The problem statement guarantees the given node is not the last node.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+List: 4 -> 5 -> 1 -> 9, delete node 5
+1. node.val = node.next.val (5 becomes 1) -> 4 -> 1 -> 1 -> 9
+2. node.next = node.next.next (skip old 1) -> 4 -> 1 -> 9
+Result: Node with value 5 is deleted!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(1)
+  Reason: Only two pointer/value operations.
+- Space Complexity: O(1)
+  Reason: Zero extra memory.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Remember this trick ONLY works when the node to delete is not the tail node.
+================================================================================

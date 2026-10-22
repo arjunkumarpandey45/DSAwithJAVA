@@ -1,0 +1,66 @@
+================================================================================
+QUESTION: Reverse Pairs (LeetCode 493)
+FILE: x_ReversePairs.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given an array nums, return the number of reverse pairs. A reverse pair is defined as (i, j) where i < j and nums[i] > 2 * nums[j].
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Similar to Count Inversions, but with condition `nums[i] > 2 * nums[j]`.
+We cannot count directly during the merge step because `nums[i] > 2 * nums[j]` is NOT the same comparison used to sort (`nums[i] > nums[j]`).
+Solution: Separate counting from merging!
+1. Divide array into two sorted halves (left and right).
+2. Count pairs: for each element in left half, advance pointer in right half while `nums[i] > 2 * nums[right]`.
+3. Merge the two halves normally.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. In mergeSort(nums, low, high):
+   - if (low >= high) return 0;
+   - mid = (low + high) / 2;
+   - count = mergeSort(low, mid) + mergeSort(mid + 1, high);
+   - count += countPairs(nums, low, mid, high);
+   - merge(nums, low, mid, high);
+   - return count;
+2. countPairs(nums, low, mid, high):
+   - right = mid + 1, count = 0;
+   - for i = low to mid:
+     - while (right <= high && (long)nums[i] > 2L * nums[right]) right++;
+     - count += (right - (mid + 1));
+   - return count;
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Because both halves are already sorted, as `i` moves forward, `nums[i]` increases, so `right` never needs to reset backwards! The count step runs in O(N) linear time.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not check all pairs with nested loops?
+Nested loops take O(N^2). For N = 50,000, N^2 = 2.5 * 10^9 operations (TLE). Merge sort does it in O(N log N).
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Left = [6, 13], Right = [2, 5], mid = 0
+- i = 0 (val 6):
+  - right=2: 6 > 2*2(4) -> right becomes 3
+  - right=3: 6 > 2*5(10) False -> stop right at 3
+  - pairs from 6 = 3 - 2 = 1 (pair (6, 2))
+- i = 1 (val 13):
+  - right continues from 3: 13 > 2*5(10) -> right becomes 4
+  - pairs from 13 = 4 - 2 = 2 (pairs (13, 2) and (13, 5))
+Total pairs = 1 + 2 = 3.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N log N)
+  Reason: log N divide steps, each level does O(N) counting and O(N) merging.
+- Space Complexity: O(N)
+  Reason: Temporary array used during merge.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- CRITICAL: Cast to `(long) nums[i] > 2L * nums[right]`! If `nums[right] = Integer.MAX_VALUE`, `2 * nums[right]` overflows integer to negative, completely corrupting the comparison!
+================================================================================

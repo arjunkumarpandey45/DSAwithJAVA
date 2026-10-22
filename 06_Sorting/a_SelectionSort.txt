@@ -1,0 +1,55 @@
+================================================================================
+QUESTION: Selection Sort
+FILE: a_SelectionSort.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Sort an array by repeatedly finding the minimum element from the unsorted portion and swapping it to the front.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Imagine lining up people by height:
+Look through the whole line, find the shortest person, and swap them with person at position 0.
+Now position 0 is sorted!
+Next, look through the remaining line (position 1 to end), find the next shortest, swap with position 1.
+Repeat until the whole line is sorted!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Outer loop i from 0 to n - 2:
+   - Assume minimum is at index i: minIdx = i.
+   - Inner loop j from i + 1 to n - 1:
+     - If arr[j] < arr[minIdx], update minIdx = j.
+   - Swap arr[i] with arr[minIdx].
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+In step i, the smallest element in the remaining unsorted subarray is placed in its permanent correct position at index i.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not use it for large data?
+Selection sort always does ~N^2 / 2 comparisons, even if the array is already sorted! It is not adaptive and takes O(N^2) time.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Input: [64, 25, 12, 22, 11]
+i = 0: min is 11 (index 4) -> swap 64 and 11 -> [11, 25, 12, 22, 64]
+i = 1: min in [25, 12, 22, 64] is 12 (index 2) -> swap 25 and 12 -> [11, 12, 25, 22, 64]
+i = 2: min in [25, 22, 64] is 22 (index 3) -> swap 25 and 22 -> [11, 12, 22, 25, 64]
+i = 3: min in [25, 64] is 25 (index 3) -> swap with itself -> [11, 12, 22, 25, 64]
+Sorted!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N^2) in all cases (best, average, worst)
+  Reason: Two nested loops always run (N - 1) + (N - 2) + ... + 1 times.
+- Space Complexity: O(1)
+  Reason: In-place sorting algorithm.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Selection Sort minimizes the number of swaps (at most N swaps), which is useful if writing to memory is very costly.
+- Selection Sort is generally NOT stable.
+================================================================================

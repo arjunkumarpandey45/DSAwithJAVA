@@ -1,0 +1,61 @@
+================================================================================
+QUESTION: Rotate Array by D Places (Left & Right)
+FILE: a_RotateArrByD.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Rotate an array to the left or right by D positions.
+For example: [1, 2, 3, 4, 5] rotated left by 2 becomes [3, 4, 5, 1, 2].
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+If you rotate an array of size 5 by 5 places, it comes back to the exact same place!
+So first: d = d % n (no need to do extra full circles).
+
+The Reversal Trick (Pure Magic):
+To rotate LEFT by D places:
+1. Reverse the first D elements: [1, 2] -> [2, 1]
+2. Reverse the remaining N - D elements: [3, 4, 5] -> [5, 4, 3]
+3. Reverse the ENTIRE array: [2, 1, 5, 4, 3] -> [3, 4, 5, 1, 2]! DONE in-place!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. d = d % n.
+2. reverse(arr, 0, d - 1).
+3. reverse(arr, d, n - 1).
+4. reverse(arr, 0, n - 1).
+Helper reverse(arr, start, end):
+While start < end: swap arr[start] and arr[end], start++, end--.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Reversing individual parts inverts their internal order. Reversing the whole array restores their original internal order while swapping the two major blocks into their rotated positions.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not rotate 1 step D times?
+Rotating 1 step takes O(N). Doing it D times takes O(N * D) which is O(N^2) (gives TLE for large D).
+Why not copy to a temporary array of size D?
+Temporary array takes O(D) extra memory. The 3-reversals method uses O(1) memory!
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+arr = [1, 2, 3, 4, 5], d = 2
+Step 1: reverse index 0..1 -> [2, 1, 3, 4, 5]
+Step 2: reverse index 2..4 -> [2, 1, 5, 4, 3]
+Step 3: reverse entire array 0..4 -> [3, 4, 5, 1, 2]
+Result: [3, 4, 5, 1, 2]
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Each element is visited and swapped a constant number of times (at most twice).
+- Space Complexity: O(1)
+  Reason: In-place array swaps.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Always do `d = d % n` at the very beginning to avoid out-of-bounds errors when d > n.
+- Be clear whether the question asks for LEFT rotation or RIGHT rotation. For right rotation by D: reverse(0, n-d-1), reverse(n-d, n-1), reverse(0, n-1).
+================================================================================

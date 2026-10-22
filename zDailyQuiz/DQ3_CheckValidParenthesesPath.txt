@@ -1,0 +1,83 @@
+================================================================================
+QUESTION: DQ3 - Check Valid Parentheses Path
+FILE: DQ3_CheckValidParenthesesPath.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given an m x n grid filled with '(' and ')'.
+Starting from cell (0, 0), you can only move Right or Down until reaching (m - 1, n - 1).
+Determine if there exists any path from start to end that forms a valid, balanced parentheses string.
+A valid string has matching pairs where '(' is never closed before opening, and balance at end is 0.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+1. Any path from (0,0) to (m-1, n-1) takes exactly (m + n - 1) cells.
+   If (m + n - 1) is odd, a balanced string is impossible (need equal '(' and ')').
+2. If grid[0][0] is ')' or grid[m-1][n-1] is '(', impossible.
+3. At any cell (r, c), balance = count('(') - count(')').
+   Balance must never drop below 0 at any moment.
+   Balance can never exceed (m + n) / 2 because remaining steps wouldn't be able to balance it.
+4. Multiple paths can reach the same cell with the same balance. Memoizing visited states (r, c, balance)
+   turns an exponential 2^(m+n) search into a fast polynomial BFS/DFS!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. If start is ')' or length (m + n - 1) is odd, return false immediately.
+2. Use 3D visited boolean array: vis[m][n][m + n].
+3. Start BFS queue with state (0, 0, 1) and mark vis[0][0][1] = true.
+4. While queue is not empty, poll (row, col, balance):
+   - If row == m - 1, col == n - 1, and balance == 0, return true!
+   - Explore 2 directions: Right (row, col + 1) and Down (row + 1, col).
+   - Calculate newBalance = balance + (grid[nr][nc] == '(' ? 1 : -1).
+   - If newBalance >= 0 and !vis[nr][nc][newBalance]:
+     mark visited and enqueue (nr, nc, newBalance).
+5. If queue empties without finding a valid path, return false.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+A parentheses string is valid if and only if:
+1. Balance never goes negative at any prefix.
+2. Final balance is exactly 0.
+By exploring all reachable (row, col, balance) states using BFS and memoizing them,
+we test all valid path configurations without doing redundant work.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not pure DFS without memoization / visited array?
+- A grid of 100 x 100 has 2^(198) possible paths! Without memoization, recursion causes infinite TLE.
+  Memoizing (r, c, balance) limits states to at most m * n * (m + n) operations.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Input grid: 2x3
+  ['(', '(', ')']
+  ['(', ')', ')']
+
+m = 2, n = 3. Path length = 2 + 3 - 1 = 4 (even, valid candidates exist).
+Start at (0, 0) with char '(' -> balance = 1. Queue = [(0, 0, 1)].
+
+Poll (0, 0, 1):
+  - Go Right to (0, 1): char '(', newBalance = 2. Enqueue (0, 1, 2).
+  - Go Down to (1, 0): char '(', newBalance = 2. Enqueue (1, 0, 2).
+
+Poll (0, 1, 2):
+  - Go Right to (0, 2): char ')', newBalance = 1. Enqueue (0, 2, 1).
+  - Go Down to (1, 1): char ')', newBalance = 1. Enqueue (1, 1, 1).
+
+From (1, 1, 1):
+  - Go Right to (1, 2): char ')', newBalance = 1 - 1 = 0.
+  Reached (m-1, n-1) with balance == 0! Return true.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(m * n * (m + n))
+  Reason: Each unique state (r, c, balance) is pushed to the queue at most once.
+- Space Complexity: O(m * n * (m + n))
+  Reason: 3D visited array vis[m][n][m + n] and BFS queue storage.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- If grid[0][0] == ')' or grid[m-1][n-1] == '(', return false immediately.
+- If (m + n - 1) % 2 != 0, a balanced path is mathematically impossible.
+================================================================================

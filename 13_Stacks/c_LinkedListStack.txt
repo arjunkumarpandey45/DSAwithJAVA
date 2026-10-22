@@ -1,0 +1,52 @@
+================================================================================
+QUESTION: Implement Stack Using Linked List
+FILE: c_LinkedListStack.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Implement a dynamic-size Stack where elements are stored as nodes in a singly linked list.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Use the head of the linked list as the `top` of the stack!
+- Push: insert at head (`newNode.next = top; top = newNode`).
+- Pop: delete from head (`top = top.next`).
+- Peek: return `top.val`.
+Stack can grow infinitely with no capacity limit!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. class Node { int val; Node next; }
+2. Node top = null;
+3. push(x): Node n = new Node(x); n.next = top; top = n;
+4. pop(): if (top == null) return -1; int v = top.val; top = top.next; return v;
+5. peek(): return top == null ? -1 : top.val;
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Inserting and deleting at the head of a linked list are both O(1) operations, perfectly matching stack performance requirements.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Array Stack vs LinkedList Stack:
+Array stack has better cache locality and uses less memory per element. LinkedList stack never runs out of space but incurs pointer overhead.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+top = null
+push(5) -> [5] -> null, top = 5
+push(10) -> [10] -> [5] -> null, top = 10
+pop() -> returns 10, top becomes 5
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(1) for all operations
+  Reason: Head operations only.
+- Space Complexity: O(N)
+  Reason: One node per pushed element.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Never insert at the TAIL of the linked list for stack implementation, because deleting from the tail takes O(N) in a singly linked list!
+================================================================================

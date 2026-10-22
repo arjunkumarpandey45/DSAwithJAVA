@@ -1,0 +1,60 @@
+================================================================================
+QUESTION: Power Set Using Bit Manipulation
+FILE: c_PowerSet.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Generate all 2^N subsets of an array using bit masking.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+An array of size N has 2^N subsets.
+Numbers from 0 to 2^N - 1 in binary represent every possible pick/skip combination!
+For N = 3: 2^3 = 8 numbers (0 to 7):
+- 0 = 000 -> []
+- 1 = 001 -> [arr[0]]
+- 2 = 010 -> [arr[1]]
+- 3 = 011 -> [arr[0], arr[1]]
+- 7 = 111 -> [arr[0], arr[1], arr[2]]
+If the j-th bit of number i is 1: include arr[j] in the subset!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. int subsetsCount = 1 << n; // 2^n
+2. For i = 0 to subsetsCount - 1:
+   - List<Integer> sub = new ArrayList<>();
+   - For j = 0 to n - 1:
+     - If ((i & (1 << j)) != 0): sub.add(arr[j]);
+   - ans.add(sub);
+3. Return ans.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Counting from 0 to 2^N - 1 generates all binary strings of length N. Testing `(i & (1 << j))` determines whether the j-th element belongs to subset i.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why recursion vs bit manipulation?
+Bit manipulation generates subsets iteratively without recursion stack overhead. However, it only works when N <= 30 (since 1 << 31 overflows 32-bit int).
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+arr = [1, 2], n = 2 -> 1 << 2 = 4 subsets
+i = 0 (00): []
+i = 1 (01): j=0 set -> [1]
+i = 2 (10): j=1 set -> [2]
+i = 3 (11): j=0 set, j=1 set -> [1, 2]
+Result: [[], [1], [2], [1, 2]]
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(2^N * N)
+  Reason: 2^N subsets generated, each takes N bit checks.
+- Space Complexity: O(2^N * N)
+  Reason: Memory to store all 2^N subsets.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Operator precedence trap: `(i & (1 << j)) != 0` MUST have parentheses around `i & (1 << j)`! `!=` has higher precedence than `&`.
+================================================================================

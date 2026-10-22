@@ -1,0 +1,65 @@
+================================================================================
+QUESTION: Path Sum I & II (LeetCode 112 & 113)
+FILE: k_PathSum.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+1. Path Sum I: Return true if tree has a root-to-leaf path with sum == targetSum.
+2. Path Sum II: Find all unique root-to-leaf paths where the sum equals targetSum.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Path Sum I:
+Subtract `root.val` from targetSum as you go down.
+At a leaf node, check if `targetSum == root.val`!
+
+Path Sum II:
+Backtracking with a list `currPath`:
+- Add `root.val` to `currPath`.
+- If leaf and sum matches: add a COPY of `currPath` to results.
+- Recurse left and right.
+- Backtrack: remove last element from `currPath`.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+Path Sum I:
+if (root == null) return false;
+if (root.left == null && root.right == null) return targetSum == root.val;
+return hasPathSum(root.left, targetSum - root.val) || hasPathSum(root.right, targetSum - root.val);
+
+Path Sum II:
+void dfs(root, target, curr, ans):
+- curr.add(root.val);
+- if leaf and target == root.val: ans.add(new ArrayList<>(curr));
+- dfs(root.left, target - root.val); dfs(root.right, target - root.val);
+- curr.remove(curr.size() - 1); // backtrack
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Subtracting node values reduces the target until 0 is needed at the leaf. Backtracking restores list state for sibling exploration.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not check paths from every node?
+The problem strictly specifies ROOT-to-LEAF paths.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Tree: 5 -> 4 -> 11 -> 2, target = 22
+5: need 22 - 5 = 17
+4: need 17 - 4 = 13
+11: need 13 - 11 = 2
+2: leaf! 2 == 2 -> TRUE! Path found: [5, 4, 11, 2]
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Visits each node once.
+- Space Complexity: O(H)
+  Reason: Stack depth.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Path Sum II trap: You MUST add `new ArrayList<>(curr)` to the answer, NOT `curr`! Adding `curr` adds a reference that gets emptied during backtracking.
+================================================================================

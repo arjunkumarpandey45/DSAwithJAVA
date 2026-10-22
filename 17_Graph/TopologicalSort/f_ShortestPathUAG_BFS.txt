@@ -1,0 +1,56 @@
+================================================================================
+QUESTION: Shortest Path in Undirected Graph with Unit Weights
+FILE: f_ShortestPathUAG_BFS.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Find the shortest path from a source vertex to all vertices in an undirected unweighted graph (unit weight = 1).
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+When all edges have weight 1, standard BFS is the optimal shortest path algorithm!
+- Distance to start node = 0.
+- When visiting an unvisited neighbor from node `u`: `dist[neighbor] = dist[u] + 1`!
+- Push neighbor to queue.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. int[] dist = new int[V]; Arrays.fill(dist, -1); dist[src] = 0;
+2. Queue<Integer> q = new LinkedList<>(); q.offer(src);
+3. while (!q.isEmpty()):
+   - int node = q.poll();
+   - for v in adj.get(node):
+     - if (dist[v] == -1): // unvisited
+       - dist[v] = dist[node] + 1;
+       - q.offer(v);
+4. Return dist.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+BFS traverses vertices in increasing order of their distance from source (distance 0, then 1, then 2...). The first time a node is touched, it is reached via the shortest path.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Dijkstra is unnecessary overhead when edge weights are uniform (1). BFS does it in O(V + E) with a simple FIFO queue.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+0 - 1, 0 - 3, 1 - 2, 3 - 2, src = 0
+dist[0] = 0, q = [0]
+poll 0 -> dist[1]=1, dist[3]=1, q=[1, 3]
+poll 1 -> dist[2]=2, q=[3, 2]
+poll 3 -> neighbor 2 already has dist 2
+Final dist: [0, 1, 2, 1]
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(V + 2E)
+  Reason: Linear BFS traversal.
+- Space Complexity: O(V)
+  Reason: Queue and distance array.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Using `-1` as the unvisited marker allows `dist[]` to serve as both the visited tracker and distance array.
+================================================================================

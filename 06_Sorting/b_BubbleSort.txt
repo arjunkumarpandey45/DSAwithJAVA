@@ -1,0 +1,61 @@
+================================================================================
+QUESTION: Bubble Sort (With Optimization)
+FILE: b_BubbleSort.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Sort an array by repeatedly swapping adjacent elements if they are in the wrong order. Larger elements "bubble up" to the end of the array.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Compare side-by-side neighbors:
+If left neighbor > right neighbor, swap them!
+After one full pass through the array, the largest number is guaranteed to have bubbled to the very end.
+Repeat for the remaining prefix!
+Optimization: If during an entire pass NO swaps happened, the array is already sorted! Stop immediately!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Outer loop i from n - 1 down to 1:
+   - boolean swapped = false;
+   - Inner loop j from 0 to i - 1:
+     - If arr[j] > arr[j + 1]:
+       - swap(arr[j], arr[j + 1]);
+       - swapped = true;
+   - If (!swapped) break; // already sorted!
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Each pass places the maximum element of the unsorted segment at the rightmost position of that segment.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not use it on big inputs?
+O(N^2) time is too slow for N > 10,000. Algorithms like Merge Sort or Quick Sort run in O(N log N).
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Input: [5, 1, 4, 2, 8]
+Pass 1:
+- compare 5, 1 -> swap -> [1, 5, 4, 2, 8]
+- compare 5, 4 -> swap -> [1, 4, 5, 2, 8]
+- compare 5, 2 -> swap -> [1, 4, 2, 5, 8]
+- compare 5, 8 -> ok -> [1, 4, 2, 5, 8] (8 is in place)
+Pass 2:
+- compare 1, 4 -> ok
+- compare 4, 2 -> swap -> [1, 2, 4, 5, 8]
+- compare 4, 5 -> ok (5 is in place)
+Pass 3: no swaps needed! Break early.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: Best: O(N) when already sorted; Worst/Average: O(N^2)
+  Reason: Outer loop runs up to N times, inner loop runs up to N times.
+- Space Complexity: O(1)
+  Reason: In-place sorting.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Always include the swapped flag optimization. Without it, best case remains O(N^2) instead of O(N).
+================================================================================

@@ -1,0 +1,68 @@
+================================================================================
+QUESTION: Merge Sort (Divide and Conquer)
+FILE: d_MeregSort.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+A classic O(N log N) divide-and-conquer sorting algorithm. It divides the array into two halves, recursively sorts them, and merges the two sorted halves together.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+It is hard to sort 100 elements at once.
+So divide: sort the left 50, sort the right 50.
+How to sort 50? Divide into 25 and 25...
+Keep dividing until you have 1 element (1 element is automatically sorted!).
+Now comes the magic: MERGE!
+Merging two already-sorted arrays into one sorted array is easy and fast (using two pointers like zipping a jacket).
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. mergeSort(arr, low, high):
+   - Base Case: if (low >= high) return;
+   - int mid = (low + high) / 2;
+   - mergeSort(arr, low, mid); // sort left half
+   - mergeSort(arr, mid + 1, high); // sort right half
+   - merge(arr, low, mid, high); // combine them
+2. merge function:
+   - Use pointer left = low, right = mid + 1, and a temp list.
+   - While (left <= mid && right <= high):
+     - add smaller of arr[left] and arr[right] to temp.
+   - Copy remaining elements from left or right half.
+   - Copy temp back into original arr[low...high].
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Divide-and-conquer creates a recursion tree of height log2(N). At each level of the tree, merging all elements takes O(N) work. Total work = (levels) * (work per level) = N * log2(N).
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not always use Merge Sort?
+Merge Sort requires an extra temporary array of size O(N) to merge. In memory-constrained environments, in-place Quick Sort or Heap Sort may be preferred.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Input: [3, 1, 2, 4]
+Divide: [3, 1] and [2, 4]
+Divide: [3], [1] and [2], [4]
+Merge [3] and [1] -> [1, 3]
+Merge [2] and [4] -> [2, 4]
+Merge [1, 3] and [2, 4]:
+- compare 1 and 2 -> take 1
+- compare 3 and 2 -> take 2
+- compare 3 and 4 -> take 3
+- take remaining 4
+Result: [1, 2, 3, 4]
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N log N) in all cases (best, average, worst)
+  Reason: log N division levels, O(N) merging work at each level.
+- Space Complexity: O(N)
+  Reason: Temporary array used during the merge step.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Merge Sort is STABLE, making it the algorithm of choice for sorting objects in Java (Arrays.sort() for objects uses TimSort, a variant of Merge Sort).
+- Avoid integer overflow in mid calculation for large N: use mid = low + (high - low) / 2.
+================================================================================

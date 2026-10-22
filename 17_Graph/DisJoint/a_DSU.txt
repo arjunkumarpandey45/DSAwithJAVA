@@ -1,0 +1,64 @@
+================================================================================
+QUESTION: Disjoint Set Union (DSU / Union-Find by Rank & Size)
+FILE: a_DSU.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Data structure providing near O(1) operations to union two sets and find the representative/parent of a set, with Path Compression and Union by Rank/Size.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Two core functions:
+1. `findUPar(node)` (Find Ultimate Parent):
+   Climb up parent pointers to find the leader of the set.
+   Path Compression: As you backtrack down, point every visited node directly to the ultimate parent: `parent[node] = findUPar(parent[node])`!
+2. `unionBySize(u, v)`:
+   Find ultimate parents of u and v.
+   Attach the SMALLER tree under the LARGER tree to prevent trees from becoming tall degenerate lines!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+class DSU {
+    int[] parent, size;
+    public DSU(int n) {
+        parent = new int[n + 1]; size = new int[n + 1];
+        for (int i = 0; i <= n; i++) { parent[i] = i; size[i] = 1; }
+    }
+    public int findUPar(int node) {
+        if (node == parent[node]) return node;
+        return parent[node] = findUPar(parent[node]); // path compression
+    }
+    public void unionBySize(int u, int v) {
+        int pu = findUPar(u), pv = findUPar(v);
+        if (pu == pv) return;
+        if (size[pu] < size[pv]) { parent[pu] = pv; size[pv] += size[pu]; }
+        else { parent[pv] = pu; size[pu] += size[pv]; }
+    }
+}
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Path Compression flattens the tree height to near 1. Union by Size keeps tree balanced. Together, operations take O(alpha(N)) ~ O(1) time.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Without path compression and union by rank/size, tree can degenerate into a line of height N, taking O(N) per find.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+union(1, 2) -> 2 connects to 1, size[1]=2
+union(2, 3) -> root of 2 is 1 -> 3 connects to 1, size[1]=3
+findUPar(3) -> directly points to 1!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(4 * alpha) ~ O(1) amortized
+  Reason: Ackermann inverse function alpha(N) <= 4 for all practical N.
+- Space Complexity: O(N)
+  Reason: Parent and size arrays.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Always check `if (pu == pv) return;` before adding sizes, or you will double the component size!
+================================================================================

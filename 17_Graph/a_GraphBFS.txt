@@ -1,0 +1,56 @@
+================================================================================
+QUESTION: Graph Breadth First Search (BFS)
+FILE: a_GraphBFS.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Traverse all vertices of a graph level-by-level starting from a source vertex using a queue and a visited array.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Like ripples expanding in a pond when you drop a stone:
+Start at node 0.
+Visit all IMMEDIATE neighbors (distance 1).
+Then visit all THEIR neighbors (distance 2)...
+Use a Queue (FIFO) and a boolean `visited[]` array so you never visit the same node twice!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. boolean[] vis = new boolean[V]; Queue<Integer> q = new LinkedList<>();
+2. q.offer(startNode); vis[startNode] = true;
+3. while (!q.isEmpty()):
+   - int node = q.poll();
+   - ans.add(node);
+   - for each neighbor in adj.get(node):
+     - if (!vis[neighbor]): vis[neighbor] = true; q.offer(neighbor);
+4. Return ans.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Queue enforces first-come-first-served exploration. Every vertex at distance d is dequeued and expanded before any vertex at distance d+1.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+BFS is specially designed for finding the SHORTEST PATH in unweighted graphs because it visits nodes in strictly increasing distance order.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Adj: 0-[1, 2], 1-[0, 2], 2-[0, 1]
+q=[0], vis={0}
+- poll 0: visit neighbors 1, 2 -> q=[1, 2], vis={0, 1, 2}
+- poll 1: neighbors 0, 2 already visited
+- poll 2: neighbors 0, 1 already visited
+BFS Order: [0, 1, 2]
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(V + 2E) for undirected, O(V + E) for directed
+  Reason: Every vertex enters queue once (V), and all edges are traversed once (2E).
+- Space Complexity: O(V)
+  Reason: Queue and visited array of size V.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Mark `vis[neighbor] = true` IMMEDIATELY upon pushing to queue, NOT when polling! Marking on polling causes duplicate pushes and memory explosion.
+================================================================================

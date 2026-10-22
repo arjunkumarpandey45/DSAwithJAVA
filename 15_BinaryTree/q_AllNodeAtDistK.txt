@@ -1,0 +1,64 @@
+================================================================================
+QUESTION: All Nodes Distance K in Binary Tree (LeetCode 863)
+FILE: q_AllNodeAtDistK.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given the root of a binary tree, a target node, and an integer k, return an array of the values of all nodes that have a distance k from the target node.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Distance K from target goes in THREE directions:
+1. Down to left child
+2. Down to right child
+3. UP TO PARENT!
+Binary tree nodes only point downward. So first:
+Step 1: Map child -> parent using a HashMap via BFS/DFS.
+Step 2: Run BFS outward from the `target` node like ripples in a pond, moving to left, right, and parent, tracking distance until `distance == k`!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Build parentMap: Map<TreeNode, TreeNode> parentMap.
+   - BFS from root: parentMap.put(node.left, node), parentMap.put(node.right, node).
+2. Radial BFS from target:
+   - Queue<TreeNode> q = new LinkedList<>(); q.offer(target);
+   - Set<TreeNode> visited = new HashSet<>(); visited.add(target);
+   - int dist = 0;
+   - while (!q.isEmpty()):
+     - if (dist == k) break;
+     - int size = q.size();
+     - for i = 0 to size - 1:
+       - TreeNode curr = q.poll();
+       - check curr.left, curr.right, and parentMap.get(curr):
+         if exists and not visited: visited.add, q.offer;
+     - dist++;
+3. Remaining nodes in queue are all at distance K! Add to result list.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Parent pointers convert the directed tree into an undirected graph. BFS from target explores outward by unit distance concentric rings.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Calculating LCA and depths for all node pairs is complex and O(N^2). Graph BFS is clean and O(N).
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+target = 5, k = 2
+dist = 0: q=[5], visited={5}
+dist = 1: neighbors of 5 (left: 6, right: 2, parent: 3) -> q=[6, 2, 3]
+dist = 2: expand neighbors -> q=[7, 4, 1] -> dist==2, BREAK!
+Result: [7, 4, 1]
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Pass 1 builds parent map (O(N)). Pass 2 radial BFS visits nodes at most once (O(N)).
+- Space Complexity: O(N)
+  Reason: Parent map, visited set, and queue.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Always maintain a `visited` set during the radial BFS to avoid going back and forth between parent and child in an infinite loop!
+================================================================================

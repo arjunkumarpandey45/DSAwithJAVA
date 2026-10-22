@@ -1,0 +1,57 @@
+================================================================================
+QUESTION: Implement Queue using Stacks (LeetCode 232)
+FILE: f_ImplementQueueUsingStacks.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Implement a FIFO queue using only two LIFO stacks.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Reversing a reversed order gives the ORIGINAL order!
+Two stacks: `inStack` and `outStack`:
+- Push(x): simply push onto `inStack`.
+- Pop() / Peek():
+  - If `outStack` is empty, pour ALL elements from `inStack` into `outStack`!
+  - Pouring reverses their order, so the oldest element is now at the TOP of `outStack`!
+  - Pop / peek from `outStack`!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Stack<Integer> in = new Stack<>(), out = new Stack<>();
+2. push(x): in.push(x);
+3. pop(): peek(); return out.pop();
+4. peek():
+   - if (out.isEmpty()): while (!in.isEmpty()) out.push(in.pop());
+   - return out.peek();
+5. empty(): return in.isEmpty() && out.isEmpty();
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Pouring from `in` to `out` happens only when `out` is completely empty. Elements maintain correct FIFO order in `outStack` until exhausted.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not move elements back to `in` on every operation?
+Moving back and forth makes every pop O(N). Leaving elements in `outStack` achieves O(1) amortized time!
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+push(1) -> in=[1]
+push(2) -> in=[1, 2]
+peek() -> out is empty -> pour in into out -> out=[2, 1], in=[] -> return out.peek() = 1!
+pop() -> returns out.pop() = 1 -> out=[2]
+empty() -> out has 2 -> false
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: push: O(1), pop: O(1) amortized, peek: O(1) amortized
+  Reason: Each element moved between stacks at most twice.
+- Space Complexity: O(N)
+  Reason: Two stacks holding N elements total.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Only transfer elements from `in` to `out` when `out` is COMPLETELY EMPTY. If `out` has elements, transferring prematurely scrambles the order!
+================================================================================

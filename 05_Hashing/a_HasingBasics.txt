@@ -1,0 +1,60 @@
+================================================================================
+QUESTION: Hashing Basics & Frequency Counting
+FILE: a_HasingBasics.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Demonstrates frequency counting of array elements using an array hash table (frequency array) and Java's HashMap for O(1) average lookups.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+If you want to know how many times a number appears in an array:
+Naive: loop through the whole array every time you are asked (O(N) per query).
+Smart: count everyone once and store in a lookup table (O(1) per query)!
+If numbers are small (e.g. 0 to 12), use an integer array hash[13].
+If numbers are large or negative, use HashMap<Integer, Integer>.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Array hashing:
+   - int[] hash = new int[maxVal + 1];
+   - for each x in arr: hash[x]++;
+   - query(x) returns hash[x].
+2. HashMap hashing:
+   - map.put(x, map.getOrDefault(x, 0) + 1);
+   - query(x) returns map.getOrDefault(x, 0).
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Precomputing frequencies takes O(N) once. After that, array indexing is O(1) and HashMap lookup is O(1) on average using hash functions.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not scan the array for each query?
+If there are Q queries and array has size N, scanning takes O(Q * N). With hashing, it takes O(N + Q), which is thousands of times faster!
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+arr = [1, 2, 1, 3, 2]
+hash array initialized to zeros.
+- see 1: hash[1] becomes 1
+- see 2: hash[2] becomes 1
+- see 1: hash[1] becomes 2
+- see 3: hash[3] becomes 1
+- see 2: hash[2] becomes 2
+Query 1 -> hash[1] = 2.
+Query 4 -> hash[4] = 0.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N) to build, O(1) per query
+  Reason: Traverse array once to count, then direct access.
+- Space Complexity: O(U)
+  Reason: Space proportional to unique elements or maximum value.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Array hashing fails if elements are negative or huge (e.g. 10^9). In those cases, always use HashMap.
+- Remember map.getOrDefault(key, 0) to avoid NullPointerException when key is seen for the first time.
+================================================================================

@@ -1,0 +1,56 @@
+================================================================================
+QUESTION: Balanced Binary Tree (LeetCode 110)
+FILE: f_BalancedBinaryTree.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+A binary tree is height-balanced if the depth of the two subtrees of every node never differs by more than 1.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Naive way: calculate height of left and right subtree for each node using O(N) height helper. Calling it for all nodes takes O(N^2) time!
+Optimal O(N) trick:
+Combine balance checking INTO the height function!
+If a subtree is balanced, return its true height.
+If a subtree is UNBALANCED, return -1 as a failure signal!
+Whenever you receive -1 from either child, propagate -1 upwards immediately!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. isBalanced(root): return checkHeight(root) != -1;
+2. checkHeight(root):
+   - if (root == null) return 0;
+   - int lh = checkHeight(root.left);
+   - if (lh == -1) return -1;
+   - int rh = checkHeight(root.right);
+   - if (rh == -1) return -1;
+   - if (Math.abs(lh - rh) > 1) return -1; // unbalanced!
+   - return 1 + Math.max(lh, rh);
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Checking `Math.abs(lh - rh) > 1` during the bottom-up postorder traversal halts immediately and avoids redundant height calculations.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Top-down `Math.abs(height(left) - height(right)) <= 1 && isBalanced(left) && isBalanced(right)` recomputes heights repeatedly, taking O(N^2).
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Tree: 1 with left: 2 -> left: 3 (skewed line: 1 -> 2 -> 3)
+Node 3: lh=0, rh=0 -> returns 1
+Node 2: lh=1, rh=0 -> returns 1 + max(1,0) = 2
+Node 1: lh=2, rh=0 -> |2 - 0| = 2 > 1 -> returns -1 (Unbalanced!)
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Each node visited once.
+- Space Complexity: O(H)
+  Reason: Stack depth equal to tree height.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Remember to check `if (lh == -1) return -1;` before computing `rh` to prune early.
+================================================================================

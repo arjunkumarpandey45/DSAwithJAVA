@@ -1,0 +1,58 @@
+================================================================================
+QUESTION: Accounts Merge (LeetCode 721)
+FILE: e_AccountsMerge.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Merge accounts belonging to the same person. Two accounts belong to the same person if there is some common email in both accounts.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Email -> Account Index Mapping with DSU:
+Map each email to the first account index where it was seen: `map<Email, AccountIndex>`.
+When an email appears in account `i` that was already seen in account `j`:
+Account `i` and account `j` belong to the same person! `dsu.union(i, j)`!
+After all emails are processed:
+Group emails by `dsu.findUPar(accountIndex)`.
+Sort emails alphabetically and prepend the account name.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. DSU dsu = new DSU(accounts.size());
+2. Map<String, Integer> emailToAcc = new HashMap<>();
+3. For i = 0 to accounts.size() - 1:
+   - for email in accounts.get(i).subList(1, size):
+     - if (!emailToAcc.containsKey(email)) emailToAcc.put(email, i);
+     - else dsu.unionBySize(i, emailToAcc.get(email));
+4. Map<Integer, List<String>> merged = new HashMap<>();
+   for (email, idx) in emailToAcc: int root = dsu.findUPar(idx); merged.computeIfAbsent(root, k -> new ArrayList<>()).add(email);
+5. Format result: sort emails, prepend name from accounts.get(root).get(0).
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Common emails link accounts into connected components. DSU resolves transitive connections (A connects to B, B connects to C -> A, B, C merged).
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Graph DFS on emails requires building an adjacency list of strings, which is verbose and slower than DSU on integer indices.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Acc 0: John, [john1, john2]
+Acc 1: John, [john2, john3]
+Acc 2: Mary, [mary1]
+john2 seen in Acc 0 and Acc 1 -> union(0, 1).
+Merged accounts: John [john1, john2, john3] and Mary [mary1].
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N * M * log(M))
+  Reason: DSU operations take O(1); sorting emails takes M log M.
+- Space Complexity: O(N * M)
+  Reason: Storage for emails and map.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Remember that two people can have the SAME name! Do not merge by name; only merge by shared emails.
+================================================================================

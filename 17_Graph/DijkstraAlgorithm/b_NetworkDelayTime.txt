@@ -1,0 +1,49 @@
+================================================================================
+QUESTION: Network Delay Time (LeetCode 743)
+FILE: b_NetworkDelayTime.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+You are given a network of n nodes, labeled from 1 to n. A signal is sent from node k. Return the minimum time it takes for all n nodes to receive the signal, or -1 if impossible.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+The signal travels simultaneously along all paths.
+The time it takes for ALL nodes to receive the signal is simply the MAXIMUM of the shortest travel times from source k to each node!
+Run Dijkstra from source k:
+Find `max(dist[1...n])`. If any node is unreachable (dist == inf), return -1!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Build adjacency list for 1..n.
+2. Run Dijkstra from node k -> get dist[1..n].
+3. int maxTime = 0;
+4. For i = 1 to n: if (dist[i] == INF) return -1; maxTime = Math.max(maxTime, dist[i]);
+5. Return maxTime.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Dijkstra finds the fastest arrival time for every individual node. The entire network is complete when the last node receives its signal.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+BFS fails because travel times (edge weights) are non-uniform.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+times = [[2,1,1],[2,3,1],[3,4,1]], n = 4, k = 2
+Dijkstra from 2: dist[2]=0, dist[1]=1, dist[3]=1, dist[4]=2
+All reachable! Max distance is dist[4] = 2. Output: 2.
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(E log V)
+  Reason: Standard Dijkstra.
+- Space Complexity: O(V + E)
+  Reason: Graph and heap.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Nodes are 1-INDEXED (1 to n), so initialize arrays of size `n + 1`.
+================================================================================

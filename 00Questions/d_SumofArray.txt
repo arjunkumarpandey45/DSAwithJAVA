@@ -1,0 +1,59 @@
+================================================================================
+QUESTION: Sum of Array Elements (Recursive)
+FILE: d_SumofArray.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Calculate the sum of all elements in an array using recursion instead of an iterative for-loop.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Break the problem into a tiny piece:
+"The sum of the whole array from index 0 is: arr[0] + (sum of the rest of the array from index 1)".
+Keep passing the smaller problem forward until you reach the end of the array. At the end, the sum of an empty segment is 0.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Define a function sumArray(arr, index).
+2. Base Case: If index == arr.length, return 0.
+3. Recursive Case: Return arr[index] + sumArray(arr, index + 1).
+Alternative (Tail recursive / Parameterized):
+Pass a running sum: sumArray(arr, index + 1, currentSum + arr[index]). When index == arr.length, print currentSum.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Sum(0...N-1) = arr[0] + arr[1] + ... + arr[N-1].
+Recursion breaks this into: arr[i] + Sum(i+1...N-1).
+The base case stops at N and returns 0. When calls return, additions happen correctly in reverse or accumulate along the way.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not use a standard for-loop?
+In real production code, a simple for-loop is better because it uses O(1) memory and cannot cause a stack overflow.
+However, this recursive version teaches the fundamental concept of divide-and-conquer and head/tail recursion.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Input: arr = [1, 2, 3]
+sumArray(arr, 0)
+= 1 + sumArray(arr, 1)
+= 1 + (2 + sumArray(arr, 2))
+= 1 + (2 + (3 + sumArray(arr, 3)))
+= 1 + (2 + (3 + 0))
+= 1 + (2 + 3)
+= 1 + 5
+= 6
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: We visit every index from 0 to N-1 exactly once.
+- Space Complexity: O(N)
+  Reason: The recursive call stack grows to size N.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Watch out for index out of bounds: the base case must check index == arr.length.
+- For very large arrays (e.g. N = 100,000), recursion can throw StackOverflowError in Java.
+================================================================================

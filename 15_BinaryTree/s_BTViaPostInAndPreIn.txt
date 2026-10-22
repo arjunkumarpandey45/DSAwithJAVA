@@ -1,0 +1,62 @@
+================================================================================
+QUESTION: Construct Binary Tree from Preorder & Inorder / Postorder & Inorder (LeetCode 105 & 106)
+FILE: s_BTViaPostInAndPreIn.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Reconstruct a unique binary tree given its Inorder traversal and either its Preorder or Postorder traversal.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+1. Preorder gives the ROOT first (`preorder[preStart]`). Postorder gives the ROOT last (`postorder[postEnd]`).
+2. Find that root's position in INORDER array using a HashMap: `inRootIndex = inMap.get(root.val)`.
+3. Inorder magic:
+   Everything to the LEFT of `inRootIndex` belongs to the LEFT subtree!
+   Everything to the RIGHT belongs to the RIGHT subtree!
+4. Count `numsLeft = inRootIndex - inStart`.
+5. Recurse for left subtree and right subtree with partitioned index boundaries!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+Preorder & Inorder:
+1. Map<Integer, Integer> inMap = new HashMap<>();
+   for (i = 0; i < inorder.length; i++) inMap.put(inorder[i], i);
+2. build(preStart, preEnd, inStart, inEnd):
+   - if (preStart > preEnd || inStart > inEnd) return null;
+   - Node root = new Node(preorder[preStart]);
+   - int inRoot = inMap.get(root.val);
+   - int numsLeft = inRoot - inStart;
+   - root.left = build(preStart + 1, preStart + numsLeft, inStart, inRoot - 1);
+   - root.right = build(preStart + numsLeft + 1, preEnd, inRoot + 1, inEnd);
+   - return root;
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Inorder uniquely delineates left and right subtrees. Combined with root identification from preorder/postorder, the tree is uniquely determined.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Without Inorder, a tree CANNOT be uniquely constructed from Preorder and Postorder alone (ambiguous whether single child is left or right).
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+pre = [3, 9, 20, 15, 7], in = [9, 3, 15, 20, 7]
+Root is pre[0]=3.
+inMap has 3 at index 1.
+numsLeft = 1 - 0 = 1 (node 9).
+Left subtree: pre=[9], in=[9] -> root.left = 9.
+Right subtree: pre=[20, 15, 7], in=[15, 20, 7] -> root.right = 20...
+Tree successfully constructed!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: HashMap lookup takes O(1). Each node created once.
+- Space Complexity: O(N)
+  Reason: HashMap and recursion call stack.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Always pre-populate a HashMap with `inorder[i] -> index` to avoid O(N) linear scans on every call.
+================================================================================

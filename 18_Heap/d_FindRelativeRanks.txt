@@ -1,0 +1,64 @@
+================================================================================
+QUESTION: Relative Ranks (LeetCode 506)
+FILE: d_FindRelativeRanks.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Assign athletic ranks to athletes based on scores: 1st place gets "Gold Medal", 2nd gets "Silver Medal", 3rd gets "Bronze Medal", and all others get their placement number ("4", "5"...).
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Scores need to be sorted descending, but we must write ranks into their ORIGINAL indices!
+Use a Max-Heap storing pairs: `(score, originalIndex)`:
+- Poll athletes from the heap one by one (giving rank 1, rank 2, rank 3...).
+- For rank 1: ans[index] = "Gold Medal"
+- For rank 2: ans[index] = "Silver Medal"
+- For rank 3: ans[index] = "Bronze Medal"
+- For rank >= 4: ans[index] = String.valueOf(rank).
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> b[0] - a[0]); // max-heap by score
+2. For i = 0 to score.length - 1: pq.offer(new int[]{ score[i], i });
+3. String[] ans = new String[score.length];
+4. int rank = 1;
+5. while (!pq.isEmpty()):
+   - int[] athlete = pq.poll(); int idx = athlete[1];
+   - if (rank == 1) ans[idx] = "Gold Medal";
+   - else if (rank == 2) ans[idx] = "Silver Medal";
+   - else if (rank == 3) ans[idx] = "Bronze Medal";
+   - else ans[idx] = String.valueOf(rank);
+   - rank++;
+6. Return ans.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Max-Heap orders athletes by score while keeping their original index intact, allowing direct placement into the result array.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Can also be solved by sorting an Integer index array with `Integer.compare(score[b], score[a])`. Both take O(N log N).
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+score = [10, 3, 8, 9, 4]
+Max-heap polls in order: 10(idx 0), 9(idx 3), 8(idx 2), 4(idx 4), 3(idx 1)
+- rank 1: idx 0 -> "Gold Medal"
+- rank 2: idx 3 -> "Silver Medal"
+- rank 3: idx 2 -> "Bronze Medal"
+- rank 4: idx 4 -> "4"
+- rank 5: idx 1 -> "5"
+Result: ["Gold Medal", "5", "Bronze Medal", "Silver Medal", "4"]
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N log N)
+  Reason: Heapify and poll N elements.
+- Space Complexity: O(N)
+  Reason: Heap and output string array.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Watch exact capitalization of "Gold Medal", "Silver Medal", "Bronze Medal" for automated tests.
+================================================================================

@@ -1,0 +1,64 @@
+================================================================================
+QUESTION: Majority Element (> N/2) - Moore's Voting Algorithm
+FILE: g_MajorityElement.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Find the element that appears more than N/2 times in an array of size N (guaranteed to exist).
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Imagine an election with multiple candidates:
+The majority candidate has MORE votes than all other candidates combined!
+If every non-majority element pairs up to cancel out one majority element...
+The majority element will STILL have votes left over!
+So track a candidate and a count:
+- If count == 0: pick current element as new candidate, count = 1.
+- If current element == candidate: count++.
+- Else: count-- (cancel one vote).
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. candidate = 0, count = 0.
+2. For each num in arr:
+   - If count == 0: candidate = num, count = 1;
+   - Else if num == candidate: count++;
+   - Else: count--;
+3. Return candidate (if majority is guaranteed).
+4. If not guaranteed, do a second verification pass to count candidate occurrences.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Because the true majority element appears > N/2 times, even in the worst case where every other element cancels a vote, its count cannot drop to zero overall.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not use HashMap?
+HashMap uses O(N) extra space. Moore's Voting uses O(1) space!
+Why not sort and return arr[N / 2]?
+Sorting takes O(N log N) time. Moore's Voting takes O(N) linear time.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+arr = [2, 2, 1, 1, 1, 2, 2]
+i=0 (2): count=0 -> cand=2, count=1
+i=1 (2): cand=2 -> count=2
+i=2 (1): cand=2 -> count=1
+i=3 (1): cand=2 -> count=0
+i=4 (1): count=0 -> cand=1, count=1
+i=5 (2): cand=1 -> count=0
+i=6 (2): count=0 -> cand=2, count=1
+Final candidate: 2
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Single pass through array.
+- Space Complexity: O(1)
+  Reason: Only two variables: candidate and count.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- If the problem does NOT guarantee that a majority element exists, you MUST run a second loop to verify if count(candidate) > N / 2.
+================================================================================

@@ -1,0 +1,54 @@
+================================================================================
+QUESTION: Square Star Pattern
+FILE: Square.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Print an N x N solid square grid of asterisks ('* ') using nested loops.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+A square has N rows and N columns. Every row has exactly N stars.
+Outer loop controls the N rows.
+Inner loop prints N stars on the current line.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Read input n.
+2. Outer loop: for i from 0 to n - 1 (n times).
+3. Inner loop: for j from 0 to n - 1 (n times):
+   - Print "* " without a newline.
+4. After inner loop terminates: print a newline.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Running an inner loop of size N exactly N times outputs N * N stars arranged evenly into a square grid.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not use a single loop with string multiplication?
+Java strings do not have native python-like * operator without methods like repeat(), and nested loops are the foundational building block for all 2D grid algorithms and matrix traversals.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Input: n = 3
+i = 0: prints "* * * ", newline
+i = 1: prints "* * * ", newline
+i = 2: prints "* * * ", newline
+Result:
+* * * 
+* * * 
+* * *
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N^2)
+  Reason: Both loops run N times, resulting in N * N iterations.
+- Space Complexity: O(1)
+  Reason: Only loop counter variables are used.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Notice the space after "* ": "* " makes the square look symmetric in standard monospace terminal fonts.
+================================================================================

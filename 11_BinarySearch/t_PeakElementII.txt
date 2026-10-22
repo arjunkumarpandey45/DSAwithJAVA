@@ -1,0 +1,68 @@
+================================================================================
+QUESTION: Find a Peak Element II in 2D Matrix (LeetCode 1901)
+FILE: t_PeakElementII.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+A peak element in a 2D grid is an element that is strictly greater than all of its adjacent neighbors to the left, right, top, and bottom. Find any peak element in O(m * log n) time.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Binary search on COLUMNS (from col 0 to n - 1):
+Pick the middle column `midCol`.
+Find the MAXIMUM element in this column (say at row `maxRow`).
+Why the maximum in the column? Because it is ALREADY greater than its top and bottom neighbors!
+Now just check its left and right neighbors:
+- If it is greater than both left and right neighbors: PEAK FOUND! Return [maxRow, midCol].
+- If left neighbor > current: a peak MUST exist in the left half! Search left: `high = midCol - 1`.
+- Else: search right: `low = midCol + 1`.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. low = 0, high = n - 1.
+2. while (low <= high):
+   - int midCol = low + (high - low) / 2;
+   - int maxRow = 0;
+   - for (int r = 0; r < m; r++) if (mat[r][midCol] > mat[maxRow][midCol]) maxRow = r;
+   - int left = (midCol > 0) ? mat[maxRow][midCol - 1] : -1;
+   - int right = (midCol < n - 1) ? mat[maxRow][midCol + 1] : -1;
+   - if (mat[maxRow][midCol] > left && mat[maxRow][midCol] > right):
+     - return new int[]{ maxRow, midCol };
+   - else if (left > mat[maxRow][midCol]) high = midCol - 1;
+   - else low = midCol + 1;
+3. Return new int[]{-1, -1}.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+The column maximum eliminates vertical checks. Following the strictly greater horizontal neighbor is guaranteed to converge to a 2D peak by induction.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not check all cells?
+O(M * N) scans every cell. Binary search on columns takes O(M * log N) time.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+mat = [
+  [1, 4],
+  [3, 2]
+]
+low = 0, high = 1 -> midCol = 0
+Column 0 elements: mat[0][0]=1, mat[1][0]=3. Max in col 0 is at row 1 (val 3).
+Neighbors of mat[1][0]=3:
+- left = -1, right = mat[1][1] = 2
+3 > -1 and 3 > 2! BOTH NEIGHBORS BEATEN!
+Return [1, 0]!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(M * log N)
+  Reason: log N column bisections, each bisection scans M rows to find maximum.
+- Space Complexity: O(1)
+  Reason: Constant space.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Always pick the global maximum of the column, not just any local maximum, to prevent cycles.
+================================================================================

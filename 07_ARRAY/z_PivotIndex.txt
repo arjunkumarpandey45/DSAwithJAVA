@@ -1,0 +1,60 @@
+================================================================================
+QUESTION: Find Pivot Index / Equilibrium Index (LeetCode 724)
+FILE: z_PivotIndex.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Find the leftmost index where the sum of numbers to its left equals the sum of numbers to its right. Return -1 if no such index exists.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+First calculate the `totalSum` of the entire array.
+Now iterate through the array maintaining `leftSum`:
+At index `i`, what is the right sum?
+`rightSum = totalSum - leftSum - arr[i]`!
+Check: Does `leftSum == rightSum`?
+If yes, index `i` is the pivot index! Return `i`.
+Otherwise, add `arr[i]` to `leftSum` and proceed.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. int totalSum = 0, leftSum = 0;
+2. For num in arr: totalSum += num;
+3. For i = 0 to n - 1:
+   - int rightSum = totalSum - leftSum - arr[i];
+   - if (leftSum == rightSum) return i;
+   - leftSum += arr[i];
+4. Return -1.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Knowing total sum allows calculating the right sum in O(1) without an inner loop.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not calculate leftSum and rightSum with loops at each index?
+That takes O(N^2) time. Precomputing totalSum reduces time to O(N).
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+arr = [1, 7, 3, 6, 5, 6]
+totalSum = 28
+i=0 (1): left=0, right=28-0-1=27 != 0 -> left=1
+i=1 (7): left=1, right=28-1-7=20 != 1 -> left=8
+i=2 (3): left=8, right=28-8-3=17 != 8 -> left=11
+i=3 (6): left=11, right=28-11-6=11 == left(11)! PIVOT FOUND AT INDEX 3!
+Output: 3
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Pass 1 computes totalSum (O(N)), Pass 2 finds pivot (O(N)).
+- Space Complexity: O(1)
+  Reason: Only primitive variables.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Index 0: elements to the left have sum 0.
+- Index n-1: elements to the right have sum 0.
+================================================================================

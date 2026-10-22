@@ -1,0 +1,56 @@
+================================================================================
+QUESTION: Kth Largest Element in an Array (LeetCode 215)
+FILE: b_FindKthLargest.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given an integer array nums and an integer k, return the kth largest element in the array.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Maintain a MIN-HEAP of size K:
+- Iterate through all numbers in nums.
+- Add current number to min-heap.
+- If heap size > k: pop the smallest element (`pq.poll()`).
+Why does this work?
+The heap continuously ejects the smallest numbers. After examining all elements, the heap holds the K largest numbers, and the SMALLEST of those K largest (sitting at `pq.peek()`) is EXACTLY the K-th largest element!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. PriorityQueue<Integer> pq = new PriorityQueue<>(); // default min-heap
+2. For num in nums:
+   - pq.offer(num);
+   - if (pq.size() > k) pq.poll();
+3. Return pq.peek();
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+A min-heap of capacity K guarantees the top is the k-th largest element overall.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Sorting the entire array takes O(N log N). Min-heap takes O(N log K) time and only O(K) memory.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+nums = [3, 2, 1, 5, 6, 4], k = 2
+- num 3: pq=[3]
+- num 2: pq=[2, 3]
+- num 1: pq=[1, 2, 3] -> size 3 > 2 -> poll 1 -> pq=[2, 3]
+- num 5: pq=[2, 3, 5] -> poll 2 -> pq=[3, 5]
+- num 6: pq=[3, 5, 6] -> poll 3 -> pq=[5, 6]
+- num 4: pq=[4, 5, 6] -> poll 4 -> pq=[5, 6]
+pq.peek() = 5! (2nd largest is 5).
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N log K)
+  Reason: Each insertion/deletion in a heap of size K takes log K.
+- Space Complexity: O(K)
+  Reason: Heap holds at most K elements.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Remember: Kth Largest = Min-Heap of size K. Do not use Max-Heap of size N unless you want O(N log N).
+================================================================================

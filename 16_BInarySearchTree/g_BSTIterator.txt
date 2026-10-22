@@ -1,0 +1,57 @@
+================================================================================
+QUESTION: Binary Search Tree Iterator (LeetCode 173)
+FILE: g_BSTIterator.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Implement an iterator over a BST that returns the next smallest number with next() and hasNext() in O(1) average time and O(H) space.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Controlled Inorder Traversal using a Stack:
+Push the root and ALL its left children onto a stack (deepest left child is at top).
+When `next()` is called:
+- Pop node from stack (this is the next smallest element!).
+- If this node has a right child, push the right child and ALL its left descendants onto the stack!
+- Return popped node's value.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Stack<TreeNode> st = new Stack<>();
+2. Constructor(root): pushAll(root);
+3. hasNext(): return !st.isEmpty();
+4. next():
+   - TreeNode node = st.pop();
+   - pushAll(node.right);
+   - return node.val;
+5. pushAll(node):
+   - while (node != null) { st.push(node); node = node.left; }
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Only stores nodes along a single left-branch path at any time, maintaining O(H) memory while delivering elements in exact ascending order.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Storing full inorder in a list upfront takes O(N) space. The iterator takes O(H) space.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Tree: 7 -> (3, 15 -> (9, 20))
+init: push 7, 3 -> st=[7, 3]
+next(): pop 3, 3 has no right -> returns 3. st=[7]
+next(): pop 7, pushAll(15): push 15, 9 -> returns 7. st=[15, 9]
+next(): pop 9 -> returns 9
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(1) amortized for next(), O(1) for hasNext()
+  Reason: Each node is pushed and popped exactly once across all N calls: N / N = O(1).
+- Space Complexity: O(H)
+  Reason: Stack holds at most H nodes.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Amortized O(1) means most calls take O(1), and occasional calls take O(H), averaging to O(1).
+================================================================================

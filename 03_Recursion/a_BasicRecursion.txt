@@ -1,0 +1,63 @@
+================================================================================
+QUESTION: Basic Recursion Concepts & Printing Numbers
+FILE: a_BasicRecursion.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Demonstrates the core mechanics of recursion: base case, recursive case, call stack, and printing numbers 1 to N or N to 1.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Recursion is simply a method calling itself.
+To keep it from calling itself forever (which crashes with StackOverflowError), you MUST give it a stopping signal called the "BASE CASE".
+Where you put your print statement matters:
+- Print BEFORE the call: prints on the way down (Forward phase: 5, 4, 3, 2, 1).
+- Print AFTER the call: prints on the way back up (Backtracking phase: 1, 2, 3, 4, 5).
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Print 1 to N (using backtracking):
+   - void printNum(int n):
+     - if (n == 0) return;
+     - printNum(n - 1); // wait for smaller numbers to finish
+     - System.out.println(n); // print on return!
+2. Print N to 1:
+   - void printReverse(int n):
+     - if (n == 0) return;
+     - System.out.println(n); // print immediately
+     - printReverse(n - 1);
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+The call stack is LIFO (Last In First Out). Calls are stacked on top of each other until the base case is hit. Once returning starts, the topmost call executes its remaining lines and pops off.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not just a loop?
+A loop is simpler for linear printing, but understanding the call stack's forward and unwinding phases is crucial for trees, graphs, and backtracking.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+Call printNum(3):
+printNum(3)
+  printNum(2)
+    printNum(1)
+      printNum(0) -> base case, returns!
+    resumes -> prints 1
+  resumes -> prints 2
+resumes -> prints 3
+Output: 1, 2, 3
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Function called N times.
+- Space Complexity: O(N)
+  Reason: N stack frames created in memory.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Trap: Missing base case = Infinite recursion = StackOverflowError.
+- Trap: Calling fun(n) instead of fun(n - 1) causes infinite loop with the same argument.
+================================================================================

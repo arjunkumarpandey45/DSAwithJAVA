@@ -1,0 +1,63 @@
+================================================================================
+QUESTION: Union and Intersection of Two Sorted Arrays
+FILE: c_UnionAndIniterSection.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given two sorted arrays, find:
+1. Union: all distinct elements present in either array (sorted order).
+2. Intersection: all common elements present in both arrays.
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Because both arrays are ALREADY SORTED, we do not need HashSets!
+Use two pointers (i for arr1, j for arr2):
+- For Union: Compare arr1[i] and arr2[j]. Add the smaller one (avoiding duplicates by checking last added element). If equal, add once and advance both.
+- For Intersection: If arr1[i] == arr2[j], it is common! Add to result, increment both. If arr1[i] < arr2[j], increment i. Else increment j.
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+Union:
+1. i = 0, j = 0, result list.
+2. While i < n1 && j < n2:
+   - pick smaller, if not equal to last added element in list, add it.
+   - advance the pointer of the chosen element (or both if equal).
+3. Add remaining elements from whichever array is not finished.
+
+Intersection:
+1. While i < n1 && j < n2:
+   - if arr1[i] == arr2[j]: add to result, i++, j++.
+   - else if arr1[i] < arr2[j]: i++.
+   - else: j++.
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+Sorted order guarantees that as pointers move left-to-right, we never miss smaller elements and can detect matches in a single simultaneous pass.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not use TreeSet / HashSet?
+TreeSet takes O((N + M) log(N + M)) and extra heap space. Two pointers take O(N + M) time and O(1) auxiliary space.
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+arr1 = [1, 2, 3], arr2 = [2, 3, 5]
+Intersection:
+- i=0(1), j=0(2): 1 < 2 -> i++
+- i=1(2), j=0(2): 2 == 2 -> add 2, i++, j++
+- i=2(3), j=1(3): 3 == 3 -> add 3, i++, j++
+- i=3 reaches end -> loop stops.
+Intersection: [2, 3]
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N + M)
+  Reason: Both pointers traverse each array once.
+- Space Complexity: O(N + M)
+  Reason: Space only for storing the returned result list.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- For Union, always check if `unionList.get(unionList.size() - 1) == currentElement` before adding to prevent duplicate entries.
+================================================================================

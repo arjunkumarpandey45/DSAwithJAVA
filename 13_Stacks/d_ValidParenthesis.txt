@@ -1,0 +1,59 @@
+================================================================================
+QUESTION: Valid Parentheses (LeetCode 20)
+FILE: d_ValidParenthesis.java
+================================================================================
+
+1. WHAT IS THIS PROBLEM ABOUT?
+--------------------------------------------------------------------------------
+Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid (brackets must close in the correct order and type).
+
+2. HOW TO THINK (INTUITION)?
+--------------------------------------------------------------------------------
+Brackets must close in REVERSE order of how they were opened:
+The most recently opened bracket must be the first one closed! This is the definition of LIFO: a Stack!
+Whenever you see an opening bracket `(`, `{`, `[`: push it to stack.
+Whenever you see a closing bracket `)`, `}`, `]`: check if the top of the stack matches! If yes, pop it. If no, invalid!
+
+3. STEP-BY-STEP APPROACH
+--------------------------------------------------------------------------------
+1. Stack<Character> st = new Stack<>();
+2. For each char c in s:
+   - If (c == '(' || c == '{' || c == '['): st.push(c);
+   - Else:
+     - If (st.isEmpty()) return false; // no matching opening bracket
+     - char top = st.pop();
+     - if ((c == ')' && top != '(') || (c == '}' && top != '{') || (c == ']' && top != '[')) return false;
+3. Return st.isEmpty(); // must not have unclosed brackets left
+
+4. WHY THIS WORKS?
+--------------------------------------------------------------------------------
+The stack maintains the unmatched opening brackets in nesting order. Matching and popping leaves an empty stack only if every bracket was properly nested.
+
+5. WHY NOT OTHER APPROACHES (WHY NOT THAT)?
+--------------------------------------------------------------------------------
+Why not just count brackets with integer counters?
+Counters work for single bracket types (like only `()`), but FAIL when multiple types interleave (e.g. "([)]" has equal counts of each type, but is INVALID!).
+
+6. STEP-BY-STEP DRY RUN
+--------------------------------------------------------------------------------
+s = "({[]})"
+'(' -> push '('
+'{' -> push '{'
+'[' -> push '['
+']' -> matches top '[' -> pop
+'}' -> matches top '{' -> pop
+')' -> matches top '(' -> pop
+Stack is empty -> return TRUE!
+
+7. COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+- Time Complexity: O(N)
+  Reason: Traverse string once.
+- Space Complexity: O(N)
+  Reason: Stack holds up to N characters.
+
+8. IMPORTANT TIPS, TRAPS & EDGE CASES
+--------------------------------------------------------------------------------
+- Trap 1: Check `st.isEmpty()` BEFORE popping when a closing bracket arrives (e.g. s = ")").
+- Trap 2: Return `st.isEmpty()` at the end, NOT `true`! If an opening bracket is left unclosed (e.g. s = "(("), returning true is a bug.
+================================================================================
