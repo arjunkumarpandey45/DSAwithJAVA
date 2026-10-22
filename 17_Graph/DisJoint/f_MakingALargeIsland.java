@@ -3,7 +3,7 @@ package DisJoint;
 
 import java.util.*;
 
-public class e_MakingALargeIsland {
+public class f_MakingALargeIsland {
     private static int n;
     private static final int[][] directions = {
         {1, 0}, {-1, 0}, {0, 1}, {0, -1}
