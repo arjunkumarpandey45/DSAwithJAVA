@@ -9,25 +9,25 @@ public class a_DijkstraAlgorithm {
         PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> Integer.compare(a[1], b[1]));
         dist[src] = 0;
         pq.offer(new int[] { src, 0 });
-while (!pq.isEmpty()) {
-    int []current=pq.poll();
-    int node=current[0];
-    int distance=current[1];
-    if(distance>dist[node]){
-        continue;
-    }
-    for (int []edge :graph.get(node) ){
-        int nextNode=edge[0];
-        int weight=edge[1];
-        int newDistance=weight+distance;
-        if(newDistance<dist[nextNode]){
-            dist[nextNode]=newDistance;
-            pq.offer(new int[]{nextNode,newDistance});
+        while (!pq.isEmpty()) {
+            int[] current = pq.poll();
+            int node = current[0];
+            int distance = current[1];
+            if (distance > dist[node]) {
+                continue;
+            }
+            for (int[] edge : graph.get(node)) {
+                int nextNode = edge[0];
+                int weight = edge[1];
+                int newDistance = weight + distance;
+                if (newDistance < dist[nextNode]) {
+                    dist[nextNode] = newDistance;
+                    pq.offer(new int[] { nextNode, newDistance });
+                }
+
+            }
+
         }
-        
-    }
-    
-}
         return dist;
     }
 
